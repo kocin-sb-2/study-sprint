@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kemi 2 — Gymnasiepoäng 100</title>
+<meta name="description" content="Complete Skolverket syllabus guide for Kemi 2 — organic chemistry, biochemistry, equilibrium, and analytical chemistry.">
+<meta property="og:title" content="Kemi 2 — Study Sprint">
+<meta property="og:description" content="Complete Skolverket syllabus guide for Kemi 2 — organic chemistry, biochemistry, equilibrium, and analytical chemistry.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent-chem: #ff8a65;
+  --accent-chem-dim: rgba(255,138,101,0.12);
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-purple: #b388ff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.back-link {
+  padding: 0 24px;
+  padding-top: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-chem);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.back-link a:hover {
+  gap: 12px;
+  color: #ff6b4a;
+}
+
+.hero {
+  padding: 40px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,138,101,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 50%, rgba(255,138,101,0.06) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-20px, 10px) rotate(2deg); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--accent-chem);
+}
+
+.hero .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.hero .badge-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge.chem { background: var(--accent-chem-dim); color: var(--accent-chem); border: 1px solid rgba(255,138,101,0.25); }
+
+.content { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.intro-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.intro-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.stat-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-chem);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.section {
+  margin-bottom: 36px;
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-number {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  background: var(--accent-chem-dim);
+  color: var(--accent-chem);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.section-arrow {
+  color: var(--text-muted);
+  transition: transform 0.3s;
+  font-size: 1.2rem;
+}
+
+.section-arrow.open { transform: rotate(90deg); }
+
+.topic-list { display: flex; flex-direction: column; gap: 6px; }
+
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.topic:hover {
+  border-color: rgba(255,255,255,0.1);
+  background: var(--surface-2);
+}
+
+.topic-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.topic-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+  background: var(--accent-chem);
+}
+
+.topic-content { flex: 1; }
+
+.topic-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.topic-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.topic-expand-icon {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.topic.expanded .topic-expand-icon { transform: rotate(90deg); }
+.topic.expanded { border-color: rgba(255,255,255,0.12); }
+
+.topic-body {
+  display: none;
+  padding: 0 18px 18px 38px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+
+.topic.expanded .topic-body { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.info-block {
+  margin-top: 16px;
+}
+
+.info-block-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-chem);
+}
+
+.concept-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  border-left: 3px solid var(--accent-chem);
+}
+
+.concept-item strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.term-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.term-item .term-word {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 0.88rem;
+}
+
+.formula-card {
+  background: var(--surface-3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  border: 1px solid rgba(102,187,106,0.15);
+}
+
+.formula-card .formula-note {
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.exam-tip {
+  background: rgba(179,136,255,0.08);
+  border: 1px solid rgba(179,136,255,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.exam-tip::before {
+  content: '▸ ';
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.footer-note {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .topic-body { padding-left: 18px; }
+  .term-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="back-link">
+  <a href="index.html">← Back to Hub</a>
+</div>
+
+<div class="hero">
+  <h1>Kemi 2</h1>
+  <p class="subtitle">Swedish Gymnasium — Structured Syllabus Roadmap</p>
+  <div class="badge-row">
+    <span class="badge chem">Swedish Gymnasium Kemi 2 (100p)</span>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="intro-card">
+  <h3>Swedish Gymnasium — Kemi 2 (100p)</h3>
+  <p>Kemi 2 builds on Kemi 1 and covers organic chemistry, biochemistry, chemical equilibrium, reaction kinetics, analytical chemistry, and the nature of chemistry as a discipline. Below is every core content area from Skolverket's centralt innehåll, broken down into exam-ready subtopics. Click any topic to expand detailed notes.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-value">5</div><div class="stat-label">Core Sections</div></div>
+    <div class="stat"><div class="stat-value">~24</div><div class="stat-label">Subtopics</div></div>
+    <div class="stat"><div class="stat-value">100p</div><div class="stat-label">Course Points</div></div>
+  </div>
+</div>
+
+<!-- ===== SECTION 01: ORGANISK KEMI ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('s01')">
+    <div class="section-number">01</div>
+    <div class="section-title">Organisk Kemi — Organic Chemistry</div>
+    <span class="section-arrow open" id="arrow-s01">▸</span>
+  </div>
+  <div class="topic-list" id="body-s01">
+
+    <div class="topic" id="topic-s01-1">
+      <div class="topic-header" onclick="toggleTopic('s01-1')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Carbon Chemistry Fundamentals</div>
+          <div class="topic-detail">Hybridisation (sp³, sp², sp), chain structures, functional groups, structural and molecular formulas.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Hybridisation:</strong> sp³ (tetrahedral, 109.5°), sp² (trigonal planar, 120°), and sp (linear, 180°). Determines molecular geometry and chemical properties. sp³ single bonds, sp² double bonds, sp triple bonds.</div>
+          <div class="concept-item"><strong>Carbon chains:</strong> Straight-chain (alkan), branched-chain (isoalkanes), and cyclic structures. Chain length and branching affect boiling point, melting point, and solubility.</div>
+          <div class="concept-item"><strong>Functional groups:</strong> Characteristic atom groups that define reactivity (e.g., –OH hydroxyl, –C=O carbonyl, –COOH carboxyl, –NH₂ amino). Same functional group → similar chemical behaviour regardless of rest of molecule.</div>
+          <div class="concept-item"><strong>Isomerism origin:</strong> Carbon's ability to form four bonds and chain flexibly creates multiple arrangements (isomers) with same molecular formula but different properties.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Hybridisation (hybridisering):</span> Mixing of atomic orbitals to form new hybrid orbitals with specific geometry.</div>
+            <div class="term-item"><span class="term-word">Functional group (funktionell grupp):</span> An atom or group of atoms responsible for the characteristic reactions of an organic compound.</div>
+            <div class="term-item"><span class="term-word">Structural isomer (strukturisomer):</span> Molecules with the same molecular formula but different connectivity (different structures).</div>
+            <div class="term-item"><span class="term-word">Saturated hydrocarbon (mättad kolväte):</span> Contains only C–C and C–H single bonds (alkanes).</div>
+            <div class="term-item"><span class="term-word">Unsaturated hydrocarbon (omättad kolväte):</span> Contains C=C double bonds (alkenes) or C≡C triple bonds (alkynes).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">CₙH₂ₙ₊₂<div class="formula-note">Alkanes (saturated acyclic)</div></div>
+          <div class="formula-card">CₙH₂ₙ<div class="formula-note">Alkenes or cycloalkanes</div></div>
+          <div class="formula-card">CₙH₂ₙ₋₂<div class="formula-note">Alkynes or dienes</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Identify hybridisation state of each carbon in a structure — predict geometry and reactivity.</div>
+          <div class="exam-tip">Draw and name structural isomers given a molecular formula.</div>
+          <div class="exam-tip">Recognise functional groups in complex molecules and predict reactivity.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s01-2">
+      <div class="topic-header" onclick="toggleTopic('s01-2')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">IUPAC Nomenclature & Naming</div>
+          <div class="topic-detail">Systematic naming of alkanes, alkenes, alkynes, alcohols, aldehydes, ketones, carboxylic acids. Swedish convention (IUPAC).</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>IUPAC naming rules:</strong> (1) Identify the longest carbon chain (parent name). (2) Number the chain to give functional groups lowest numbers. (3) Name and number substituents. (4) Arrange substituents alphabetically in the name.</div>
+          <div class="concept-item"><strong>Prefixes:</strong> Indicate position and number of substituents: di-, tri-, tetra-, penta-, etc. Alphabetise by substituent name (not prefix).</div>
+          <div class="concept-item"><strong>Suffixes for functional groups:</strong> –ane (alkane), –en (alkene), –yn (alkyne), –ol (alcohol), –al (aldehyde), –one (ketone), –oic acid (carboxylic acid).</div>
+          <div class="concept-item"><strong>Numbering priority:</strong> Functional groups take precedence (carboxylic acid > aldehyde > ketone > alcohol > amine > alkene/alkyne). Number to give these groups the lowest numbers.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Parent chain (huvudkedja):</span> The longest continuous carbon chain that includes the principal functional group.</div>
+            <div class="term-item"><span class="term-word">Substituent (substitutent):</span> An atom or group replacing a hydrogen on the parent chain (e.g., methyl, ethyl, chloro).</div>
+            <div class="term-item"><span class="term-word">Principal functional group (huvudfunktionell grupp):</span> The most reactive group, which determines the suffix and numbering priority.</div>
+            <div class="term-item"><span class="term-word">IUPAC:</span> International Union of Pure and Applied Chemistry — system for systematic chemical nomenclature.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Name organic molecules from structural formulas using correct IUPAC rules.</div>
+          <div class="exam-tip">Draw structural formulas from IUPAC names — test understanding of nomenclature priorities.</div>
+          <div class="exam-tip">Identify errors in incorrect IUPAC names and correct them.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s01-3">
+      <div class="topic-header" onclick="toggleTopic('s01-3')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Alkanes, Alkenes, Alkynes</div>
+          <div class="topic-detail">Saturated vs unsaturated hydrocarbons. Structure, properties, combustion, addition and substitution reactions.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Alkanes (alkaner):</strong> CₙH₂ₙ₊₂. Single C–C bonds only. Non-polar, hydrophobic. Boiling point increases with chain length. Combustion: CₓHᵧ + O₂ → CO₂ + H₂O. Substitution reactions with halogens (free-radical mechanism).</div>
+          <div class="concept-item"><strong>Alkenes (alkener):</strong> CₙH₂ₙ. C=C double bond (sp² carbons). Polar, more reactive than alkanes. Addition reactions across the double bond (electrophilic addition): H₂, X₂, HX, H₂O. Markovnikov's rule: H adds to C with more H atoms already attached.</div>
+          <div class="concept-item"><strong>Alkynes (alkyner):</strong> CₙH₂ₙ₋₂. C≡C triple bond (sp carbons). Even more reactive. Addition reactions (two equivalents can add). Can undergo coupling reactions. Less common in Kemi 2, but important for completeness.</div>
+          <div class="concept-item"><strong>Branching effect:</strong> Branching lowers boiling point compared to straight-chain isomers (less surface contact). Increases stability of carbocations (tertiary > secondary > primary).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Saturated (mättad):</span> All available bonds filled with atoms (typically H); only single bonds.</div>
+            <div class="term-item"><span class="term-word">Unsaturated (omättad):</span> Contains C=C or C≡C bonds; can undergo addition reactions.</div>
+            <div class="term-item"><span class="term-word">Combustion (förbränning):</span> Complete oxidation in oxygen producing CO₂ and H₂O; exothermic.</div>
+            <div class="term-item"><span class="term-word">Addition reaction (additionsreaktion):</span> Two molecules combine to form one product; occurs across double/triple bonds.</div>
+            <div class="term-item"><span class="term-word">Substitution reaction (substitutionsreaktion):</span> One atom/group replaces another; typical of saturated hydrocarbons.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">CₓHᵧ + (x + y/4)O₂ → xCO₂ + (y/2)H₂O<div class="formula-note">General combustion equation</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Balance combustion equations for hydrocarbons.</div>
+          <div class="exam-tip">Write equations for addition of H₂, Br₂, HBr, H₂O to alkenes (apply Markovnikov's rule).</div>
+          <div class="exam-tip">Distinguish between addition and substitution reactions in terms of mechanism and conditions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s01-4">
+      <div class="topic-header" onclick="toggleTopic('s01-4')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Alcohols, Aldehydes, Ketones, Carboxylic Acids</div>
+          <div class="topic-detail">Functional groups with oxygen: structure, nomenclature, preparation, oxidation reactions, properties.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Alcohols (alkoholer, –OH):</strong> Hydroxyl group bonded to sp³ carbon. Primary (1°), secondary (2°), tertiary (3°) based on substitution. H-bonding → higher boiling points, soluble in water. Oxidation: primary → aldehyde → carboxylic acid; secondary → ketone; tertiary → no oxidation.</div>
+          <div class="concept-item"><strong>Aldehydes (aldehyder, –CHO):</strong> Carbonyl at chain end. Product of primary alcohol oxidation. Readily oxidised to carboxylic acid. Reduced back to primary alcohol by LiAlH₄ or NaBH₄. React with nucleophiles (addition).</div>
+          <div class="concept-item"><strong>Ketones (ketoner, –CO–):</strong> Carbonyl group internal (not at chain end). From secondary alcohol oxidation. Resistant to further oxidation (no strong oxidising agent breaks C–C bonds adjacent to C=O). Undergo nucleophilic addition and condensation reactions.</div>
+          <div class="concept-item"><strong>Carboxylic acids (karboksylsyror, –COOH):</strong> Highest oxidation state for organic compounds. Weak acids (partially ionised in water). React with alcohols (esterification) and bases (salt formation). Decarboxylation possible under strong heating.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Hydroxyl group (hydroxylgrupp):</span> –OH functional group; indicates alcohol.</div>
+            <div class="term-item"><span class="term-word">Carbonyl (karbonyl):</span> C=O functional group; found in aldehydes, ketones, carboxylic acids, esters.</div>
+            <div class="term-item"><span class="term-word">Oxidation state (oxidationstillstånd):</span> Reflects degree of oxidation; alcohols → aldehydes/ketones → carboxylic acids (increasing oxidation).</div>
+            <div class="term-item"><span class="term-word">Nucleophilic addition (nukleofil addition):</span> Attack by electron-rich nucleophile on electron-poor carbonyl carbon.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">RCH₂OH + [O] → RCHO + H₂O<div class="formula-note">Primary alcohol → aldehyde (mild oxidation)</div></div>
+          <div class="formula-card">RCHO + [O] → RCOOH<div class="formula-note">Aldehyde → carboxylic acid (strong oxidation)</div></div>
+          <div class="formula-card">R₂CHOH + [O] → R₂CO<div class="formula-note">Secondary alcohol → ketone</div></div>
+          <div class="formula-card">RCOOH + R'OH ⇌ RCOOR' + H₂O<div class="formula-note">Esterification (Fischer esterification, reversible)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Classify alcohols as 1°, 2°, or 3° and predict oxidation products.</div>
+          <div class="exam-tip">Write equations for oxidation of alcohols using [O] notation or specific reagents (K₂Cr₂O₇, KMnO₄).</div>
+          <div class="exam-tip">Esterification reactions: balance equations and understand reversibility, conditions (acid catalyst, heat).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s01-5">
+      <div class="topic-header" onclick="toggleTopic('s01-5')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Organic Reaction Types</div>
+          <div class="topic-detail">Substitution, addition, elimination, condensation, and oxidation mechanisms and examples.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Substitution (substitution):</strong> One group replaces another. SN1 (unimolecular, carbocation intermediate, favoured by 3° and polar solvents) or SN2 (bimolecular, backside attack, inversion, favoured by 1° and aprotic solvents). Alkanes: free-radical substitution (Cl₂ or Br₂ under UV).</div>
+          <div class="concept-item"><strong>Addition (addition):</strong> Two groups add across a double or triple bond, reducing unsaturation. Electrophilic addition (alkenes + HX, H₂O, X₂). Nucleophilic addition (carbonyl + CN⁻, NH₃, etc.).</div>
+          <div class="concept-item"><strong>Elimination (elimination):</strong> Removal of a small molecule (H₂O, HX) from adjacent carbons, creating a double bond. E1 (unimolecular, carbocation) or E2 (bimolecular, concerted). Often competes with substitution.</div>
+          <div class="concept-item"><strong>Condensation (kondensation):</strong> Two molecules join with loss of a small molecule (usually H₂O). Esterification, amidation, and polymerisation are condensation reactions.</div>
+          <div class="concept-item"><strong>Oxidation (oxidation):</strong> Loss of electrons (or H, or gain of O). Alcohols → carbonyl → carboxylic acid. Alkenes → epoxides or diols. Alkanes → less common.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">SN1:</span> Unimolecular nucleophilic substitution; two-step with carbocation intermediate; first-order kinetics.</div>
+            <div class="term-item"><span class="term-word">SN2:</span> Bimolecular nucleophilic substitution; one-step backside attack; second-order kinetics; inversion of configuration.</div>
+            <div class="term-item"><span class="term-word">Carbocation (karbokatjon):</span> Positively charged carbon with six electrons (sp² hybridised). Stability: 3° > 2° > 1° > methyl.</div>
+            <div class="term-item"><span class="term-word">Elimination:</span> Removal of a group from adjacent atoms, creating a multiple bond.</div>
+            <div class="term-item"><span class="term-word">Free radical (fri radikal):</span> Species with unpaired electron; formed by homolytic cleavage (e.g., Cl•).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Predict products of SN1 vs SN2 based on alkyl halide type, nucleophile, and solvent.</div>
+          <div class="exam-tip">Write mechanisms (arrow-pushing) for simple substitution and elimination reactions.</div>
+          <div class="exam-tip">Explain why certain conditions favour certain reaction types (e.g., heat favours elimination).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s01-6">
+      <div class="topic-header" onclick="toggleTopic('s01-6')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Polymers & Plastics</div>
+          <div class="topic-detail">Addition polymers (monomers, chains), condensation polymers, polymerisation reactions, properties, environmental impact.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Addition polymers (additionspolymerer):</strong> Formed by joining monomers (e.g., alkenes) without loss of atoms. Examples: polyethylene (PE), polypropylene (PP), polyvinyl chloride (PVC). Monomer units repeat in backbone; double bonds convert to single bonds during polymerisation.</div>
+          <div class="concept-item"><strong>Condensation polymers (kondensationspolymerer):</strong> Formed by joining monomers with loss of a small molecule (H₂O). Examples: polyesters (PET), polyamides (nylon), polyurethanes. Functional groups (–OH, –COOH, –NH₂) on monomers interact to form linking bonds.</div>
+          <div class="concept-item"><strong>Cross-linking and properties:</strong> Linear polymers are flexible (low melting point, soluble). Cross-linked polymers are rigid, durable, insoluble. Heat and pressure affect properties. Branching affects density and properties.</div>
+          <div class="concept-item"><strong>Environmental impact:</strong> Most synthetic plastics are non-biodegradable, persist in environment for centuries. Burning releases CO₂ (greenhouse gas) and toxic fumes. Recycling (melting, re-forming) extends useful life but degrades polymer chains. Bioplastics (from plant material) are biodegradable alternatives.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Monomer (monomer):</span> A small molecule that can join with others to form a polymer.</div>
+            <div class="term-item"><span class="term-word">Polymer (polymer):</span> A large molecule made by joining many monomers; has repeating units.</div>
+            <div class="term-item"><span class="term-word">Polymerisation (polymerisation):</span> Chemical process of linking monomers to form polymers.</div>
+            <div class="term-item"><span class="term-word">Cross-link (tvärning):</span> Chemical bonds between polymer chains, increasing rigidity and strength.</div>
+            <div class="term-item"><span class="term-word">Biodegradable:</span> Capable of being broken down by biological processes (e.g., bacteria, enzymes).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Write polymerisation equations for alkene monomers (show repeating unit in brackets with subscript n).</div>
+          <div class="exam-tip">Explain the difference between addition and condensation polymerisation with examples.</div>
+          <div class="exam-tip">Discuss properties (melting point, solubility, flexibility) in relation to polymer structure (linear, cross-linked, branched).</div>
+          <div class="exam-tip">Evaluate environmental impacts of plastics and the merits of recycling vs bioplastics.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s01-7">
+      <div class="topic-header" onclick="toggleTopic('s01-7')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Isomerism</div>
+          <div class="topic-detail">Structural isomers, geometric (cis-trans) isomers, stereoisomers, optical activity.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Structural isomers (strukturisomerer):</strong> Same molecular formula but different connectivity. Examples: butane vs 2-methylpropane (isobutane); propanol (1° alcohol) vs 2-propanol (2° alcohol). Different chemical and physical properties.</div>
+          <div class="concept-item"><strong>Geometric isomers (geometriska isomerer):</strong> Non-rotating double bonds or ring junctions prevent free rotation. Cis (same side) vs trans (opposite sides) configurations for C=C bonds. Example: but-2-ene (cis and trans forms). Different melting points, boiling points, and chemical reactivity.</div>
+          <div class="concept-item"><strong>Stereoisomers (stereoisomerer):</strong> Broader term: includes geometric isomers and optical isomers. Identical connectivity but different 3D arrangement.</div>
+          <div class="concept-item"><strong>Optical isomers (optiska isomerer):</strong> Arise from chiral carbon atoms (4 different groups attached). D/L or R/S notation. Rotate plane-polarised light in opposite directions (enantiomers). Important in biochemistry and pharmaceuticals.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Isomer (isomer):</span> Molecule with same molecular formula but different structure or arrangement.</div>
+            <div class="term-item"><span class="term-word">Chiral (kiral):</span> A carbon with four different groups (asymmetric); has no plane of symmetry.</div>
+            <div class="term-item"><span class="term-word">Enantiomer (enantiomer):</span> Pair of optical isomers that are non-superimposable mirror images.</div>
+            <div class="term-item"><span class="term-word">Cis-trans (cis-trans):</span> Geometric isomerism across a double bond (cis = same side; trans = opposite sides).</div>
+            <div class="term-item"><span class="term-word">Plane-polarised light (planpolariserat ljus):</span> Light vibrating in one plane; rotated by optically active compounds.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Identify structural isomers given a molecular formula — draw and name each.</div>
+          <div class="exam-tip">Draw and label cis and trans isomers of alkenes.</div>
+          <div class="exam-tip">Identify chiral carbons and explain why optical isomerism arises.</div>
+          <div class="exam-tip">Predict properties (boiling point, reactivity) differences between isomers.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 02: BIOKEMI ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('s02')">
+    <div class="section-number">02</div>
+    <div class="section-title">Biokemi — Biochemistry</div>
+    <span class="section-arrow open" id="arrow-s02">▸</span>
+  </div>
+  <div class="topic-list" id="body-s02">
+
+    <div class="topic" id="topic-s02-1">
+      <div class="topic-header" onclick="toggleTopic('s02-1')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Proteins & Amino Acids</div>
+          <div class="topic-detail">20 amino acids, peptide bonds, primary/secondary/tertiary/quaternary structure, enzymes as proteins.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Amino acids:</strong> 20 standard amino acids (in living systems). All have amino (–NH₂) and carboxyl (–COOH) groups attached to the same carbon (α-carbon). The R-group (side chain) varies: polar, non-polar, charged. Solubility, reactivity, and interactions depend on R-group.</div>
+          <div class="concept-item"><strong>Peptide bond (peptidösa bindning):</strong> Condensation reaction between –COOH of one amino acid and –NH₂ of another, forming –CO–NH– link with loss of H₂O. Directionality: N-terminus (free –NH₂) to C-terminus (free –COOH).</div>
+          <div class="concept-item"><strong>Primary structure (primärstruktur):</strong> Sequence of amino acids in the polypeptide chain. Determined by genetic code. Any change in sequence can drastically alter protein function (e.g., sickle cell disease from one amino acid change).</div>
+          <div class="concept-item"><strong>Secondary structure (sekundärstruktur):</strong> Regular, repeating local structures stabilised by hydrogen bonds between backbone atoms. Common types: α-helix (coiled spring), β-sheet (extended, zigzag), random coil.</div>
+          <div class="concept-item"><strong>Tertiary structure (tertiärstruktur):</strong> Overall 3D shape of single polypeptide chain. Stabilised by interactions between R-groups: hydrogen bonds, ionic bonds, disulfide bridges (–S–S–), hydrophobic interactions, van der Waals forces.</div>
+          <div class="concept-item"><strong>Quaternary structure (kvaternärstruktur):</strong> Only for multi-subunit proteins. Interactions between separate polypeptide chains. Example: haemoglobin (4 subunits). Crucial for cooperative binding and function.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Amino acid (aminosyra):</span> Organic compound with amino and carboxyl functional groups; monomers of proteins.</div>
+            <div class="term-item"><span class="term-word">Peptide bond (peptidösa bindning):</span> C–N bond formed between carboxyl of one amino acid and amino of the next.</div>
+            <div class="term-item"><span class="term-word">Polypeptide:</span> Chain of amino acids linked by peptide bonds (can also be called protein if folded and functional).</div>
+            <div class="term-item"><span class="term-word">Denaturalisation (denaturering):</span> Disruption of protein structure (secondary, tertiary, quaternary) by heat, pH, or chemicals; loses function.</div>
+            <div class="term-item"><span class="term-word">Enzyme (enzym):</span> Protein catalyst that speeds up biological reactions by lowering activation energy.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Draw a peptide bond formation between two amino acids; label the bond and identify the new N-terminus and C-terminus.</div>
+          <div class="exam-tip">Explain the different levels of protein structure and the forces stabilising each.</div>
+          <div class="exam-tip">Predict the effect of denaturation (heat, pH, chemical) on protein function.</div>
+          <div class="exam-tip">Relate amino acid structure (R-group polarity) to protein folding and function.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s02-2">
+      <div class="topic-header" onclick="toggleTopic('s02-2')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Carbohydrates</div>
+          <div class="topic-detail">Monosaccharides, disaccharides, polysaccharides, glycosidic bonds, structural and functional roles.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Monosaccharides (monosackarider):</strong> Simple sugars (C, H, O in ratio roughly 1:2:1). Glucose (6-carbon, hexose), fructose (isomer of glucose), ribose (5-carbon, pentose). Exist as linear form (aldehyde group) or cyclic forms (hemiacetal, most stable in aqueous solution). Ring forms (α and β anomers) differ in configuration at anomeric carbon.</div>
+          <div class="concept-item"><strong>Disaccharides (disackarider):</strong> Two monosaccharide units joined by glycosidic bond. Examples: sucrose (glucose + fructose), lactose (glucose + galactose), maltose (glucose + glucose). Glycosidic bond formation is condensation reaction; hydrolysis reverses it.</div>
+          <div class="concept-item"><strong>Polysaccharides (polysackarider):</strong> Many monosaccharide units joined. Starch (plants, storage, linear amylose and branched amylopectin), glycogen (animals, storage, highly branched), cellulose (structural, rigidity). Different branching and linkage types (α vs β) affect digestibility and properties.</div>
+          <div class="concept-item"><strong>Glycosidic bonds (glykosidiska bindningar):</strong> C–O–C linkages between monosaccharides. α-linkages (e.g., in starch) can be hydrolysed by human enzymes (amylase); β-linkages (e.g., in cellulose) cannot (no cellulase in humans).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Monosaccharide (monosackärid):</span> Simple sugar; single polyhydroxy aldehyde or ketone.</div>
+            <div class="term-item"><span class="term-word">Reducing sugar (reducerande sockrar):</span> Contains free aldehyde or ketone group; can be oxidised (tests positive with Fehling's or Benedict's reagent).</div>
+            <div class="term-item"><span class="term-word">Glycosidic linkage (glykosidisk bindning):</span> Bond between atoms of two monosaccharides.</div>
+            <div class="term-item"><span class="term-word">Hydrolysis (hydrolys):</span> Reaction with water that breaks bonds (e.g., polysaccharides → monosaccharides).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Draw a disaccharide formation (condensation) showing glycosidic bond formation and the water molecule released.</div>
+          <div class="exam-tip">Explain why starch is digestible but cellulose is not, in terms of enzyme specificity and glycosidic bond types.</div>
+          <div class="exam-tip">Compare properties of starch, glycogen, and cellulose in relation to their structure and biological roles.</div>
+          <div class="exam-tip">Predict products of hydrolysis of di- or polysaccharides.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s02-3">
+      <div class="topic-header" onclick="toggleTopic('s02-3')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Lipids</div>
+          <div class="topic-detail">Fatty acids, triglycerides, saturated vs unsaturated, phospholipids, membranes, properties.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Fatty acids (fettsyror):</strong> Long hydrocarbon chains (typically 16–18 carbons) with –COOH at end. Saturated (single bonds, straight chain, solid at room temp, e.g., palmitic acid) vs unsaturated (C=C double bonds, kinked shape, liquid at room temp, e.g., oleic acid). Double bond configuration (cis, more kinked) vs trans (more straight, less natural).</div>
+          <div class="concept-item"><strong>Triglycerides (triacylglycerols):</strong> Glycerol + 3 fatty acids via ester linkages. Energy storage (fats and oils). Saturated fats are more stable but associated with health risks; unsaturated fats are healthier. Hydrolysis produces glycerol + fatty acids.</div>
+          <div class="concept-item"><strong>Phospholipids (fosfolipider):</strong> Glycerol + 2 fatty acids + phosphate group. Amphipathic: hydrophobic tail (fatty acids) and hydrophilic head (phosphate). Self-assemble into bilayers in water (cell membrane structure). Head faces aqueous environment, tails face each other.</div>
+          <div class="concept-item"><strong>Cell membrane structure:</strong> Phospholipid bilayer with embedded proteins. Hydrophobic barrier prevents passage of polar molecules (ions, glucose). Selective permeability via transport proteins. Fluidity affected by cholesterol and degree of unsaturation in fatty acids.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Lipid (lipid):</span> Hydrophobic or amphipathic organic compound; includes fats, oils, waxes, phospholipids.</div>
+            <div class="term-item"><span class="term-word">Saturated fatty acid (mättad fettsyra):</span> No C=C double bonds; straight chain; higher melting point.</div>
+            <div class="term-item"><span class="term-word">Unsaturated fatty acid (omättad fettsyra):</span> Contains C=C double bonds; kinked structure; lower melting point; more fluid.</div>
+            <div class="term-item"><span class="term-word">Amphipathic:</span> Molecule with both hydrophobic and hydrophilic regions.</div>
+            <div class="term-item"><span class="term-word">Ester linkage (esterbindning):</span> C–O bond formed between carboxylic acid and alcohol groups.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Draw the structure of a triglyceride showing ester linkages; explain hydrolysis to glycerol + fatty acids.</div>
+          <div class="exam-tip">Explain phospholipid structure and its role in cell membranes (bilayer formation, selective permeability).</div>
+          <div class="exam-tip">Compare properties of saturated and unsaturated fatty acids; relate structure to health implications.</div>
+          <div class="exam-tip">Explain why phospholipids are amphipathic and how this enables membrane structure.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s02-4">
+      <div class="topic-header" onclick="toggleTopic('s02-4')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Nucleic Acids & DNA</div>
+          <div class="topic-detail">Nucleotides, base pairing, double helix structure, replication, genetic code basics.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Nucleotides (nukleotider):</strong> Building blocks of DNA and RNA. Three components: nitrogenous base (purine or pyrimidine), pentose sugar (ribose in RNA, deoxyribose in DNA), phosphate group. Connected by phosphodiester bonds (sugar-phosphate backbone).</div>
+          <div class="concept-item"><strong>DNA (deoxyribonucleic acid):</strong> Double-stranded molecule. Bases: adenine (A), thymine (T), guanine (G), cytosine (C). Base pairing rules (complementarity): A–T (2 H-bonds), G–C (3 H-bonds). Double helix structure: two antiparallel sugar-phosphate strands twisted around each other.</div>
+          <div class="concept-item"><strong>Complementary base pairing:</strong> Enables replication. Template strand directs synthesis of new strand. Each new DNA molecule = original strand + newly synthesised complementary strand (semiconservative replication).</div>
+          <div class="concept-item"><strong>Genetic code:</strong> Triplet codons (3 bases) code for amino acids. Redundancy: multiple codons for same amino acid. mRNA carries code from nucleus to ribosomes. tRNA brings correct amino acids. Start codon (AUG), stop codons (UAA, UAG, UGA).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Nucleotide (nukleotid):</span> Monomer of nucleic acids; contains sugar, phosphate, and nitrogenous base.</div>
+            <div class="term-item"><span class="term-word">Purine (purin):</span> Two-ring nitrogenous base (adenine, guanine).</div>
+            <div class="term-item"><span class="term-word">Pyrimidine (pyrimidin):</span> One-ring nitrogenous base (cytosine, thymine, uracil).</div>
+            <div class="term-item"><span class="term-word">Double helix:</span> Two-stranded spiral structure of DNA held together by base pairing and H-bonds.</div>
+            <div class="term-item"><span class="term-word">Antiparallel (antiparallell):</span> Strands run in opposite directions (5' → 3' and 3' → 5').</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Draw nucleotide structure showing sugar, phosphate, and base.</div>
+          <div class="exam-tip">Explain complementary base pairing and its role in DNA replication.</div>
+          <div class="exam-tip">Draw portion of double helix showing base pairing and hydrogen bonds.</div>
+          <div class="exam-tip">Given a DNA template strand, write the sequence of the complementary strand and the mRNA transcribed from it.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s02-5">
+      <div class="topic-header" onclick="toggleTopic('s02-5')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Enzymes & Catalysis</div>
+          <div class="topic-detail">Enzyme structure, mechanism, specificity, factors affecting activity (temperature, pH, substrate concentration), inhibition.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Enzyme (enzym):</strong> Biological catalyst (usually protein). Speeds up reaction without being consumed. Enzyme + substrate → enzyme–substrate complex → enzyme + product. Lowers activation energy by stabilising transition state.</div>
+          <div class="concept-item"><strong>Enzyme specificity (enzymspecificitet):</strong> Each enzyme catalyses one specific reaction (or type of reaction). Lock-and-key or induced-fit model: active site precisely shaped to bind substrate. Allows metabolism to be controlled and directed.</div>
+          <div class="concept-item"><strong>Temperature effect:</strong> Increasing temperature speeds up enzyme activity (more collisions) until denaturation temperature (~37°C for human enzymes). Beyond optimal temp, enzyme denatures and activity drops sharply.</div>
+          <div class="concept-item"><strong>pH effect:</strong> Each enzyme has optimal pH (neutral for most, acidic for pepsin, alkaline for trypsin). Changes in pH alter ionisation of active site and can denature protein.</div>
+          <div class="concept-item"><strong>Substrate concentration effect:</strong> At low [substrate], rate increases linearly (first-order). At high [substrate], rate plateaus (zero-order) when enzyme is saturated (Vmax). Enzyme concentration is directly proportional to reaction rate.</div>
+          <div class="concept-item"><strong>Inhibition:</strong> Competitive inhibition: inhibitor competes with substrate for active site (can be reversed by increasing [substrate]). Non-competitive inhibition: inhibitor binds elsewhere, reducing enzyme activity (cannot be reversed by increasing [substrate]).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Active site (aktivt ställe):</span> Pocket in enzyme where substrate binds and reaction occurs.</div>
+            <div class="term-item"><span class="term-word">Substrate (substrat):</span> Molecule that enzyme acts upon.</div>
+            <div class="term-item"><span class="term-word">Cofactor (kofaktor):</span> Non-protein helper (e.g., metal ion, vitamin) required for enzyme activity.</div>
+            <div class="term-item"><span class="term-word">Denaturation (denaturering):</span> Loss of enzyme structure and activity due to heat, pH, or chemical.</div>
+            <div class="term-item"><span class="term-word">Vmax:</span> Maximum velocity; rate when enzyme is saturated with substrate.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">Enzyme + Substrate ⇌ ES → Enzyme + Product<div class="formula-note">Michaelis–Menten model of enzyme kinetics</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Explain enzyme specificity using lock-and-key or induced-fit model.</div>
+          <div class="exam-tip">Predict and explain the effect of temperature and pH changes on enzyme activity (with graphs).</div>
+          <div class="exam-tip">Interpret Michaelis–Menten curves: identify Vmax, Km, effects of substrate concentration, and enzyme concentration.</div>
+          <div class="exam-tip">Distinguish between competitive and non-competitive inhibition with examples and explanations.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 03: KEMISK JÄMVIKT & REAKTIONSKINETIK ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('s03')">
+    <div class="section-number">03</div>
+    <div class="section-title">Kemisk Jämvikt & Reaktionskinetik — Equilibrium & Kinetics</div>
+    <span class="section-arrow open" id="arrow-s03">▸</span>
+  </div>
+  <div class="topic-list" id="body-s03">
+
+    <div class="topic" id="topic-s03-1">
+      <div class="topic-header" onclick="toggleTopic('s03-1')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Chemical Equilibrium</div>
+          <div class="topic-detail">Dynamic equilibrium, equilibrium constant Kc, Le Chatelier's principle, shifts in equilibrium.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Dynamic equilibrium (dynamisk jämvikt):</strong> Forward and reverse reactions occur simultaneously at equal rates. Macroscopic properties (concentrations, colour, pH) remain constant, but reactions continue at molecular level. Not a static state.</div>
+          <div class="concept-item"><strong>Equilibrium constant (jämviktskonstant), Kc:</strong> For reaction aA + bB ⇌ cC + dD, Kc = [C]^c[D]^d / [A]^a[B]^b at equilibrium. Dimensionless (in Kemi 2, assuming concentrations in mol/L). Kc independent of initial concentrations or pressure but depends on temperature. Large Kc (>1) favours products; small Kc (<1) favours reactants.</div>
+          <div class="concept-item"><strong>Le Chatelier's principle (Le Chateliers princip):</strong> If a system at equilibrium is disturbed, it shifts to counteract the disturbance. Increasing pressure/decreasing volume: shifts towards side with fewer moles of gas. Increasing temperature: shifts towards endothermic direction. Changing concentrations: shifts to reduce the changed substance.</div>
+          <div class="concept-item"><strong>Effect of catalysts:</strong> Catalysts speed up both forward and reverse reactions equally. Do not shift equilibrium position but allow equilibrium to be reached faster. Do not change Kc.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Equilibrium (jämvikt):</span> State where forward and reverse reaction rates are equal; macroscopic properties unchanged.</div>
+            <div class="term-item"><span class="term-word">Kc:</span> Equilibrium constant (concentration-based). Characteristic of each reaction at a given temperature.</div>
+            <div class="term-item"><span class="term-word">Heterogeneous equilibrium:</span> Equilibrium involving different phases (gas, liquid, solid). Pure solids and liquids excluded from Kc expression.</div>
+            <div class="term-item"><span class="term-word">Reversible reaction (reversibel reaktion):</span> Reaction that can proceed in both directions.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">Kc = [C]^c[D]^d / [A]^a[B]^b<div class="formula-note">Equilibrium constant expression (concentration-based)</div></div>
+          <div class="formula-card">Kp = (P_C)^c(P_D)^d / (P_A)^a(P_B)^b<div class="formula-note">Equilibrium constant for gases (partial pressures)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Write Kc expressions for equilibrium reactions; remember to exclude pure solids and pure liquids.</div>
+          <div class="exam-tip">Calculate Kc given equilibrium concentrations.</div>
+          <div class="exam-tip">Predict direction of shift when conditions change (temperature, pressure, concentration) using Le Chatelier's principle.</div>
+          <div class="exam-tip">Use ICE tables (Initial, Change, Equilibrium) to calculate equilibrium concentrations from Kc and initial concentrations.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s03-2">
+      <div class="topic-header" onclick="toggleTopic('s03-2')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Reaction Rate & Kinetics</div>
+          <div class="topic-detail">Collision theory, activation energy, factors affecting rate, rate equations, catalysts.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Collision theory (stötteorin):</strong> Reaction occurs when molecules collide with sufficient energy (≥ activation energy, Ea) and correct orientation. Reaction rate depends on frequency of collisions, fraction with sufficient energy, and orientation factor.</div>
+          <div class="concept-item"><strong>Activation energy (aktiveringsenegi), Ea:</strong> Energy barrier that reactants must overcome to form products. High Ea → slow reaction. Lowering Ea (e.g., with catalyst) increases rate exponentially (Arrhenius equation).</div>
+          <div class="concept-item"><strong>Temperature effect:</strong> Increasing temperature increases kinetic energy of molecules and collision frequency. Both effects increase reaction rate. Rule of thumb: 10°C increase → rate doubles (depends on Ea).</div>
+          <div class="concept-item"><strong>Concentration effect:</strong> Increasing reactant concentration increases collision frequency → faster rate. Often follows rate law: rate = k[A]^m[B]^n where m and n are reaction orders (determined experimentally, not from stoichiometry).</div>
+          <div class="concept-item"><strong>Surface area effect:</strong> Increasing surface area (grinding solids, stirring) increases contact between reactants → faster rate.</div>
+          <div class="concept-item"><strong>Catalyst (katalysator):</strong> Speeds up reaction without being consumed. Lowers Ea by providing alternative pathway. Does not change ΔG or equilibrium position, only the rate at which equilibrium is reached.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Reaction rate (reaktionshastighet):</span> Change in concentration per unit time (mol/(L·s)).</div>
+            <div class="term-item"><span class="term-word">Order of reaction (reaktionsordning):</span> Power of concentration in rate law; determined experimentally, not from equation coefficients.</div>
+            <div class="term-item"><span class="term-word">Rate constant (hastighetskonstant), k:</span> Proportionality constant in rate law; depends on temperature.</div>
+            <div class="term-item"><span class="term-word">Homogeneous catalyst:</span> Catalyst in same phase as reactants; often forms intermediate with reactant.</div>
+            <div class="term-item"><span class="term-word">Heterogeneous catalyst:</span> Catalyst in different phase (e.g., solid catalyst with gaseous reactants).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">Rate = k[A]^m[B]^n<div class="formula-note">Rate law (m and n determined experimentally)</div></div>
+          <div class="formula-card">ln(k₂/k₁) = (Ea/R) · (1/T₁ − 1/T₂)<div class="formula-note">Arrhenius equation (effect of temperature on rate constant)</div></div>
+          <div class="formula-card">t₁/₂ = (ln 2) / k = 0.693 / k<div class="formula-note">Half-life for first-order reaction</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Use collision theory to explain how temperature, concentration, and catalysts affect reaction rate.</div>
+          <div class="exam-tip">Determine order of reaction from experimental data (initial rate method or concentration-time graphs).</div>
+          <div class="exam-tip">Write rate laws and calculate rate constant k from experimental data.</div>
+          <div class="exam-tip">Draw reaction coordinate diagram showing Ea, ΔH, and effect of catalyst.</div>
+          <div class="exam-tip">Calculate half-life for first-order reactions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s03-3">
+      <div class="topic-header" onclick="toggleTopic('s03-3')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Acids, Bases & pH</div>
+          <div class="topic-detail">Brønsted-Lowry definition, pH scale, strong vs weak acids/bases, buffers, titrations, neutralisation.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Brønsted-Lowry definition:</strong> Acid = proton (H⁺) donor; base = proton acceptor. Water can be both (amphiprotic). Conjugate acid-base pairs differ by one H⁺ (e.g., HCl/Cl⁻, NH₄⁺/NH₃).</div>
+          <div class="concept-item"><strong>pH scale:</strong> pH = −log[H⁺]. pH 7 = neutral (at 25°C), pH < 7 = acidic, pH > 7 = basic. Each unit change = 10× change in [H⁺]. pOH = −log[OH⁻]. pH + pOH = 14 (at 25°C).</div>
+          <div class="concept-item"><strong>Strong acids (starka syror):</strong> Completely dissociate: HCl, HBr, HI, HNO₃, H₂SO₄, HClO₄. Examples: 0.1 mol/L HCl has pH = 1 (100% dissociation).</div>
+          <div class="concept-item"><strong>Weak acids (svaga syror):</strong> Partially dissociate: CH₃COOH, HF, etc. Equilibrium: HA ⇌ H⁺ + A⁻. Ka = [H⁺][A⁻]/[HA]. Stronger weak acid = larger Ka. 0.1 mol/L CH₃COOH has pH ≈ 2.9 (partial dissociation).</div>
+          <div class="concept-item"><strong>Strong bases (starka baser):</strong> Completely dissociate: NaOH, KOH, etc. 0.1 mol/L NaOH has pH = 13.</div>
+          <div class="concept-item"><strong>Weak bases (svaga baser):</strong> Partially accept protons: NH₃, amines. Kb = [NH₄⁺][OH⁻]/[NH₃]. Stronger weak base = larger Kb.</div>
+          <div class="concept-item"><strong>Buffer (buffert):</strong> Solution of weak acid + conjugate base (or weak base + conjugate acid) that resists pH change. Henderson-Hasselbalch: pH = pKa + log([A⁻]/[HA]). Buffer capacity depends on concentrations of acid and conjugate base.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">pH:</span> Negative logarithm of hydrogen ion concentration; measure of acidity.</div>
+            <div class="term-item"><span class="term-word">Ka (acid dissociation constant):</span> Equilibrium constant for acid dissociation; larger Ka = stronger acid.</div>
+            <div class="term-item"><span class="term-word">Kb (base dissociation constant):</span> Equilibrium constant for base ionisation; larger Kb = stronger base.</div>
+            <div class="term-item"><span class="term-word">Conjugate acid-base pair:</span> Two species differing by one H⁺; related by acid-base equilibrium.</div>
+            <div class="term-item"><span class="term-word">Titration (titrering):</span> Procedure to determine concentration by reaction with known volume and concentration of another solution.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">pH = −log[H⁺]<div class="formula-note">Definition of pH</div></div>
+          <div class="formula-card">[H⁺][OH⁻] = Kw = 1.0 × 10⁻¹⁴ (at 25°C)<div class="formula-note">Ionic product of water</div></div>
+          <div class="formula-card">Ka = [H⁺][A⁻] / [HA]<div class="formula-note">Acid dissociation constant</div></div>
+          <div class="formula-card">pH = pKa + log([A⁻]/[HA])<div class="formula-note">Henderson-Hasselbalch equation (buffer pH)</div></div>
+          <div class="formula-card">n(acid) = n(base) at equivalence point (for titration)</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Calculate pH from [H⁺] and vice versa; calculate [OH⁻] from pH.</div>
+          <div class="exam-tip">Distinguish between strong and weak acids/bases; predict relative pH values.</div>
+          <div class="exam-tip">Calculate Ka or Kb from pH and concentration data.</div>
+          <div class="exam-tip">Design a buffer with target pH using Henderson-Hasselbalch equation.</div>
+          <div class="exam-tip">Titration calculations: given volume and concentration of titrant, calculate concentration of analyte.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s03-4">
+      <div class="topic-header" onclick="toggleTopic('s03-4')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Solubility Equilibrium</div>
+          <div class="topic-detail">Ksp (solubility product), precipitation, common ion effect, qualitative analysis.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Solubility product (löslighetsprodukt), Ksp:</strong> For salt AB ⇌ A⁺ + B⁻, Ksp = [A⁺][B⁻] at saturation. Small Ksp = sparingly soluble salt. Independent of amount of solid present. Temperature-dependent.</div>
+          <div class="concept-item"><strong>Precipitation (utfällning):</strong> When [A⁺][B⁻] > Ksp, solid forms (unsaturated → supersaturated → precipitation). Useful for separating ions. Reverse is dissolution (auflösung).</div>
+          <div class="concept-item"><strong>Common ion effect (gemensam joneffekt):</strong> Adding a common ion (e.g., Cl⁻ to AgCl solution) shifts equilibrium left, decreasing solubility of AgCl. Can be used to drive precipitation (salting out).</div>
+          <div class="concept-item"><strong>Qualitative analysis:</strong> Using selective precipitation reactions to identify and separate ions (e.g., Ag⁺ precipitated with Cl⁻ as AgCl).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Ksp:</span> Solubility product constant; product of ion concentrations at saturation.</div>
+            <div class="term-item"><span class="term-word">Solubility (löslighet):</span> Maximum amount of solute that dissolves in solvent (mol/L or g/100mL).</div>
+            <div class="term-item"><span class="term-word">Saturated solution:</span> Solution containing maximum dissolved solute at given temperature; equilibrium with solid.</div>
+            <div class="term-item"><span class="term-word">Ion product, Q:</span> Product of ion concentrations at any time (not necessarily at equilibrium). If Q > Ksp, precipitation occurs.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">Ksp = [A⁺][B⁻] (for AB salt)<div class="formula-note">General solubility product expression</div></div>
+          <div class="formula-card">Q = [A⁺][B⁻] (ionic product at any time)<div class="formula-note">If Q < Ksp: dissolution; Q = Ksp: equilibrium; Q > Ksp: precipitation</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Calculate solubility of a salt from Ksp (and vice versa).</div>
+          <div class="exam-tip">Predict whether precipitation occurs given ion concentrations and Ksp.</div>
+          <div class="exam-tip">Determine the effect of common ion on solubility; show quantitatively using Ksp.</div>
+          <div class="exam-tip">Explain qualitative analysis schemes using selective precipitation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s03-5">
+      <div class="topic-header" onclick="toggleTopic('s03-5')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Thermodynamics Overview</div>
+          <div class="topic-detail">Enthalpy ΔH, entropy ΔS, Gibbs free energy ΔG, spontaneity, energy diagrams.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Enthalpy (entalpi), ΔH:</strong> Heat released or absorbed at constant pressure. Exothermic (ΔH < 0, heat released) vs endothermic (ΔH > 0, heat absorbed). Measured in kJ/mol. Combustion and many common reactions are exothermic.</div>
+          <div class="concept-item"><strong>Entropy (entropi), ΔS:</strong> Measure of disorder or randomness. ΔS > 0 for spontaneous processes (overall). Gas formation increases entropy. Dissolution usually increases entropy. Low temperature favours negative ΔS; high temperature can overcome it.</div>
+          <div class="concept-item"><strong>Gibbs free energy (Gibbs fri energi), ΔG:</strong> ΔG = ΔH − TΔS. Predicts spontaneity: ΔG < 0 = spontaneous (forward), ΔG > 0 = non-spontaneous (reverse), ΔG = 0 = equilibrium. Temperature can change sign of ΔG for some reactions.</div>
+          <div class="concept-item"><strong>Spontaneity:</strong> Depends on both ΔH and ΔS (not just heat). Exothermic + entropy increase (ΔH < 0, ΔS > 0) always spontaneous. Endothermic + entropy decrease (ΔH > 0, ΔS < 0) never spontaneous. Other cases depend on temperature.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Exothermic:</span> Reaction that releases heat (ΔH < 0).</div>
+            <div class="term-item"><span class="term-word">Endothermic:</span> Reaction that absorbs heat (ΔH > 0).</div>
+            <div class="term-item"><span class="term-word">Spontaneous (spontan):</span> Reaction that can proceed without continuous external energy input (ΔG < 0).</div>
+            <div class="term-item"><span class="term-word">Non-spontaneous (icke-spontan):</span> Reaction that requires external energy input to proceed (ΔG > 0).</div>
+            <div class="term-item"><span class="term-word">System (system):</span> The part of the universe we are studying (e.g., reaction flask); surroundings are everything else.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Formulas</div>
+          <div class="formula-card">ΔG = ΔH − TΔS<div class="formula-note">Gibbs free energy at constant T and P</div></div>
+          <div class="formula-card">ΔG° = −RT ln(K)<div class="formula-note">Relation between ΔG and equilibrium constant</div></div>
+          <div class="formula-card">ΔH°_rxn = Σ ΔH°_f(products) − Σ ΔH°_f(reactants)<div class="formula-note">Hess's law using standard enthalpies of formation</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Calculate ΔH using Hess's law or Σ(products) − Σ(reactants) with ΔH°f values.</div>
+          <div class="exam-tip">Predict sign of ΔS for a reaction based on phases and disorder change.</div>
+          <div class="exam-tip">Use ΔG = ΔH − TΔS to determine spontaneity at different temperatures.</div>
+          <div class="exam-tip">Explain why some endothermic reactions are spontaneous (e.g., melting ice above 0°C).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 04: ANALYTISK KEMI ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('s04')">
+    <div class="section-number">04</div>
+    <div class="section-title">Analytisk Kemi — Analytical Chemistry</div>
+    <span class="section-arrow open" id="arrow-s04">▸</span>
+  </div>
+  <div class="topic-list" id="body-s04">
+
+    <div class="topic" id="topic-s04-1">
+      <div class="topic-header" onclick="toggleTopic('s04-1')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Qualitative Analysis</div>
+          <div class="topic-detail">Flame tests, precipitation reactions, identifying ions, classification schemes.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Flame tests (flammtest):</strong> Heating salts in flame produces characteristic colours due to electron transitions. Sodium (yellow), potassium (lilac), calcium (brick-red), copper (blue-green), barium (green). Quick, cheap, qualitative test for metal cations.</div>
+          <div class="concept-item"><strong>Precipitation reactions:</strong> Adding reagents (e.g., Cl⁻, OH⁻, CO₃²⁻) to identify ions. AgNO₃ + Cl⁻ → AgCl (white); Pb²⁺ + SO₄²⁻ → PbSO₄ (white); Fe³⁺ + OH⁻ → Fe(OH)₃ (brown); Cu²⁺ + OH⁻ → Cu(OH)₂ (blue). Colour and solubility characteristics aid identification.</div>
+          <div class="concept-item"><strong>Classification schemes:</strong> Systematic approach: first identify cations (by flame test, precipitation) then anions (by precipitation, gas evolution). Selective precipitation separates groups of ions.</div>
+          <div class="concept-item"><strong>Common interfering ions:</strong> Some ions can mask others in tests. Eg. Fe³⁺ can interfere with Cr₃⁺ tests due to similar precipitate colours. Requires careful control and multiple tests for confirmation.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Qualitative analysis (kvalitativ analys):</span> Identification of substances without determining quantities.</div>
+            <div class="term-item"><span class="term-word">Cation (katjon):</span> Positively charged ion (e.g., Na⁺, Cu²⁺).</div>
+            <div class="term-item"><span class="term-word">Anion (anjon):</span> Negatively charged ion (e.g., Cl⁻, SO₄²⁻).</div>
+            <div class="term-item"><span class="term-word">Reagent (reagens):</span> Substance added to a sample to detect or identify another substance.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Identify ions based on flame test colours and precipitation reactions.</div>
+          <div class="exam-tip">Write ionic equations for precipitation reactions; identify precipitate colour and formula.</div>
+          <div class="exam-tip">Design a simple qualitative analysis scheme for a mixture of ions.</div>
+          <div class="exam-tip">Interpret experimental observations (colour, gas evolution) to propose ion identities.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s04-2">
+      <div class="topic-header" onclick="toggleTopic('s04-2')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Quantitative Analysis</div>
+          <div class="topic-detail">Titrations, gravimetric analysis, volumetric methods, calculations.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Titration (titrering):</strong> A standard solution (titrant, of known concentration and volume) is gradually added to an unknown solution (analyte) until the equivalence point (molar equivalence). Indicator signals endpoint (close to but not exactly equivalence point). Calculation: n(acid) = n(base) at equivalence point → concentration of analyte.</div>
+          <div class="concept-item"><strong>Gravimetric analysis (gravimetrisk analys):</strong> Determine analyte by converting to a stable precipitate (e.g., AgCl), filtering, drying, and weighing. Calculation: mass of analyte = (mass of precipitate × molar mass of analyte) / molar mass of precipitate. Requires stoichiometry and exact molar mass knowledge.</div>
+          <div class="concept-item"><strong>Volumetric methods:</strong> Determine concentration from volume measurements (titrations, dilutions). Precision depends on glassware (burette > graduated cylinder). Requires calibrated equipment and careful technique (reading meniscus correctly, zero at start).</div>
+          <div class="concept-item"><strong>Standard solution (standardlösning):</strong> Solution of precisely known concentration, used as titrant. Made by dissolving weighed solid in solvent and diluting to mark in volumetric flask (not graduated cylinder, which has lower accuracy).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Titrant:</span> Solution of known concentration added during titration.</div>
+            <div class="term-item"><span class="term-word">Analyte:</span> Substance being analysed (concentration unknown).</div>
+            <div class="term-item"><span class="term-word">Equivalence point (ekvivalenspunkt):</span> Point in titration when molar amounts are exactly equal (stoichiometric).</div>
+            <div class="term-item"><span class="term-word">Endpoint (slutpunkt):</span> Visual indicator of when to stop titration; usually close to but not exactly equivalence point.</div>
+            <div class="term-item"><span class="term-word">Precipitate (nederbörd):</span> Solid formed when ions combine in solution.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Titration calculations: given volume and concentration of titrant, calculate concentration of analyte.</div>
+          <div class="exam-tip">Gravimetric calculations: given mass of precipitate, calculate mass of analyte.</div>
+          <div class="exam-tip">Design a titration for given analyte (choose appropriate titrant, indicator).</div>
+          <div class="exam-tip">Explain sources of error in titrations and gravimetric analysis.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s04-3">
+      <div class="topic-header" onclick="toggleTopic('s04-3')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Spectroscopic Methods</div>
+          <div class="topic-detail">Infrared (IR) spectroscopy, mass spectrometry basics, UV-visible spectroscopy, identifying compounds.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Infrared spectroscopy (IR-spektroskopi):</strong> Molecules absorb IR radiation and vibrate. Different bonds absorb at characteristic frequencies. O–H stretch (broad, 3300–3500 cm⁻¹), N–H stretch (3300–3500 cm⁻¹), C=O stretch (carbonyl, 1700–1750 cm⁻¹), C–H stretches (2800–3000 cm⁻¹), C–O stretch (1000–1300 cm⁻¹). Useful for identifying functional groups.</div>
+          <div class="concept-item"><strong>Mass spectrometry (MS):</strong> Ionises sample into charged fragments. Measured by mass-to-charge ratio (m/z). Molecular ion peak (M⁺) gives molar mass. Fragment peaks indicate bonds broken (e.g., loss of CO from carbonyl compounds). Helps determine molecular structure.</div>
+          <div class="concept-item"><strong>UV-visible spectroscopy (UV-Vis):</strong> Coloured compounds absorb UV or visible light due to electronic transitions. Beer-Lambert law: A = εcl (absorbance = molar absorptivity × concentration × path length). Used for quantitative analysis (calibration curve method) and identifying compounds with conjugation.</div>
+          <div class="concept-item"><strong>Interpretation:</strong> Combine spectra: IR identifies functional groups, MS gives molar mass and structure clues, NMR (not always in Kemi 2 but useful) gives exact connectivity.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Absorption (absorption):</span> Process where molecule absorbs electromagnetic radiation and transitions to higher energy state.</div>
+            <div class="term-item"><span class="term-word">Wavelength (våglängd), λ:</span> Distance between consecutive wave peaks; measured in nanometres (nm) for UV-Vis, micrometres (μm) or cm⁻¹ for IR.</div>
+            <div class="term-item"><span class="term-word">Molar absorptivity (molär absorptivitet), ε:</span> Constant relating absorbance to concentration; characteristic of each molecule at given wavelength.</div>
+            <div class="term-item"><span class="term-word">Molecular ion peak (molekyljon-peak), M⁺:</span> Peak in mass spectrum corresponding to intact ionised molecule; indicates molar mass.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Interpret IR spectra: identify presence of O–H, N–H, C=O, C–O based on peak positions and intensities.</div>
+          <div class="exam-tip">Use mass spectrum to determine molecular ion peak (molar mass) and propose structure from fragment peaks.</div>
+          <div class="exam-tip">Apply Beer-Lambert law: calculate concentration from absorbance and ε, or vice versa.</div>
+          <div class="exam-tip">Use UV-Vis data with calibration curve to determine unknown concentration.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s04-4">
+      <div class="topic-header" onclick="toggleTopic('s04-4')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Chromatography</div>
+          <div class="topic-detail">Paper chromatography, thin-layer chromatography (TLC), column chromatography, gas chromatography (GC), Rf values.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Paper chromatography (papperskromatografi):</strong> Sample placed on paper (stationary phase), paper dipped in solvent (mobile phase). Solvent carries components up the paper at different rates based on solubility (partition). Separated by degree of solubility in mobile phase relative to paper.</div>
+          <div class="concept-item"><strong>Thin-layer chromatography (TLC):</strong> Similar principle but faster and more efficient. Sample on thin layer of adsorbent on glass/plastic. Solvent front moves up. Rf = distance component moved / distance solvent moved. Same component always has same Rf under same conditions; useful for identifying substances and checking purity.</div>
+          <div class="concept-item"><strong>Column chromatography:</strong> Solvent flows down a column filled with adsorbent (or solid support). Compounds elute (come out) at different times based on affinity for adsorbent and solvent. Useful for separating and purifying compounds; can collect pure fractions.</div>
+          <div class="concept-item"><strong>Gas chromatography (GC):</strong> Vaporised sample injected into column (often capillary) carried by inert gas. Separation based on boiling point and interaction with stationary phase. Detector measures concentration. Retention time (time to elute) characteristic of each compound; area under peak proportional to amount.</div>
+          <div class="concept-item"><strong>Rf value (retention factor):</strong> 0 < Rf < 1. Larger Rf = more soluble in mobile phase (travels further). Same substance = same Rf; different substance = different Rf (under same conditions). Used to identify compounds and assess purity.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Chromatography (kromatografi):</span> Separation technique based on differential affinity between stationary and mobile phases.</div>
+            <div class="term-item"><span class="term-word">Stationary phase (stationär fas):</span> Medium that remains fixed (paper, adsorbent, liquid on support).</div>
+            <div class="term-item"><span class="term-word">Mobile phase (mobil fas):</span> Solvent that moves through the system (water, organic solvent).</div>
+            <div class="term-item"><span class="term-word">Rf value (Rf):</span> Ratio of distance travelled by solute to distance travelled by solvent front.</div>
+            <div class="term-item"><span class="term-word">Elution (elution):</span> Process of solute passing through and out of the chromatography system.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Calculate and interpret Rf values from chromatograms; use to identify compounds or assess purity.</div>
+          <div class="exam-tip">Explain the principle of separation in each chromatographic method (partition, adsorption, etc.).</div>
+          <div class="exam-tip">Design a TLC experiment to separate a mixture and identify components.</div>
+          <div class="exam-tip">Interpret GC data: identify peaks, retention times, and peak areas (proportional to amounts).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 05: LABORATIONER & KEMINS KARAKTÄR ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('s05')">
+    <div class="section-number">05</div>
+    <div class="section-title">Laborationer & Kemins Karaktär — Lab Skills & Nature of Chemistry</div>
+    <span class="section-arrow open" id="arrow-s05">▸</span>
+  </div>
+  <div class="topic-list" id="body-s05">
+
+    <div class="topic" id="topic-s05-1">
+      <div class="topic-header" onclick="toggleTopic('s05-1')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Planning & Conducting Experiments</div>
+          <div class="topic-detail">Safety, risk assessment, experimental design, methodology, reproducibility.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Safety (säkerhet):</strong> Essential in any lab. Wear safety glasses, lab coat, closed shoes. Know location of emergency equipment (eyewash, shower, first aid kit). Handle hazardous chemicals carefully (read labels, use fume hood for volatiles). Never eat/drink in lab. Waste disposal follows regulations.</div>
+          <div class="concept-item"><strong>Risk assessment (riskbedömning):</strong> Identify hazards (chemical, physical, biological), assess likelihood and severity, implement controls (PPE, ventilation, dilution, substitution of less hazardous material). COSHH assessment (Control of Substances Hazardous to Health) required before experiment.</div>
+          <div class="concept-item"><strong>Experimental design:</strong> Clear research question, testable hypothesis. Identify independent variable (what you change), dependent variable (what you measure), control variables (what you keep constant). Adequate number of replicates (usually ≥3). Valid controls (blank, negative, positive as appropriate).</div>
+          <div class="concept-item"><strong>Methodology (metodologi):</strong> Detailed, step-by-step procedure allowing others to replicate. Record all observations (colour changes, temperature, gas evolution, etc.). Measure quantities precisely (use appropriate glassware: burettes, pipettes, volumetric flasks for accuracy).</div>
+          <div class="concept-item"><strong>Reproducibility (reproducerbarhet):</strong> Experiment gives consistent results when repeated. High reproducibility indicates good technique and controls. Variation between replicates indicates random error; systematic error if all consistently high/low.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Safety (säkerhet):</span> Freedom from risk or hazard; critical in laboratory work.</div>
+            <div class="term-item"><span class="term-word">Hazard (fara):</span> Property of substance or procedure that can cause harm.</div>
+            <div class="term-item"><span class="term-word">Risk (risk):</span> Probability and magnitude of harm if hazard is realised.</div>
+            <div class="term-item"><span class="term-word">Control variable (kontrollvariabel):</span> Variable kept constant to isolate effect of independent variable.</div>
+            <div class="term-item"><span class="term-word">Replicate (replikat):</span> Repeated measurement under identical conditions.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Identify hazards and risks in a given experiment; suggest appropriate control measures.</div>
+          <div class="exam-tip">Design an experiment with clear variables (independent, dependent, control) to test a hypothesis.</div>
+          <div class="exam-tip">Write a detailed method allowing others to replicate the experiment.</div>
+          <div class="exam-tip">Evaluate reproducibility of data; suggest improvements to reduce error.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s05-2">
+      <div class="topic-header" onclick="toggleTopic('s05-2')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Data Processing & Error Analysis</div>
+          <div class="topic-detail">Uncertainty, significant figures, error propagation, graphical analysis, evaluation.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Uncertainty (osäkerhet):</strong> Every measurement has uncertainty. Analogue instruments: ± half the smallest division (e.g., balance to 0.01 g has uncertainty ±0.005 g). Digital instruments: ± the smallest displayed unit (e.g., digital scale reading 5.23 g has uncertainty ±0.01 g). Percentage uncertainty = (absolute uncertainty / measured value) × 100%.</div>
+          <div class="concept-item"><strong>Significant figures (signifikanta siffror):</strong> All known digits plus one estimated digit. Zeros: leading zeros not significant; zeros between non-zero digits significant; trailing zeros significant only if decimal point shown. Rules: in addition/subtraction, result has same decimal places as least precise measurement; in multiplication/division, result has same significant figures as least precise measurement.</div>
+          <div class="concept-item"><strong>Error propagation (felfortplantning):</strong> Addition/subtraction: add absolute uncertainties. Multiplication/division: add percentage uncertainties. Powers: multiply percentage uncertainty by power coefficient. Example: if measurement has 2% uncertainty and is squared, result has 4% uncertainty.</div>
+          <div class="concept-item"><strong>Systematic vs random error:</strong> Systematic error (e.g., calibration off, always too high) biases all measurements same way. Random error (e.g., parallax, temperature fluctuation) scatters measurements around true value. Replicates reveal random error (standard deviation); systematic error requires checking method.</div>
+          <div class="concept-item"><strong>Graphical analysis:</strong> Plot data with error bars showing uncertainty. Best-fit line should pass through most error bars. Calculate gradient from best-fit line; determine uncertainty in gradient from steepest and shallowest lines through extreme error bars. Linearisation (e.g., plotting 1/[A] vs time for second-order kinetics) allows determination of rate constant from gradient.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Absolute uncertainty (absolut osäkerhet):</span> Expressed in same units as measurement (e.g., ±0.1 g).</div>
+            <div class="term-item"><span class="term-word">Percentage uncertainty (procentuell osäkerhet):</span> Expressed as percentage of measured value.</div>
+            <div class="term-item"><span class="term-word">Accuracy (noggrannhet):</span> How close measurement is to true/accepted value.</div>
+            <div class="term-item"><span class="term-word">Precision (precision):</span> How close repeated measurements are to each other (reproducibility).</div>
+            <div class="term-item"><span class="term-word">Standard deviation (standardavvikelse):</span> Measure of scatter of data around mean.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Calculate absolute and percentage uncertainty from instrument readings.</div>
+          <div class="exam-tip">Apply error propagation rules to calculate final uncertainty in calculated quantities.</div>
+          <div class="exam-tip">Express final answers to appropriate number of significant figures given uncertainties.</div>
+          <div class="exam-tip">Draw graphs with error bars; determine gradient and its uncertainty from multiple lines.</div>
+          <div class="exam-tip">Identify and explain sources of systematic and random error in experiment; suggest improvements.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-s05-3">
+      <div class="topic-header" onclick="toggleTopic('s05-3')">
+        <div class="topic-dot"></div>
+        <div class="topic-content">
+          <div class="topic-name">Chemistry & Society</div>
+          <div class="topic-detail">Environmental chemistry, sustainable development, green chemistry, impact of chemistry on society.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title">Key Concepts</div>
+          <div class="concept-item"><strong>Environmental chemistry (miljökemi):</strong> Study of chemical processes in atmosphere, hydrosphere, and lithosphere. Topics: air pollution (NO₂, SO₂ from fossil fuels; particulates; ozone depletion from CFCs), water pollution (heavy metals, eutrophication from nitrogen/phosphorus), soil contamination (pesticides, mining runoff).</div>
+          <div class="concept-item"><strong>Climate change (klimatförändringar):</strong> CO₂ from combustion of fossil fuels is major greenhouse gas. Increased atmospheric CO₂ → enhanced greenhouse effect → global warming. Chemistry involved: combustion reactions, carbon cycle, absorption spectra of CO₂ and other greenhouse gases.</div>
+          <div class="concept-item"><strong>Green chemistry (grön kemi):</strong> Design of chemical products and processes to reduce hazardous substances. Principles: prevent waste (don't generate it), use renewable feedstocks, minimise energy use, minimise use of toxic/harmful chemicals, design safer chemicals with lower toxicity. Example: use of biodegradable solvents instead of VOCs.</div>
+          <div class="concept-item"><strong>Sustainable development (hållbar utveckling):</strong> Balancing economic growth, environmental protection, and social responsibility. Chemistry supports this through renewable energy (solar cells, biofuels), biodegradable plastics, catalysis (reducing energy use), water purification, clean production methods.</div>
+          <div class="concept-item"><strong>Chemistry applications in society:</strong> Pharmaceuticals (life-saving drugs), materials (alloys, ceramics, polymers), agriculture (fertilisers, pesticides but also controlled-release and sustainable alternatives), energy (batteries, hydrogen fuel cells). Benefits must be weighed against environmental and social costs.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Sustainability (hållbarhet):</span> Ability to meet present needs without compromising future generations' ability to meet theirs.</div>
+            <div class="term-item"><span class="term-word">Carbon footprint (kolfotavtryck):</span> Total greenhouse gas emissions (especially CO₂) associated with a product or activity.</div>
+            <div class="term-item"><span class="term-word">Renewable resource (förnyelsebar resurs):</span> Natural resource that can be replenished (e.g., solar energy, plant-based feedstocks).</div>
+            <div class="term-item"><span class="term-word">Biodegradable (biologiskt nedbrytbar):</span> Capable of being decomposed by microorganisms.</div>
+            <div class="term-item"><span class="term-word">Catalysis (katalys):</span> Speeding up reaction (often lowering energy use) via catalyst without being consumed.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Exam Focus</div>
+          <div class="exam-tip">Explain environmental problems (acid rain, ozone depletion, climate change) in terms of chemistry; discuss human activities causing them.</div>
+          <div class="exam-tip">Describe green chemistry principles and evaluate how a chemical process could be made more sustainable.</div>
+          <div class="exam-tip">Discuss the role of chemistry in addressing global challenges (renewable energy, clean water, waste reduction).</div>
+          <div class="exam-tip">Evaluate trade-offs between benefits and environmental/social costs of chemical technologies (e.g., pesticides, plastics, fossil fuels).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<div class="footer-note">
+  Kemi 2 Study Guide — Built for comprehensive exam preparation<br>
+  Source: Skolverket centralt innehål (Swedish Gymnasium Kemi 2)
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

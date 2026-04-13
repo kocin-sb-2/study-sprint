@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Chemistry HL — First Assessment 2025</title>
+<meta name="description" content="Complete IB Chemistry HL syllabus guide — structure, bonding, energetics, kinetics, equilibrium, and organic chemistry.">
+<meta property="og:title" content="IB Chemistry HL — Study Sprint">
+<meta property="og:description" content="Complete IB Chemistry HL syllabus guide — structure, bonding, energetics, kinetics, equilibrium, and organic chemistry.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent-chem: #ff8a65;
+  --accent-chem-dim: rgba(255,138,101,0.12);
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-purple: #b388ff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.back-link {
+  padding: 0 24px;
+  padding-top: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-chem);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.back-link a:hover {
+  gap: 12px;
+  color: #ff6b4a;
+}
+
+.hero {
+  padding: 40px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,138,101,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 50%, rgba(255,138,101,0.06) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-20px, 10px) rotate(2deg); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--accent-chem);
+}
+
+.hero .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.hero .badge-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge.chem { background: var(--accent-chem-dim); color: var(--accent-chem); border: 1px solid rgba(255,138,101,0.25); }
+
+.content { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.intro-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.intro-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.stat-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-chem);
+}
+
+.stat-value.chem {
+  color: var(--accent-chem);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.section {
+  margin-bottom: 36px;
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-number {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  background: var(--accent-chem-dim);
+  color: var(--accent-chem);
+}
+
+.section-number.chem {
+  background: var(--accent-chem-dim);
+  color: var(--accent-chem);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.section-arrow {
+  color: var(--text-muted);
+  transition: transform 0.3s;
+  font-size: 1.2rem;
+}
+
+.section-arrow.open { transform: rotate(90deg); }
+
+.topic-list { display: flex; flex-direction: column; gap: 6px; }
+
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.topic:hover {
+  border-color: rgba(255,255,255,0.1);
+  background: var(--surface-2);
+}
+
+.topic-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.topic-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+  background: var(--accent-chem);
+}
+
+.topic-dot.chem {
+  background: var(--accent-chem);
+}
+
+.topic-content { flex: 1; }
+
+.topic-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.topic-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.topic-expand-icon {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.topic.expanded .topic-expand-icon { transform: rotate(90deg); }
+.topic.expanded { border-color: rgba(255,255,255,0.12); }
+
+.topic-body {
+  display: none;
+  padding: 0 18px 18px 38px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+
+.topic.expanded .topic-body { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.info-block {
+  margin-top: 16px;
+}
+
+.info-block-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-chem);
+}
+
+.info-block-title.concepts-chem {
+  color: var(--accent-chem);
+}
+
+.info-block-title.terms {
+  color: var(--accent-gold);
+}
+
+.info-block-title.formulas {
+  color: var(--accent-green);
+}
+
+.info-block-title.exam {
+  color: var(--accent-purple);
+}
+
+.concept-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  border-left: 3px solid var(--accent-chem);
+}
+
+.concept-item.chem-border {
+  border-left: 3px solid var(--accent-chem);
+}
+
+.concept-item strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.term-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.term-item .term-word {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 0.88rem;
+}
+
+.formula-card {
+  background: var(--surface-3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  border: 1px solid rgba(102,187,106,0.15);
+}
+
+.formula-card .formula-note {
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.exam-tip {
+  background: rgba(179,136,255,0.08);
+  border: 1px solid rgba(179,136,255,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.exam-tip::before {
+  content: '▸ ';
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.hl-tag {
+  display: inline-block;
+  background: rgba(179,136,255,0.15);
+  color: #b388ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0 4px;
+}
+
+.skill-tag {
+  display: inline-block;
+  background: rgba(102,187,106,0.15);
+  color: #66bb6a;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0 4px;
+}
+
+.footer-note {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .topic-body { padding-left: 18px; }
+  .term-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="back-link">
+  <a href="index.html">← Back to Hub</a>
+</div>
+
+<div class="hero">
+  <h1>IB Chemistry HL</h1>
+  <p class="subtitle">Study Sprint — Structured Syllabus Roadmap</p>
+  <div class="badge-row">
+    <span class="badge chem">IB DP Chemistry HL 2025</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="intro-card">
+    <h3>IB Diploma Programme — Chemistry HL (First Assessment 2025)</h3>
+    <p>The IB Chemistry curriculum is organised around <strong>Structure</strong> (the nature of matter) and <strong>Reactivity</strong> (how and why reactions occur). HL students cover both SL content and additional higher-level extensions (marked with purple HL tags). Click any topic to expand detailed notes.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-value chem">6</div><div class="stat-label">Major Topics</div></div>
+      <div class="stat"><div class="stat-value chem">~22</div><div class="stat-label">Subtopics</div></div>
+      <div class="stat"><div class="stat-value chem">180h</div><div class="stat-label">Core Hours</div></div>
+      <div class="stat"><div class="stat-value chem">40h</div><div class="stat-label">Practical</div></div>
+    </div>
+  </div>
+
+  <!-- ===== S1: MODELS OF PARTICULATE MATTER ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c1')">
+      <div class="section-number chem">S1</div>
+      <div class="section-title">Structure 1 — Models of Particulate Matter</div>
+      <span class="section-arrow open" id="arrow-c1">▸</span>
+    </div>
+    <div class="topic-list" id="body-c1">
+
+      <!-- S1.1 -->
+      <div class="topic" id="topic-c1-1">
+        <div class="topic-header" onclick="toggleTopic('c1-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S1.1 — Introduction to the Particulate Nature of Matter</div>
+            <div class="topic-detail">Elements, compounds, mixtures. Kinetic molecular theory. States of matter and phase changes. Separation techniques.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Elements, compounds, mixtures:</strong> An element consists of one type of atom. A compound is two or more elements chemically bonded in fixed ratios. A mixture contains two or more substances not chemically bonded, with variable composition.</div>
+            <div class="concept-item chem-border"><strong>Kinetic molecular theory:</strong> All matter consists of particles in constant motion. Temperature is a measure of average kinetic energy. Higher temperature = faster particles. This explains properties of solids, liquids, and gases.</div>
+            <div class="concept-item chem-border"><strong>States of matter:</strong> Solids — particles vibrate in fixed positions, strong forces, fixed shape/volume. Liquids — particles can move past each other, moderate forces, fixed volume but variable shape. Gases — particles far apart, negligible forces, variable shape and volume.</div>
+            <div class="concept-item chem-border"><strong>Phase changes:</strong> Melting (s→l), freezing (l→s), boiling/evaporation (l→g), condensation (g→l), sublimation (s→g), deposition (g→s). During phase changes, temperature remains constant as energy is used to break/form intermolecular bonds.</div>
+            <div class="concept-item chem-border"><strong>Separation techniques:</strong> Filtration (insoluble solid from liquid), distillation (different boiling points), chromatography (different affinities for stationary/mobile phases), evaporation (solute from solution), fractional distillation (similar boiling points).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Element:</span> A pure substance that cannot be broken down into simpler substances by chemical means. All atoms have the same atomic number.</div>
+              <div class="term-item"><span class="term-word">Compound:</span> A substance formed from two or more elements chemically combined in a fixed ratio.</div>
+              <div class="term-item"><span class="term-word">Mixture:</span> Two or more substances physically combined, not chemically bonded, that can be separated by physical methods.</div>
+              <div class="term-item"><span class="term-word">Homogeneous mixture:</span> A mixture with uniform composition throughout (e.g., a solution).</div>
+              <div class="term-item"><span class="term-word">Heterogeneous mixture:</span> A mixture with non-uniform composition — different parts are visible (e.g., sand and water).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Classify substances as elements, compounds, or mixtures from descriptions or particle diagrams.</div>
+            <div class="exam-tip">Use kinetic molecular theory to explain observations about states of matter, pressure, and diffusion.</div>
+            <div class="exam-tip">Choose an appropriate separation technique for a given mixture and explain how it works.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S1.2 -->
+      <div class="topic" id="topic-c1-2">
+        <div class="topic-header" onclick="toggleTopic('c1-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S1.2 — The Nuclear Atom</div>
+            <div class="topic-detail">Protons, neutrons, electrons. Isotopes. Mass spectrometry and relative atomic mass. <span class="hl-tag">HL</span> Fragmentation patterns.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Subatomic particles:</strong> Protons (charge +1, mass 1 u, in nucleus), neutrons (charge 0, mass 1 u, in nucleus), electrons (charge −1, mass ~1/1836 u, in electron shells). Atomic number (Z) = number of protons. Mass number (A) = protons + neutrons.</div>
+            <div class="concept-item chem-border"><strong>Isotopes:</strong> Atoms of the same element with the same number of protons but different numbers of neutrons. Same chemical properties (same electron configuration) but different physical properties (mass, rate of diffusion, nuclear stability).</div>
+            <div class="concept-item chem-border"><strong>Mass spectrometry:</strong> An instrument that measures the mass-to-charge ratio (m/z) of ions. Steps: vaporisation → ionisation → acceleration → deflection → detection. The mass spectrum shows peaks at different m/z values, with height proportional to abundance.</div>
+            <div class="concept-item chem-border"><strong>Relative atomic mass (Ar):</strong> The weighted average of the masses of all naturally occurring isotopes of an element, measured relative to ¹²C = 12.000. Calculated from mass spectrum data.</div>
+            <div class="concept-item chem-border"><strong>HL: Fragmentation:</strong> In mass spectrometry, molecules can break apart (fragment) after ionisation. The fragmentation pattern helps identify the molecular structure. The peak with the highest m/z (excluding isotope peaks) is typically the molecular ion peak (M⁺).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Atomic number (Z):</span> The number of protons in the nucleus of an atom. Defines the element.</div>
+              <div class="term-item"><span class="term-word">Mass number (A):</span> The total number of protons and neutrons in the nucleus.</div>
+              <div class="term-item"><span class="term-word">Isotopes:</span> Atoms of the same element (same Z) with different mass numbers (different number of neutrons).</div>
+              <div class="term-item"><span class="term-word">Relative atomic mass (Ar):</span> The weighted mean mass of an atom of an element relative to 1/12 the mass of a ¹²C atom.</div>
+              <div class="term-item"><span class="term-word">Mass spectrum:</span> A plot of relative abundance vs m/z ratio, showing the isotopes or fragments of a substance.</div>
+              <div class="term-item"><span class="term-word">Molecular ion peak (M⁺):</span> The peak in a mass spectrum corresponding to the intact molecule minus one electron.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Ar = Σ (isotope mass × fractional abundance)<div class="formula-note">Relative atomic mass from mass spectrum data</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate relative atomic mass from isotopic masses and abundances (from a mass spectrum or table).</div>
+            <div class="exam-tip">Determine the number of protons, neutrons, and electrons in atoms and ions from notation like ³⁵₁₇Cl⁻.</div>
+            <div class="exam-tip">HL: Interpret a mass spectrum to identify a compound from its molecular ion peak and fragmentation pattern.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S1.3 -->
+      <div class="topic" id="topic-c1-3">
+        <div class="topic-header" onclick="toggleTopic('c1-3')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S1.3 — Electron Configurations</div>
+            <div class="topic-detail">Emission spectra, energy levels, sublevels (s, p, d, f). Orbital diagrams. <span class="hl-tag">HL</span> Ionisation energies. PES.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Emission spectra:</strong> When atoms are excited (by heat or electricity), electrons absorb energy and jump to higher energy levels. When they fall back down, they emit photons of specific energies, producing a line emission spectrum. This proves energy levels are quantised.</div>
+            <div class="concept-item chem-border"><strong>Energy levels and sublevels:</strong> Main energy levels (n = 1, 2, 3...) contain sublevels: s (2e⁻), p (6e⁻), d (10e⁻), f (14e⁻). Each sublevel contains orbitals, each holding max 2 electrons with opposite spins.</div>
+            <div class="concept-item chem-border"><strong>Electron configuration rules:</strong> Aufbau principle (fill lowest energy first), Hund's rule (fill orbitals of the same sublevel singly before pairing), Pauli exclusion principle (max 2 electrons per orbital, opposite spins). Exception examples: Cr is [Ar]3d⁵4s¹, Cu is [Ar]3d¹⁰4s¹.</div>
+            <div class="concept-item chem-border"><strong>HL: Successive ionisation energies:</strong> Removing electrons one at a time from an atom requires increasing energy. Large jumps in IE indicate crossing into a new (inner) energy level. Data from successive IEs reveals the number of electrons in each shell.</div>
+            <div class="concept-item chem-border"><strong>HL: Photoelectron spectroscopy (PES):</strong> Measures the binding energies of all electrons in an atom. Each peak corresponds to a sublevel. Peak height ∝ number of electrons in that sublevel. Provides direct experimental evidence for sublevel structure.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Electron configuration:</span> The arrangement of electrons in an atom's energy levels and sublevels (e.g., 1s² 2s² 2p⁶ 3s² 3p⁶).</div>
+              <div class="term-item"><span class="term-word">Orbital:</span> A region of space where there is a high probability of finding an electron. Each orbital holds max 2 electrons.</div>
+              <div class="term-item"><span class="term-word">Aufbau principle:</span> Electrons fill the lowest available energy level first.</div>
+              <div class="term-item"><span class="term-word">Hund's rule:</span> Electrons occupy orbitals of the same sublevel singly (with parallel spins) before pairing up.</div>
+              <div class="term-item"><span class="term-word">Pauli exclusion principle:</span> No two electrons in an atom can have the same set of four quantum numbers (max 2 per orbital, opposite spins).</div>
+              <div class="term-item"><span class="term-word">Ionisation energy (IE):</span> The energy required to remove one mole of electrons from one mole of gaseous atoms.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write full and condensed electron configurations for atoms and ions (including d-block elements and their ions).</div>
+            <div class="exam-tip">Explain the relationship between emission spectra and electron energy levels.</div>
+            <div class="exam-tip">HL: Interpret PES spectra to determine electron configuration. Analyse successive IE data to deduce the number of electrons in each shell.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S1.4 -->
+      <div class="topic" id="topic-c1-4">
+        <div class="topic-header" onclick="toggleTopic('c1-4')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S1.4 — Counting Particles by Mass: The Mole</div>
+            <div class="topic-detail">Mole concept, Avogadro's constant. Molar mass, empirical/molecular formulae. <span class="hl-tag">HL</span> Molar volume. Real vs ideal gases.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>The mole:</strong> One mole contains exactly 6.022 × 10²³ particles (Avogadro's constant, Nₐ). It is the amount of substance containing as many particles as there are atoms in 12 g of ¹²C.</div>
+            <div class="concept-item chem-border"><strong>Molar mass (M):</strong> The mass of one mole of a substance, numerically equal to its relative formula mass in g/mol. n = m/M.</div>
+            <div class="concept-item chem-border"><strong>Empirical vs molecular formula:</strong> Empirical formula = simplest whole-number ratio of atoms (e.g., CH₂O). Molecular formula = actual number of atoms in one molecule (e.g., C₆H₁₂O₆). To find molecular from empirical: divide molar mass by empirical formula mass.</div>
+            <div class="concept-item chem-border"><strong>Concentration:</strong> c = n/V, where c is in mol/dm³ (M), n in mol, V in dm³. Dilution: c₁V₁ = c₂V₂.</div>
+            <div class="concept-item chem-border"><strong>HL: Molar volume of gases:</strong> At STP (0°C, 100 kPa), one mole of any ideal gas occupies 22.7 dm³. This follows from the ideal gas law and is independent of the gas identity (Avogadro's law).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Mole (mol):</span> The SI unit of amount of substance. One mole = 6.022 × 10²³ entities.</div>
+              <div class="term-item"><span class="term-word">Avogadro's constant (Nₐ):</span> 6.022 × 10²³ mol⁻¹ — the number of particles in one mole.</div>
+              <div class="term-item"><span class="term-word">Molar mass (M):</span> The mass per mole of a substance. Unit: g/mol.</div>
+              <div class="term-item"><span class="term-word">Empirical formula:</span> The simplest whole-number ratio of atoms in a compound.</div>
+              <div class="term-item"><span class="term-word">Molecular formula:</span> The actual number of each type of atom in one molecule of a compound.</div>
+              <div class="term-item"><span class="term-word">Concentration (c):</span> Amount of solute per unit volume of solution. Unit: mol/dm³.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">n = m / M<div class="formula-note">Moles from mass and molar mass</div></div>
+            <div class="formula-card">n = N / Nₐ<div class="formula-note">Moles from number of particles</div></div>
+            <div class="formula-card">c = n / V<div class="formula-note">Concentration (V in dm³)</div></div>
+            <div class="formula-card">c₁V₁ = c₂V₂<div class="formula-note">Dilution equation</div></div>
+            <div class="formula-card">V = n × 22.7 dm³ (at STP)<div class="formula-note">HL: Molar volume of gas at STP</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Interconvert between mass, moles, number of particles, concentration, and volume of gases.</div>
+            <div class="exam-tip">Determine empirical formula from percentage composition or combustion data, then molecular formula from molar mass.</div>
+            <div class="exam-tip">Dilution calculations: find the new concentration or volume needed.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S1.5 -->
+      <div class="topic" id="topic-c1-5">
+        <div class="topic-header" onclick="toggleTopic('c1-5')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S1.5 — Ideal Gases</div>
+            <div class="topic-detail">Ideal gas model and assumptions. Gas laws. PV = nRT. <span class="hl-tag">HL</span> Deviations from ideal behaviour.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Ideal gas assumptions:</strong> (1) Gas particles have negligible volume compared to the container. (2) No intermolecular forces between particles. (3) Collisions are perfectly elastic. (4) Particles are in constant, random motion. (5) Average KE is proportional to absolute temperature.</div>
+            <div class="concept-item chem-border"><strong>Gas laws:</strong> Boyle's law: P ∝ 1/V (constant T, n). Charles' law: V ∝ T (constant P, n). Gay-Lussac's: P ∝ T (constant V, n). Avogadro's: V ∝ n (constant T, P). All combined into PV = nRT.</div>
+            <div class="concept-item chem-border"><strong>Ideal gas equation:</strong> PV = nRT, where R = 8.314 J/(mol·K). T must be in Kelvin (K = °C + 273). P in Pa, V in m³ (or P in kPa, V in dm³).</div>
+            <div class="concept-item chem-border"><strong>HL: Real gas deviations:</strong> Real gases deviate from ideal behaviour at high pressure (particle volume becomes significant) and low temperature (intermolecular forces become important). Gas molecules with stronger IMFs and larger sizes deviate more.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Ideal gas:</span> A hypothetical gas that perfectly obeys PV = nRT under all conditions.</div>
+              <div class="term-item"><span class="term-word">STP (Standard Temperature and Pressure):</span> 0°C (273.15 K) and 100 kPa (IB definition).</div>
+              <div class="term-item"><span class="term-word">Gas constant (R):</span> 8.314 J/(mol·K) — the proportionality constant in the ideal gas equation.</div>
+              <div class="term-item"><span class="term-word">Absolute zero:</span> 0 K (−273.15°C) — the theoretical temperature at which all particle motion ceases.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">PV = nRT<div class="formula-note">Ideal gas equation</div></div>
+            <div class="formula-card">P₁V₁/T₁ = P₂V₂/T₂<div class="formula-note">Combined gas law (constant n)</div></div>
+            <div class="formula-card">T(K) = T(°C) + 273.15<div class="formula-note">Celsius to Kelvin conversion</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Use PV = nRT to find any one variable given the others. Always convert to Kelvin!</div>
+            <div class="exam-tip">HL: Explain when and why real gases deviate from ideal behaviour — relate to the assumptions being broken.</div>
+            <div class="exam-tip">Graphical questions: identify which gas law a graph represents (P vs V, V vs T, etc.).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== S2: BONDING & STRUCTURE ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c2')">
+      <div class="section-number chem">S2</div>
+      <div class="section-title">Structure 2 — Models of Bonding & Structure</div>
+      <span class="section-arrow open" id="arrow-c2">▸</span>
+    </div>
+    <div class="topic-list" id="body-c2">
+
+      <div class="topic" id="topic-c2-1">
+        <div class="topic-header" onclick="toggleTopic('c2-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S2.1 — The Ionic Model</div>
+            <div class="topic-detail">Ionic bonding, lattice structures, properties. <span class="hl-tag">HL</span> Born-Haber cycles. Lattice enthalpy. Polarisation.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Ionic bonding:</strong> Transfer of electrons from a metal to a non-metal, forming cations (+) and anions (−). The electrostatic attraction between oppositely charged ions forms the ionic bond. Ionic compounds form giant lattice structures.</div>
+            <div class="concept-item chem-border"><strong>Properties of ionic compounds:</strong> High melting/boiling points (strong electrostatic forces in lattice). Conduct electricity when molten or dissolved (ions free to move), but not as solids (ions fixed). Generally soluble in water (polar solvent). Brittle (like charges repel when layers shift).</div>
+            <div class="concept-item chem-border"><strong>HL: Born-Haber cycles:</strong> An application of Hess's law to calculate lattice enthalpy indirectly using known enthalpy changes: atomisation, ionisation, electron affinity, formation enthalpy. A higher lattice enthalpy indicates a stronger ionic bond.</div>
+            <div class="concept-item chem-border"><strong>HL: Polarisation:</strong> Small, highly charged cations can distort the electron cloud of large anions, introducing covalent character to the bond (Fajans' rules). This means ionic and covalent bonding exist on a continuum.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Ionic bond:</span> The electrostatic attraction between oppositely charged ions.</div>
+              <div class="term-item"><span class="term-word">Lattice structure:</span> A regular, repeating 3D arrangement of ions in an ionic compound.</div>
+              <div class="term-item"><span class="term-word">Lattice enthalpy:</span> The enthalpy change when one mole of an ionic compound is formed from its gaseous ions (exothermic) — or separated into gaseous ions (endothermic, depending on definition).</div>
+              <div class="term-item"><span class="term-word">Electron affinity:</span> The enthalpy change when one mole of electrons is added to one mole of gaseous atoms.</div>
+              <div class="term-item"><span class="term-word">Fajans' rules:</span> Rules predicting when an ionic bond will have significant covalent character (small cation, large anion, high charge).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Explain properties of ionic compounds (melting point, conductivity, solubility) in terms of structure and bonding.</div>
+            <div class="exam-tip">HL: Construct and use a Born-Haber cycle to calculate lattice enthalpy or another unknown enthalpy change.</div>
+            <div class="exam-tip">HL: Compare theoretical and experimental lattice enthalpies to assess covalent character.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c2-2">
+        <div class="topic-header" onclick="toggleTopic('c2-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S2.2 — The Covalent Model</div>
+            <div class="topic-detail">Lewis structures. VSEPR theory. Polarity. <span class="hl-tag">HL</span> Resonance. Formal charge. Hybridisation.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Covalent bonding:</strong> Sharing of electron pairs between non-metal atoms. A single bond shares 1 pair, double bond shares 2 pairs, triple bond shares 3 pairs. Bond strength increases and bond length decreases as bond order increases.</div>
+            <div class="concept-item chem-border"><strong>Lewis (dot) structures:</strong> Diagrams showing all valence electrons, bonding pairs, and lone pairs around atoms. Follow the octet rule (8 electrons around each atom, except H which gets 2). Count total valence electrons, form bonds, distribute remaining electrons as lone pairs.</div>
+            <div class="concept-item chem-border"><strong>VSEPR theory:</strong> Valence Shell Electron Pair Repulsion — electron pairs (bonding and lone) around a central atom arrange themselves to minimise repulsion. This determines molecular geometry. Lone pairs repel more than bonding pairs, compressing bond angles.</div>
+            <div class="concept-item chem-border"><strong>Common shapes:</strong> Linear (2 e⁻ domains, 180°), trigonal planar (3, 120°), tetrahedral (4, 109.5°), trigonal bipyramidal (5, 90°/120°), octahedral (6, 90°). With lone pairs: bent, trigonal pyramidal, T-shaped, seesaw, square planar, etc.</div>
+            <div class="concept-item chem-border"><strong>Polarity:</strong> A bond is polar if atoms have different electronegativities. A molecule is polar if it has polar bonds arranged asymmetrically (net dipole moment ≠ 0). Symmetric molecules (e.g., CO₂, CCl₄) are non-polar despite having polar bonds.</div>
+            <div class="concept-item chem-border"><strong>HL: Resonance:</strong> When a Lewis structure can be drawn in multiple valid ways (e.g., O₃, CO₃²⁻, benzene). The actual structure is a hybrid — an average of all resonance structures. Bond order is fractional.</div>
+            <div class="concept-item chem-border"><strong>HL: Hybridisation:</strong> The mixing of atomic orbitals to form new hybrid orbitals for bonding. sp³ (tetrahedral, 4 σ bonds), sp² (trigonal planar, 3 σ + 1 π), sp (linear, 2 σ + 2 π). The number of σ bonds + lone pairs on the central atom determines hybridisation.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Covalent bond:</span> A bond formed by the sharing of one or more pairs of electrons between atoms.</div>
+              <div class="term-item"><span class="term-word">Lone pair:</span> A pair of valence electrons not involved in bonding.</div>
+              <div class="term-item"><span class="term-word">Electronegativity:</span> The ability of an atom to attract a shared pair of electrons in a covalent bond.</div>
+              <div class="term-item"><span class="term-word">VSEPR:</span> Valence Shell Electron Pair Repulsion — a model for predicting molecular geometry.</div>
+              <div class="term-item"><span class="term-word">Dipole moment:</span> A measure of the polarity of a molecule, determined by the magnitude and direction of bond dipoles.</div>
+              <div class="term-item"><span class="term-word">Sigma (σ) bond:</span> A bond formed by head-on overlap of orbitals (single bonds).</div>
+              <div class="term-item"><span class="term-word">Pi (π) bond:</span> A bond formed by sideways overlap of p-orbitals (part of double/triple bonds).</div>
+              <div class="term-item"><span class="term-word">Formal charge:</span> The charge on an atom in a Lewis structure = valence e⁻ − lone pair e⁻ − ½(bonding e⁻). Preferred structures minimise formal charges.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Draw Lewis structures for molecules and ions. Predict the shape and bond angle using VSEPR. Determine polarity.</div>
+            <div class="exam-tip">HL: Draw resonance structures and explain how resonance affects bond length and strength.</div>
+            <div class="exam-tip">HL: Determine hybridisation of the central atom from the number of electron domains.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c2-3">
+        <div class="topic-header" onclick="toggleTopic('c2-3')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S2.3 — The Metallic Model</div>
+            <div class="topic-detail">Metallic bonding. Physical properties. <span class="hl-tag">HL</span> Transition metals and d-electron delocalisation.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Metallic bonding:</strong> A lattice of positive metal cations surrounded by a "sea" of delocalised electrons. The electrostatic attraction between the cations and the delocalised electrons holds the structure together.</div>
+            <div class="concept-item chem-border"><strong>Properties explained:</strong> High melting points (strong attraction). Electrical conductivity (delocalised electrons can flow). Thermal conductivity (electrons transfer kinetic energy). Malleability and ductility (layers can slide past each other without breaking bonds — electrons adjust).</div>
+            <div class="concept-item chem-border"><strong>Factors affecting strength:</strong> More delocalised electrons per atom and smaller ionic radius → stronger metallic bonding → higher melting point. E.g., Na < Mg < Al (1, 2, 3 delocalised e⁻ respectively).</div>
+            <div class="concept-item chem-border"><strong>HL: Transition metals:</strong> Have partially filled d-orbitals. The d-electrons can also delocalise, contributing to very strong metallic bonding. This explains why transition metals generally have higher melting points than s-block metals.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Metallic bond:</span> The electrostatic attraction between a lattice of metal cations and delocalised electrons.</div>
+              <div class="term-item"><span class="term-word">Delocalised electrons:</span> Electrons not associated with a single atom but shared across the entire metallic lattice.</div>
+              <div class="term-item"><span class="term-word">Alloy:</span> A mixture of a metal with other metals or non-metals. Different-sized atoms disrupt regular layers, making alloys harder and less malleable.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Explain properties of metals (conductivity, malleability, melting point) using the metallic bonding model.</div>
+            <div class="exam-tip">Compare metallic bonding strength across elements (e.g., Na vs Mg vs Al) and explain trends.</div>
+            <div class="exam-tip">Explain why alloys are harder than pure metals in terms of structure.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c2-4">
+        <div class="topic-header" onclick="toggleTopic('c2-4')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S2.4 — From Models to Materials</div>
+            <div class="topic-detail">Intermolecular forces: LDF, dipole-dipole, H-bonding. Allotropes of carbon. <span class="hl-tag">HL</span> Polymers. Supramolecular chemistry.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Intermolecular forces (IMFs):</strong> Forces between molecules (NOT within them). Three types in order of increasing strength: London dispersion forces (LDF) — present in ALL molecules, stronger with more electrons/larger surface area. Dipole-dipole — between polar molecules. Hydrogen bonding — special strong dipole-dipole between H bonded to N/O/F and a lone pair on N/O/F.</div>
+            <div class="concept-item chem-border"><strong>Effect on physical properties:</strong> Stronger IMFs → higher boiling point, higher viscosity, lower vapour pressure. Water's unusually high BP for its size is due to extensive hydrogen bonding. Ice is less dense than liquid water (H-bonds create open lattice structure).</div>
+            <div class="concept-item chem-border"><strong>Allotropes of carbon:</strong> Diamond (giant covalent, each C bonded to 4 others, extremely hard, non-conductor). Graphite (layers of sp² carbon with delocalised electrons, soft/lubricant, conducts electricity). Fullerenes/graphene (molecular/2D forms with unique properties).</div>
+            <div class="concept-item chem-border"><strong>HL: Condensation polymers:</strong> Formed by combining monomers with the loss of small molecules (usually H₂O). Examples: polyesters (from diol + dicarboxylic acid), polyamides/nylon (from diamine + dicarboxylic acid), proteins (amino acids).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">London dispersion forces (LDF):</span> Temporary, induced dipole-dipole forces caused by fluctuations in electron distribution. Present in all molecules.</div>
+              <div class="term-item"><span class="term-word">Dipole-dipole forces:</span> Attractions between the positive end of one polar molecule and the negative end of another.</div>
+              <div class="term-item"><span class="term-word">Hydrogen bond:</span> A strong intermolecular force between a hydrogen atom bonded to N, O, or F and a lone pair on another N, O, or F atom.</div>
+              <div class="term-item"><span class="term-word">Allotrope:</span> Different structural forms of the same element in the same physical state (e.g., diamond, graphite, fullerene for carbon).</div>
+              <div class="term-item"><span class="term-word">Giant covalent structure:</span> A structure where all atoms are connected by covalent bonds in a continuous network (e.g., diamond, SiO₂).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Identify the strongest IMF present in a given molecule and explain how it affects boiling point.</div>
+            <div class="exam-tip">Compare boiling points of different substances by analysing their IMFs, molecular size, and polarity.</div>
+            <div class="exam-tip">Explain the properties of carbon allotropes in terms of their bonding and structure.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== S3: CLASSIFICATION OF MATTER ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c3')">
+      <div class="section-number chem">S3</div>
+      <div class="section-title">Structure 3 — Classification of Matter</div>
+      <span class="section-arrow open" id="arrow-c3">▸</span>
+    </div>
+    <div class="topic-list" id="body-c3">
+
+      <div class="topic" id="topic-c3-1">
+        <div class="topic-header" onclick="toggleTopic('c3-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S3.1 — The Periodic Table: Classification of Elements</div>
+            <div class="topic-detail">Periodic trends: atomic radius, IE, electronegativity. <span class="hl-tag">HL</span> d-block properties. Variable oxidation states.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Periodic table organisation:</strong> Arranged by increasing atomic number. Groups (columns) = same number of valence electrons = similar chemical properties. Periods (rows) = same number of occupied energy levels. Blocks: s-block (Groups 1-2), p-block (Groups 13-18), d-block (Groups 3-12), f-block (lanthanides/actinides).</div>
+            <div class="concept-item chem-border"><strong>Periodic trends across a period (left → right):</strong> Atomic radius decreases (more protons, stronger nuclear attraction, same shielding). First ionisation energy generally increases (harder to remove electrons). Electronegativity increases (except noble gases).</div>
+            <div class="concept-item chem-border"><strong>Periodic trends down a group:</strong> Atomic radius increases (more electron shells). Ionisation energy decreases (outer electrons further from nucleus, more shielding). Electronegativity decreases.</div>
+            <div class="concept-item chem-border"><strong>HL: Transition metals (d-block):</strong> Characteristic properties include variable oxidation states, formation of coloured compounds, catalytic activity, and formation of complex ions. These arise from the partially filled d-orbitals.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Atomic radius:</span> Half the distance between the nuclei of two bonded atoms of the same element.</div>
+              <div class="term-item"><span class="term-word">First ionisation energy:</span> The energy needed to remove one electron from one mole of gaseous atoms: X(g) → X⁺(g) + e⁻.</div>
+              <div class="term-item"><span class="term-word">Electronegativity:</span> The ability of an atom in a covalent bond to attract the shared pair of electrons toward itself (Pauling scale).</div>
+              <div class="term-item"><span class="term-word">Electron affinity:</span> The enthalpy change when an electron is added to a gaseous atom.</div>
+              <div class="term-item"><span class="term-word">Transition metal:</span> A d-block element that forms at least one ion with a partially filled d-sublevel.</div>
+              <div class="term-item"><span class="term-word">Oxidation state:</span> The charge an atom would have if all bonds were ionic. Transition metals can have multiple oxidation states.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Explain periodic trends (atomic radius, IE, electronegativity) across a period and down a group with reasoning.</div>
+            <div class="exam-tip">HL: Explain why transition metals have variable oxidation states and form coloured complexes (d-orbital splitting).</div>
+            <div class="exam-tip">Predict and compare properties of elements based on their position in the periodic table.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c3-2">
+        <div class="topic-header" onclick="toggleTopic('c3-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">S3.2 — Functional Groups: Classification of Organic Compounds</div>
+            <div class="topic-detail">Homologous series. IUPAC nomenclature. Structural isomers. <span class="hl-tag">HL</span> Spectroscopy (IR, NMR, MS). Stereoisomerism.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Homologous series:</strong> A series of compounds with the same functional group and general formula, differing by CH₂. Members have similar chemical properties but gradually changing physical properties (increasing BP with chain length).</div>
+            <div class="concept-item chem-border"><strong>Key functional groups:</strong> Alkanes (C–C single bonds), alkenes (C=C), alcohols (–OH), aldehydes (–CHO), ketones (C=O internal), carboxylic acids (–COOH), esters (–COO–), amines (–NH₂), amides (–CONH₂), halogenoalkanes (C–X).</div>
+            <div class="concept-item chem-border"><strong>IUPAC naming:</strong> Find the longest carbon chain, number from the end nearest to the first substituent/functional group, name substituents as prefixes, and use the functional group suffix (e.g., -ol for alcohol, -al for aldehyde, -one for ketone, -oic acid for carboxylic acid).</div>
+            <div class="concept-item chem-border"><strong>Structural isomers:</strong> Molecules with the same molecular formula but different structural arrangements (chain isomers, positional isomers, functional group isomers).</div>
+            <div class="concept-item chem-border"><strong>HL: Spectroscopic identification:</strong> IR spectroscopy identifies functional groups from characteristic absorption peaks (e.g., O–H broad ~3200-3600 cm⁻¹, C=O sharp ~1700 cm⁻¹). ¹H NMR shows how many types of hydrogen environments and their relative numbers. Mass spectrometry gives molecular mass and fragmentation pattern.</div>
+            <div class="concept-item chem-border"><strong>HL: Stereoisomerism:</strong> Geometric (cis-trans) isomers due to restricted rotation around C=C. Optical isomers (enantiomers) due to a chiral carbon (4 different groups) — non-superimposable mirror images that rotate plane-polarised light in opposite directions.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Functional group:</span> An atom or group of atoms responsible for the characteristic chemical reactions of a compound.</div>
+              <div class="term-item"><span class="term-word">Homologous series:</span> A family of compounds with the same functional group and general formula, each member differing by CH₂.</div>
+              <div class="term-item"><span class="term-word">Structural isomers:</span> Molecules with the same molecular formula but different structural arrangements of atoms.</div>
+              <div class="term-item"><span class="term-word">Stereoisomers:</span> Molecules with the same structural formula but different spatial arrangements.</div>
+              <div class="term-item"><span class="term-word">Chiral centre:</span> A carbon atom bonded to four different groups, giving rise to optical isomers.</div>
+              <div class="term-item"><span class="term-word">Index of hydrogen deficiency (IHD):</span> The number of degrees of unsaturation (double bonds + rings) = (2C + 2 + N − H − X) / 2.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Name compounds using IUPAC nomenclature and draw structural formulae from names.</div>
+            <div class="exam-tip">Draw all structural isomers for a given molecular formula.</div>
+            <div class="exam-tip">HL: Use IR, ¹H NMR, and MS data together to identify an unknown organic compound. Calculate IHD to predict the number of rings/double bonds.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== R1: WHAT DRIVES REACTIONS ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c4')">
+      <div class="section-number chem">R1</div>
+      <div class="section-title">Reactivity 1 — What Drives Chemical Reactions?</div>
+      <span class="section-arrow open" id="arrow-c4">▸</span>
+    </div>
+    <div class="topic-list" id="body-c4">
+
+      <div class="topic" id="topic-c4-1">
+        <div class="topic-header" onclick="toggleTopic('c4-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R1.1 — Measuring Enthalpy Changes</div>
+            <div class="topic-detail">Exo/endothermic reactions. Energy profiles. Calorimetry. Bond enthalpies. <span class="hl-tag">HL</span> Hess's law.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Enthalpy (H):</strong> The heat content of a system at constant pressure. We measure changes in enthalpy (ΔH), not absolute values. Exothermic: ΔH < 0 (releases heat, products lower energy). Endothermic: ΔH > 0 (absorbs heat, products higher energy).</div>
+            <div class="concept-item chem-border"><strong>Calorimetry:</strong> Measuring enthalpy changes experimentally using Q = mcΔT. Then ΔH = −Q/n (per mole of limiting reagent). Assumptions: no heat loss, specific heat capacity of solution = water (4.18 J/g/K), density = 1 g/cm³.</div>
+            <div class="concept-item chem-border"><strong>Bond enthalpies:</strong> Energy required to break one mole of a specific bond in the gaseous state (always endothermic). ΔH ≈ Σ(bonds broken) − Σ(bonds formed). This gives only an estimate because bond enthalpies are averages.</div>
+            <div class="concept-item chem-border"><strong>Energy profiles:</strong> Diagrams showing energy on the y-axis and reaction progress on the x-axis. Show reactant/product energy levels, activation energy (Ea), and ΔH. The peak represents the transition state.</div>
+            <div class="concept-item chem-border"><strong>HL: Hess's law:</strong> The total enthalpy change for a reaction is independent of the route taken. ΔH = Σ ΔH_f(products) − Σ ΔH_f(reactants), or ΔH = Σ ΔH_c(reactants) − Σ ΔH_c(products). Used to calculate ΔH for reactions that cannot be measured directly.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Standard enthalpy change (ΔH°):</span> Measured under standard conditions: 298 K, 100 kPa, 1 mol/dm³ solutions.</div>
+              <div class="term-item"><span class="term-word">Enthalpy of formation (ΔH_f°):</span> The enthalpy change when one mole of a compound is formed from its elements in their standard states.</div>
+              <div class="term-item"><span class="term-word">Enthalpy of combustion (ΔH_c°):</span> The enthalpy change when one mole of a substance undergoes complete combustion under standard conditions.</div>
+              <div class="term-item"><span class="term-word">Activation energy (Ea):</span> The minimum energy required for a reaction to occur.</div>
+              <div class="term-item"><span class="term-word">Bond enthalpy:</span> The energy needed to break one mole of a bond in the gaseous state, averaged across different molecules.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Q = mcΔT<div class="formula-note">Heat absorbed/released by surroundings</div></div>
+            <div class="formula-card">ΔH = −Q / n<div class="formula-note">Enthalpy change per mole</div></div>
+            <div class="formula-card">ΔH ≈ Σ(bonds broken) − Σ(bonds formed)<div class="formula-note">Enthalpy from bond enthalpies</div></div>
+            <div class="formula-card">ΔH = Σ ΔH_f(products) − Σ ΔH_f(reactants)<div class="formula-note">HL: Hess's law using formation enthalpies</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Perform calorimetry calculations: Q = mcΔT → ΔH = −Q/n. Identify sources of error in calorimetry experiments.</div>
+            <div class="exam-tip">Use bond enthalpies to estimate ΔH and explain why the answer is approximate.</div>
+            <div class="exam-tip">HL: Apply Hess's law using formation or combustion data to calculate unknown enthalpy changes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c4-2">
+        <div class="topic-header" onclick="toggleTopic('c4-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R1.2 — Energy Cycles in Reactions <span class="hl-tag">HL</span></div>
+            <div class="topic-detail">Born-Haber cycles. Lattice enthalpy. Enthalpy of hydration, solution, atomisation.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Born-Haber cycle:</strong> An enthalpy cycle for the formation of an ionic compound from its elements, via gaseous atoms and ions. Uses Hess's law to find lattice enthalpy indirectly. Steps: atomisation → ionisation of metal → atomisation of non-metal → electron affinity → lattice formation.</div>
+            <div class="concept-item chem-border"><strong>Lattice enthalpy:</strong> The energy released when one mole of an ionic compound is formed from its gaseous ions. High lattice enthalpy = strong ionic bonding. Increases with higher ion charges and smaller ion sizes (Coulomb's law).</div>
+            <div class="concept-item chem-border"><strong>Enthalpy of solution:</strong> ΔH_sol = −ΔH_lattice + ΔH_hydration(cation) + ΔH_hydration(anion). Whether dissolving is exo- or endothermic depends on the balance between breaking the lattice (endothermic) and hydrating the ions (exothermic).</div>
+            <div class="concept-item chem-border"><strong>Comparing lattice enthalpies:</strong> If experimental lattice enthalpy (from Born-Haber) >> theoretical (from ionic model), the compound has significant covalent character.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Enthalpy of atomisation:</span> The enthalpy change when one mole of gaseous atoms is formed from an element in its standard state.</div>
+              <div class="term-item"><span class="term-word">Enthalpy of hydration:</span> The enthalpy change when one mole of gaseous ions is dissolved in water.</div>
+              <div class="term-item"><span class="term-word">Enthalpy of solution:</span> The enthalpy change when one mole of a solute dissolves in excess solvent.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Construct a Born-Haber cycle and use it to calculate an unknown enthalpy value.</div>
+            <div class="exam-tip">Explain trends in lattice enthalpy using ion size and charge.</div>
+            <div class="exam-tip">Calculate enthalpy of solution from lattice enthalpy and hydration enthalpies.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c4-3">
+        <div class="topic-header" onclick="toggleTopic('c4-3')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R1.3 — Energy from Fuels</div>
+            <div class="topic-detail">Combustion reactions. Fossil fuels. Biofuels. Fuel cells.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Complete vs incomplete combustion:</strong> Complete: fuel + excess O₂ → CO₂ + H₂O (maximum energy released). Incomplete: limited O₂ → CO (toxic) and/or C (soot) + H₂O (less energy, pollutants produced).</div>
+            <div class="concept-item chem-border"><strong>Fossil fuels:</strong> Coal, oil, natural gas — formed from ancient organic matter. Non-renewable. Burning releases CO₂ (greenhouse gas), SO₂ (acid rain from sulfur impurities), NOₓ (from high-temperature combustion).</div>
+            <div class="concept-item chem-border"><strong>Biofuels:</strong> Fuels derived from biomass (ethanol from fermentation, biodiesel from vegetable oils). Considered carbon-neutral (CO₂ absorbed during growth = CO₂ released during combustion), though this is simplified.</div>
+            <div class="concept-item chem-border"><strong>Fuel cells:</strong> Electrochemical devices that convert chemical energy directly to electrical energy. Hydrogen fuel cell: 2H₂ + O₂ → 2H₂O. More efficient than combustion engines. Only product is water. Challenge: hydrogen storage and production.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write balanced equations for complete and incomplete combustion of hydrocarbons and alcohols.</div>
+            <div class="exam-tip">Discuss advantages and disadvantages of fossil fuels, biofuels, and hydrogen fuel cells.</div>
+            <div class="exam-tip">Explain how a hydrogen fuel cell works (anode: oxidation of H₂, cathode: reduction of O₂, overall cell reaction).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c4-4">
+        <div class="topic-header" onclick="toggleTopic('c4-4')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R1.4 — Entropy & Spontaneity <span class="hl-tag">HL</span></div>
+            <div class="topic-detail">Entropy (S). Predicting entropy changes. Gibbs free energy: ΔG = ΔH − TΔS. Spontaneity.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Entropy (S):</strong> A measure of the dispersal of energy and matter (the number of possible microstates). Greater disorder = higher entropy. S(gas) >> S(liquid) > S(solid). Entropy increases with temperature, number of particles, and complexity of molecules.</div>
+            <div class="concept-item chem-border"><strong>Predicting ΔS:</strong> Increase in number of gas molecules → positive ΔS. Phase change from solid to liquid to gas → positive ΔS. Dissolving a solid in water → usually positive ΔS. Decrease in gas moles → negative ΔS.</div>
+            <div class="concept-item chem-border"><strong>Gibbs free energy:</strong> ΔG = ΔH − TΔS. Determines spontaneity: ΔG < 0 → spontaneous. ΔG > 0 → non-spontaneous. ΔG = 0 → at equilibrium. A reaction can be spontaneous even if endothermic, provided TΔS is large enough (entropy-driven).</div>
+            <div class="concept-item chem-border"><strong>Temperature dependence:</strong> When ΔH and ΔS have the same sign, spontaneity depends on temperature. ΔH < 0 and ΔS > 0 → always spontaneous. ΔH > 0 and ΔS < 0 → never spontaneous. Mixed signs → spontaneous above or below a certain T = ΔH/ΔS.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Entropy (S):</span> A thermodynamic quantity representing the degree of dispersal of energy and matter. Unit: J/(mol·K).</div>
+              <div class="term-item"><span class="term-word">Gibbs free energy (G):</span> The thermodynamic potential that determines whether a process is spontaneous at constant T and P.</div>
+              <div class="term-item"><span class="term-word">Spontaneous reaction:</span> A reaction that occurs without continuous external input of energy (ΔG < 0). Does not mean "fast."</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">ΔG = ΔH − TΔS<div class="formula-note">Gibbs free energy equation</div></div>
+            <div class="formula-card">ΔS°_reaction = Σ S°(products) − Σ S°(reactants)<div class="formula-note">Standard entropy change of reaction</div></div>
+            <div class="formula-card">T = ΔH / ΔS (at ΔG = 0)<div class="formula-note">Temperature at which spontaneity changes</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate ΔG from ΔH and ΔS at a given temperature. Predict spontaneity and the effect of changing temperature.</div>
+            <div class="exam-tip">Predict the sign of ΔS from the equation (changes in state, number of gas moles).</div>
+            <div class="exam-tip">Calculate the temperature at which a reaction becomes spontaneous (or non-spontaneous).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== R2: HOW MUCH, HOW FAST, HOW FAR ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c5')">
+      <div class="section-number chem">R2</div>
+      <div class="section-title">Reactivity 2 — How Much, How Fast & How Far?</div>
+      <span class="section-arrow open" id="arrow-c5">▸</span>
+    </div>
+    <div class="topic-list" id="body-c5">
+
+      <div class="topic" id="topic-c5-1">
+        <div class="topic-header" onclick="toggleTopic('c5-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R2.1 — How Much? The Amount of Chemical Change</div>
+            <div class="topic-detail">Stoichiometry. Mole ratios. Limiting/excess reagents. Percentage yield. Atom economy.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Stoichiometry:</strong> The quantitative relationship between reactants and products in a balanced equation. Coefficients give mole ratios. From moles of one substance, you can find moles (and then mass, volume, or concentration) of any other substance in the reaction.</div>
+            <div class="concept-item chem-border"><strong>Limiting and excess reagents:</strong> The limiting reagent is completely consumed and determines the maximum amount of product. The excess reagent is left over. To identify: calculate moles of each reactant and compare their ratio to the stoichiometric ratio.</div>
+            <div class="concept-item chem-border"><strong>Percentage yield:</strong> (actual yield / theoretical yield) × 100%. Always ≤ 100%. Less than 100% due to: incomplete reactions, side reactions, loss during transfer/purification.</div>
+            <div class="concept-item chem-border"><strong>Atom economy:</strong> (molar mass of desired product / total molar mass of all products) × 100%. A measure of how efficiently atoms are used. Higher atom economy = less waste. Addition reactions have 100% atom economy.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">% yield = (actual yield / theoretical yield) × 100%<div class="formula-note">Percentage yield</div></div>
+            <div class="formula-card">% atom economy = (M_desired product / Σ M_all products) × 100%<div class="formula-note">Atom economy</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Perform full stoichiometric calculations: given mass/volume/concentration of one substance, find another. Always start with a balanced equation.</div>
+            <div class="exam-tip">Identify the limiting reagent and calculate theoretical yield, then percentage yield from actual yield.</div>
+            <div class="exam-tip">Calculate atom economy and discuss its importance in green chemistry.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c5-2">
+        <div class="topic-header" onclick="toggleTopic('c5-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R2.2 — How Fast? The Rate of Chemical Change</div>
+            <div class="topic-detail">Collision theory. Factors affecting rate. Maxwell-Boltzmann. <span class="hl-tag">HL</span> Rate equations. Arrhenius. Mechanisms.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Collision theory:</strong> For a reaction to occur, particles must (1) collide, (2) with sufficient energy (≥ Ea), and (3) with correct orientation. Rate depends on the frequency of successful collisions.</div>
+            <div class="concept-item chem-border"><strong>Factors affecting rate:</strong> Temperature ↑ → faster particles, more exceed Ea. Concentration/pressure ↑ → more frequent collisions. Surface area ↑ → more exposed particles. Catalyst → provides alternative pathway with lower Ea.</div>
+            <div class="concept-item chem-border"><strong>Maxwell-Boltzmann distribution:</strong> A graph showing the distribution of particle energies at a given temperature. At higher T, the curve shifts right and flattens — a greater proportion of particles have energy ≥ Ea. A catalyst lowers Ea, so more particles can react at the same temperature.</div>
+            <div class="concept-item chem-border"><strong>HL: Rate equations:</strong> Rate = k[A]^m[B]^n. The order with respect to each reactant (m, n) is determined experimentally, not from the balanced equation. Rate constant k depends on temperature (Arrhenius equation). Overall order = m + n.</div>
+            <div class="concept-item chem-border"><strong>HL: Arrhenius equation:</strong> k = Ae^(−Ea/RT). Plotting ln k vs 1/T gives a straight line with slope = −Ea/R. This allows experimental determination of Ea.</div>
+            <div class="concept-item chem-border"><strong>HL: Rate-determining step:</strong> The slowest step in a multi-step mechanism controls the overall rate. The rate equation reflects the species involved in the RDS (and any preceding fast equilibria).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Rate of reaction:</span> The change in concentration of reactants or products per unit time. Unit: mol/(dm³·s).</div>
+              <div class="term-item"><span class="term-word">Activation energy (Ea):</span> The minimum energy required for a successful collision (reaction to occur).</div>
+              <div class="term-item"><span class="term-word">Catalyst:</span> A substance that increases the rate of reaction without being consumed, by providing an alternative pathway with lower Ea.</div>
+              <div class="term-item"><span class="term-word">Rate constant (k):</span> The proportionality constant in the rate equation. Depends on temperature and Ea.</div>
+              <div class="term-item"><span class="term-word">Order of reaction:</span> The power to which a reactant's concentration is raised in the rate equation (determined experimentally).</div>
+              <div class="term-item"><span class="term-word">Rate-determining step (RDS):</span> The slowest elementary step in a reaction mechanism.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Rate = k[A]^m[B]^n<div class="formula-note">HL: Rate equation</div></div>
+            <div class="formula-card">k = Ae^(−Ea/RT)<div class="formula-note">HL: Arrhenius equation</div></div>
+            <div class="formula-card">ln k = ln A − Ea/(RT)<div class="formula-note">HL: Linearised Arrhenius (plot ln k vs 1/T)</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Explain how each factor affects rate using collision theory and Maxwell-Boltzmann distributions.</div>
+            <div class="exam-tip">Sketch and annotate Maxwell-Boltzmann distributions showing the effect of temperature or a catalyst.</div>
+            <div class="exam-tip">HL: Determine rate equations from experimental data (initial rates method). Deduce mechanisms from rate equations.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c5-3">
+        <div class="topic-header" onclick="toggleTopic('c5-3')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R2.3 — How Far? The Extent of Chemical Change</div>
+            <div class="topic-detail">Dynamic equilibrium. Le Chatelier's principle. Kc. <span class="hl-tag">HL</span> Kp. ΔG° and K relationship.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Dynamic equilibrium:</strong> In a closed system, when the forward and reverse reaction rates are equal. Macroscopic properties remain constant, but reactions continue at the molecular level. Reached from either direction.</div>
+            <div class="concept-item chem-border"><strong>Le Chatelier's principle:</strong> When a system at equilibrium is disturbed, it shifts to partially counteract the change. Temperature ↑ → shifts in endothermic direction. Concentration ↑ of a substance → shifts away from it. Pressure ↑ → shifts to side with fewer gas moles. Catalysts do NOT shift equilibrium (speed up both directions equally).</div>
+            <div class="concept-item chem-border"><strong>Equilibrium constant (Kc):</strong> For aA + bB ⇌ cC + dD: Kc = [C]^c[D]^d / [A]^a[B]^b. Large K → products favoured. Small K → reactants favoured. Only affected by temperature, not concentration, pressure, or catalysts.</div>
+            <div class="concept-item chem-border"><strong>HL: Kp:</strong> For gaseous reactions, Kp uses partial pressures instead of concentrations. Kp = (p_C)^c(p_D)^d / (p_A)^a(p_B)^b. Partial pressure: p_A = (mole fraction of A) × total pressure.</div>
+            <div class="concept-item chem-border"><strong>HL: ΔG° and K:</strong> ΔG° = −RT ln K. If K > 1, ΔG° < 0 (products favoured thermodynamically). If K < 1, ΔG° > 0 (reactants favoured).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Dynamic equilibrium:</span> A state where the rates of the forward and reverse reactions are equal and concentrations remain constant.</div>
+              <div class="term-item"><span class="term-word">Le Chatelier's principle:</span> A system at equilibrium will respond to a disturbance by shifting to partially oppose the change.</div>
+              <div class="term-item"><span class="term-word">Equilibrium constant (K):</span> The ratio of product to reactant concentrations (or pressures) at equilibrium, each raised to their stoichiometric coefficients.</div>
+              <div class="term-item"><span class="term-word">ICE table:</span> A method (Initial, Change, Equilibrium) for organising equilibrium calculations.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Kc = [C]^c[D]^d / [A]^a[B]^b<div class="formula-note">Equilibrium constant expression</div></div>
+            <div class="formula-card">ΔG° = −RT ln K<div class="formula-note">HL: Relationship between Gibbs energy and K</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write Kc expressions and use ICE tables to calculate K or equilibrium concentrations.</div>
+            <div class="exam-tip">Predict the effect of changes (temperature, concentration, pressure, catalyst) on equilibrium position AND on K.</div>
+            <div class="exam-tip">HL: Calculate Kp from partial pressures. Use ΔG° = −RT ln K to find K or ΔG°.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== R3: MECHANISMS ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c6')">
+      <div class="section-number chem">R3</div>
+      <div class="section-title">Reactivity 3 — Mechanisms of Chemical Change</div>
+      <span class="section-arrow open" id="arrow-c6">▸</span>
+    </div>
+    <div class="topic-list" id="body-c6">
+
+      <div class="topic" id="topic-c6-1">
+        <div class="topic-header" onclick="toggleTopic('c6-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R3.1 — Proton Transfer Reactions (Acids & Bases)</div>
+            <div class="topic-detail">Brønsted-Lowry. pH scale. Strong vs weak. <span class="hl-tag">HL</span> Lewis acids/bases. Ka, Kb, Kw. Buffers. pH curves.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Brønsted-Lowry theory:</strong> An acid is a proton (H⁺) donor; a base is a proton acceptor. In every acid-base reaction, a proton is transferred. Conjugate acid-base pairs differ by one H⁺.</div>
+            <div class="concept-item chem-border"><strong>pH scale:</strong> pH = −log₁₀[H⁺]. pH 7 = neutral (at 25°C), pH < 7 = acidic, pH > 7 = basic. Each unit change in pH = 10× change in [H⁺].</div>
+            <div class="concept-item chem-border"><strong>Strong vs weak:</strong> Strong acids/bases fully dissociate in water (HCl, NaOH). Weak acids/bases partially dissociate — equilibrium lies toward undissociated form (CH₃COOH, NH₃). Same concentration, same pH? No — weak acid has higher pH than strong acid.</div>
+            <div class="concept-item chem-border"><strong>HL: Ka and Kb:</strong> Ka = [H⁺][A⁻]/[HA] for weak acids. Larger Ka = stronger acid. pKa = −log Ka. Kw = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ at 25°C. Ka × Kb = Kw for conjugate pairs.</div>
+            <div class="concept-item chem-border"><strong>HL: Buffer solutions:</strong> Resist changes in pH when small amounts of acid or base are added. Made from a weak acid + its conjugate base (or weak base + conjugate acid). Buffer action: the weak acid neutralises added OH⁻; the conjugate base neutralises added H⁺.</div>
+            <div class="concept-item chem-border"><strong>HL: pH curves (titration curves):</strong> Plot pH vs volume of titrant added. Shape depends on strong/weak combinations. The equivalence point is where stoichiometric amounts have reacted. Indicator choice: pKa of indicator ≈ pH at equivalence point.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Conjugate acid-base pair:</span> Two species that differ by one proton (H⁺).</div>
+              <div class="term-item"><span class="term-word">Amphiprotic / amphoteric:</span> A substance that can act as both an acid and a base (e.g., water, amino acids).</div>
+              <div class="term-item"><span class="term-word">Ka (acid dissociation constant):</span> The equilibrium constant for the dissociation of a weak acid.</div>
+              <div class="term-item"><span class="term-word">Kw (ionic product of water):</span> [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ at 25°C.</div>
+              <div class="term-item"><span class="term-word">Buffer solution:</span> A solution that resists pH changes upon addition of small amounts of acid or base.</div>
+              <div class="term-item"><span class="term-word">Equivalence point:</span> The point in a titration where the acid and base have reacted in stoichiometric proportions.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">pH = −log[H⁺]   and   [H⁺] = 10^(−pH)<div class="formula-note">pH calculations</div></div>
+            <div class="formula-card">Kw = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ (at 25°C)<div class="formula-note">Ionic product of water</div></div>
+            <div class="formula-card">Ka = [H⁺][A⁻] / [HA]<div class="formula-note">HL: Acid dissociation constant</div></div>
+            <div class="formula-card">pH = pKa + log([A⁻]/[HA])<div class="formula-note">HL: Henderson-Hasselbalch equation (buffers)</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate pH of strong acids/bases directly from concentration. For weak acids (HL), use Ka and approximations.</div>
+            <div class="exam-tip">Identify conjugate acid-base pairs in any proton-transfer reaction.</div>
+            <div class="exam-tip">HL: Sketch and interpret pH curves for all four strong/weak acid-base combinations. Choose appropriate indicators.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c6-2">
+        <div class="topic-header" onclick="toggleTopic('c6-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R3.2 — Electron Transfer Reactions (Redox)</div>
+            <div class="topic-detail">Oxidation numbers. Half-equations. Electrochemical cells. <span class="hl-tag">HL</span> E° values. Faraday's laws.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Redox:</strong> Oxidation = loss of electrons (increase in oxidation number). Reduction = gain of electrons (decrease in oxidation number). OIL RIG. They always occur together — one substance is oxidised while another is reduced.</div>
+            <div class="concept-item chem-border"><strong>Oxidation numbers:</strong> Rules: elements = 0, monatomic ions = charge, O usually −2, H usually +1. Sum in a compound = 0; in a polyatomic ion = ion charge. Used to track electron transfer.</div>
+            <div class="concept-item chem-border"><strong>Voltaic (galvanic) cell:</strong> Two different metals in solutions of their ions, connected by a wire and salt bridge. Spontaneous redox reaction generates electricity. Anode = oxidation (−), cathode = reduction (+). Salt bridge completes the circuit.</div>
+            <div class="concept-item chem-border"><strong>Electrolytic cell:</strong> Uses electrical energy to drive a non-spontaneous reaction. Anode = oxidation (+), cathode = reduction (−). Applications: electroplating, extraction of reactive metals (e.g., aluminium), electrolysis of brine.</div>
+            <div class="concept-item chem-border"><strong>HL: Standard electrode potentials (E°):</strong> Measured relative to the standard hydrogen electrode (SHE, E° = 0.00 V). More positive E° = stronger oxidising agent. Cell EMF: E°_cell = E°_cathode − E°_anode. Positive E°_cell → spontaneous reaction.</div>
+            <div class="concept-item chem-border"><strong>HL: Faraday's laws:</strong> The amount of substance deposited/dissolved at an electrode is proportional to the charge passed. Q = It, n = Q/(zF), where z = electrons transferred per ion, F = 96,485 C/mol.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Oxidation:</span> Loss of electrons / increase in oxidation number.</div>
+              <div class="term-item"><span class="term-word">Reduction:</span> Gain of electrons / decrease in oxidation number.</div>
+              <div class="term-item"><span class="term-word">Oxidising agent:</span> A substance that causes oxidation (itself gets reduced).</div>
+              <div class="term-item"><span class="term-word">Reducing agent:</span> A substance that causes reduction (itself gets oxidised).</div>
+              <div class="term-item"><span class="term-word">Salt bridge:</span> A connection between two half-cells allowing ion flow to maintain electrical neutrality.</div>
+              <div class="term-item"><span class="term-word">Standard electrode potential (E°):</span> The potential of a half-cell under standard conditions relative to the SHE.</div>
+              <div class="term-item"><span class="term-word">Faraday constant (F):</span> 96,485 C/mol — the charge carried by one mole of electrons.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">E°_cell = E°_cathode − E°_anode<div class="formula-note">HL: Cell EMF from standard electrode potentials</div></div>
+            <div class="formula-card">Q = I × t<div class="formula-note">HL: Charge from current and time</div></div>
+            <div class="formula-card">n = Q / (z × F)<div class="formula-note">HL: Moles deposited in electrolysis</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Assign oxidation numbers and identify which species is oxidised/reduced in a reaction.</div>
+            <div class="exam-tip">Write and balance half-equations, then combine them into a full redox equation.</div>
+            <div class="exam-tip">HL: Use E° values to predict spontaneity and calculate cell EMF. Perform Faraday's law calculations for electrolysis.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c6-3">
+        <div class="topic-header" onclick="toggleTopic('c6-3')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R3.3 — Electron Sharing Reactions (Radicals) <span class="hl-tag">HL</span></div>
+            <div class="topic-detail">Radicals. Homolytic fission. Free radical substitution: initiation, propagation, termination.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Homolytic fission:</strong> A covalent bond breaks so that each atom gets one electron from the shared pair, forming two radicals (species with unpaired electrons). Denoted by a half-arrow (fishhook). Requires energy (UV light or heat).</div>
+            <div class="concept-item chem-border"><strong>Free radical substitution (e.g., CH₄ + Cl₂):</strong> Three stages: (1) Initiation: UV light causes homolytic fission of Cl₂ → 2Cl•. (2) Propagation: Cl• + CH₄ → CH₃• + HCl, then CH₃• + Cl₂ → CH₃Cl + Cl• (chain reaction — radical regenerated). (3) Termination: two radicals combine (e.g., Cl• + Cl• → Cl₂).</div>
+            <div class="concept-item chem-border"><strong>Limitations:</strong> Free radical substitution produces a mixture of products (mono-, di-, tri-substituted) because substitution can continue. This makes it non-selective — low yield of a specific product.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Radical (free radical):</span> A species with one or more unpaired electrons. Highly reactive.</div>
+              <div class="term-item"><span class="term-word">Homolytic fission:</span> Breaking a covalent bond so each atom receives one electron, forming two radicals.</div>
+              <div class="term-item"><span class="term-word">Initiation:</span> The step that produces the first radicals (usually by UV light).</div>
+              <div class="term-item"><span class="term-word">Propagation:</span> Steps where a radical reacts with a molecule to form a product and regenerate a radical (chain continues).</div>
+              <div class="term-item"><span class="term-word">Termination:</span> Steps where two radicals combine, ending the chain.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write the three stages (initiation, propagation, termination) using correct curly arrow notation (half-arrows for radicals).</div>
+            <div class="exam-tip">Explain why a mixture of products is formed and why this limits the usefulness of the reaction.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c6-4">
+        <div class="topic-header" onclick="toggleTopic('c6-4')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">R3.4 — Electron-Pair Sharing Reactions <span class="hl-tag">HL</span></div>
+            <div class="topic-detail">Nucleophiles, electrophiles. SN1, SN2 mechanisms. Electrophilic addition. Aromatic substitution. Condensation.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Nucleophiles and electrophiles:</strong> A nucleophile is an electron-pair donor (lone pair or π-electrons) — attacks positive/electron-deficient centres. An electrophile is an electron-pair acceptor — attacks negative/electron-rich centres.</div>
+            <div class="concept-item chem-border"><strong>SN2 mechanism:</strong> One-step process: nucleophile attacks the carbon simultaneously as the leaving group departs. Rate = k[substrate][nucleophile]. Favoured by primary substrates (less steric hindrance). Inversion of configuration at the carbon.</div>
+            <div class="concept-item chem-border"><strong>SN1 mechanism:</strong> Two-step process: (1) leaving group departs forming a carbocation, (2) nucleophile attacks the carbocation. Rate = k[substrate]. Favoured by tertiary substrates (stable carbocation). Racemisation (mixture of enantiomers).</div>
+            <div class="concept-item chem-border"><strong>Electrophilic addition:</strong> Alkenes react with electrophiles (HBr, Br₂, H₂O/H⁺). The π-bond attacks the electrophile, forming a carbocation intermediate, then a nucleophile attacks. Markovnikov's rule: H adds to the carbon with more H's already (more stable carbocation intermediate).</div>
+            <div class="concept-item chem-border"><strong>Electrophilic aromatic substitution:</strong> Benzene's delocalised π-system is attacked by an electrophile. A hydrogen is substituted (not added) to preserve aromaticity. Examples: nitration (HNO₃/H₂SO₄), halogenation (Br₂/FeBr₃ catalyst).</div>
+            <div class="concept-item chem-border"><strong>Condensation reactions:</strong> Two molecules join with the loss of a small molecule (usually H₂O). Examples: ester formation (alcohol + carboxylic acid → ester + H₂O), amide formation (amine + carboxylic acid → amide + H₂O).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Nucleophile:</span> A species that donates an electron pair to form a new covalent bond (e.g., OH⁻, NH₃, CN⁻, H₂O).</div>
+              <div class="term-item"><span class="term-word">Electrophile:</span> A species that accepts an electron pair to form a new covalent bond (e.g., H⁺, NO₂⁺, Br⁺).</div>
+              <div class="term-item"><span class="term-word">Leaving group:</span> An atom or group that departs with the bonding electrons during a substitution reaction.</div>
+              <div class="term-item"><span class="term-word">Carbocation:</span> A positively charged carbon intermediate. Stability: tertiary > secondary > primary.</div>
+              <div class="term-item"><span class="term-word">Heterolytic fission:</span> Breaking a bond so that both electrons go to one atom, forming a cation and an anion.</div>
+              <div class="term-item"><span class="term-word">Markovnikov's rule:</span> In HX addition to an alkene, H adds to the carbon with more hydrogens (forming the more stable carbocation).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Draw full curly-arrow mechanisms for SN1, SN2, electrophilic addition, and electrophilic aromatic substitution.</div>
+            <div class="exam-tip">Predict whether SN1 or SN2 is more likely based on the substrate (primary vs tertiary).</div>
+            <div class="exam-tip">Apply Markovnikov's rule to predict the major product of addition to unsymmetrical alkenes.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SKILLS & PRACTICAL ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c7')">
+      <div class="section-number chem" style="background:rgba(102,187,106,0.12);color:var(--accent-green);">&#9879;</div>
+      <div class="section-title">Skills, Practical Work & Assessment</div>
+      <span class="section-arrow open" id="arrow-c7">▸</span>
+    </div>
+    <div class="topic-list" id="body-c7">
+
+      <div class="topic" id="topic-c7-1">
+        <div class="topic-header" onclick="toggleTopic('c7-1')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">Experimental Techniques <span class="skill-tag">SKILL</span></div>
+            <div class="topic-detail">Titrations, calorimetry, distillation, chromatography, gravimetric analysis, spectrophotometry.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Titration:</strong> A volumetric technique to determine concentration. Add titrant from a burette to analyte in a flask until the equivalence point (detected by indicator colour change or pH meter). Back-titration used when the analyte is insoluble or slow-reacting.</div>
+            <div class="concept-item chem-border"><strong>Calorimetry:</strong> Measuring enthalpy changes using Q = mcΔT. Key: insulate to minimise heat loss. Use a graph (temperature vs time) to extrapolate the maximum temperature if heat loss occurs.</div>
+            <div class="concept-item chem-border"><strong>Chromatography:</strong> Separating mixtures based on different affinities for stationary and mobile phases. Rf = distance moved by spot / distance moved by solvent front. Different types: paper, TLC, column, gas chromatography.</div>
+            <div class="concept-item chem-border"><strong>Spectrophotometry / colorimetry:</strong> Measuring absorption of light by coloured solutions. Beer-Lambert law: A = εcl. Calibration curve method: measure absorbance of known concentrations, then read unknown concentration from the curve.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Describe the procedure for a titration (including equipment, indicator choice, and how to identify the endpoint).</div>
+            <div class="exam-tip">Use Rf values to identify substances from a chromatogram.</div>
+            <div class="exam-tip">Explain how to use a calibration curve in spectrophotometry to find an unknown concentration.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c7-2">
+        <div class="topic-header" onclick="toggleTopic('c7-2')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">Data Processing & Analysis <span class="skill-tag">SKILL</span></div>
+            <div class="topic-detail">Uncertainty, error propagation, graphical analysis, significant figures.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Uncertainty:</strong> Every measurement has uncertainty. Analogue instruments: ± half the smallest division. Digital instruments: ± the smallest displayed digit. Percentage uncertainty = (absolute uncertainty / measured value) × 100%.</div>
+            <div class="concept-item chem-border"><strong>Error propagation:</strong> Addition/subtraction: add absolute uncertainties. Multiplication/division: add percentage uncertainties. Powers: multiply percentage uncertainty by the power.</div>
+            <div class="concept-item chem-border"><strong>Graphical analysis:</strong> Use error bars to show uncertainty. Best-fit line should pass through error bars. Max/min gradient lines give uncertainty in gradient. Linearisation of data (e.g., plotting 1/[A] vs t for second-order) allows determination of rate constants and other parameters.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Propagate uncertainties through multi-step calculations correctly.</div>
+            <div class="exam-tip">Draw graphs with error bars and determine uncertainty in gradient from max/min lines.</div>
+            <div class="exam-tip">Express answers to the correct number of significant figures.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c7-3">
+        <div class="topic-header" onclick="toggleTopic('c7-3')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">Scientific Investigation (IA)</div>
+            <div class="topic-detail">Internal assessment: personal investigation. 3,000-word limit. Research question, methodology, analysis.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Research question:</strong> Must be focused, measurable, and answerable through primary experimental data. Should clearly define the independent and dependent variables.</div>
+            <div class="concept-item chem-border"><strong>Methodology:</strong> Detailed, reproducible procedure. Identify and control variables. Justify the range and number of trials. Include safety and ethical considerations.</div>
+            <div class="concept-item chem-border"><strong>Data analysis:</strong> Process raw data into meaningful results (tables, graphs, calculations). Include uncertainties. Use appropriate statistical tools. Relate results back to the research question with scientific reasoning.</div>
+            <div class="concept-item chem-border"><strong>Evaluation:</strong> Discuss strengths and weaknesses of the method. Identify systematic and random errors with specific suggestions for improvement. Assess whether the conclusion is justified by the data.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">The IA is worth 20% of the final grade. Focus on a clear, focused research question and thorough error analysis.</div>
+            <div class="exam-tip">Quality of data processing and evaluation matters more than perfect results.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c7-4">
+        <div class="topic-header" onclick="toggleTopic('c7-4')">
+          <div class="topic-dot chem"></div>
+          <div class="topic-content">
+            <div class="topic-name">Exam Structure</div>
+            <div class="topic-detail">Paper 1: MCQs + data analysis. Paper 2: short-answer and extended-response.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts-chem">Key Concepts</div>
+            <div class="concept-item chem-border"><strong>Paper 1 (2 hours):</strong> Part A — 30 multiple-choice questions (no calculator). Part B — data-based and short-answer questions (calculator allowed). Tests both knowledge recall and data interpretation skills. Total: 36% of final grade.</div>
+            <div class="concept-item chem-border"><strong>Paper 2 (2 hours 30 minutes):</strong> Short-answer and extended-response questions. Calculator and data booklet allowed. Tests in-depth understanding, application, and synthesis. Total: 44% of final grade.</div>
+            <div class="concept-item chem-border"><strong>Internal Assessment:</strong> One scientific investigation (IA). 3,000-word report. 20% of final grade. Assessed on: personal engagement, exploration, analysis, evaluation, communication.</div>
+            <div class="concept-item chem-border"><strong>Exam strategy:</strong> Always show working. Use the data booklet. Read questions carefully — command terms matter (state vs explain vs discuss). For extended response, structure your answer logically. Time management: ~1.5 min per mark.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">
+  Study Sprint — Built for structured, Harvard-level preparation<br>
+  Sources: IBO Chemistry Guide (First Assessment 2025)
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

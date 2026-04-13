@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fysik 2 — Gymnasiepoäng 100</title>
+<meta name="description" content="Complete Skolverket syllabus guide for Fysik 2 — mechanics, waves, electromagnetism, and astrophysics.">
+<meta property="og:title" content="Fysik 2 — Study Sprint">
+<meta property="og:description" content="Complete Skolverket syllabus guide for Fysik 2 — mechanics, waves, electromagnetism, and astrophysics.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent-physics: #4fc3f7;
+  --accent-physics-dim: rgba(79,195,247,0.12);
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-purple: #b388ff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.back-link {
+  padding: 0 24px;
+  padding-top: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-physics);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.back-link a:hover {
+  gap: 12px;
+  color: #2fc7f0;
+}
+
+.hero {
+  padding: 40px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(79,195,247,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 50%, rgba(79,195,247,0.06) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-20px, 10px) rotate(2deg); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--accent-physics);
+}
+
+.hero .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.hero .badge-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge.phys { background: var(--accent-physics-dim); color: var(--accent-physics); border: 1px solid rgba(79,195,247,0.25); }
+
+.content { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.intro-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.intro-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.stat-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-physics);
+}
+
+.stat-value.phys {
+  color: var(--accent-physics);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.section {
+  margin-bottom: 36px;
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-number {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  background: var(--accent-physics-dim);
+  color: var(--accent-physics);
+}
+
+.section-number.phys {
+  background: var(--accent-physics-dim);
+  color: var(--accent-physics);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.section-arrow {
+  color: var(--text-muted);
+  transition: transform 0.3s;
+  font-size: 1.2rem;
+}
+
+.section-arrow.open { transform: rotate(90deg); }
+
+.topic-list { display: flex; flex-direction: column; gap: 6px; }
+
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.topic:hover {
+  border-color: rgba(255,255,255,0.1);
+  background: var(--surface-2);
+}
+
+.topic-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.topic-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+  background: var(--accent-physics);
+}
+
+.topic-dot.phys {
+  background: var(--accent-physics);
+}
+
+.topic-content { flex: 1; }
+
+.topic-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.topic-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.topic-expand-icon {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.topic.expanded .topic-expand-icon { transform: rotate(90deg); }
+.topic.expanded { border-color: rgba(255,255,255,0.12); }
+
+.topic-body {
+  display: none;
+  padding: 0 18px 18px 38px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+
+.topic.expanded .topic-body { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.info-block {
+  margin-top: 16px;
+}
+
+.info-block-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-physics);
+}
+
+.info-block-title.concepts {
+  color: var(--accent-physics);
+}
+
+.info-block-title.terms {
+  color: var(--accent-gold);
+}
+
+.info-block-title.formulas {
+  color: var(--accent-green);
+}
+
+.info-block-title.exam {
+  color: var(--accent-purple);
+}
+
+.concept-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  border-left: 3px solid var(--accent-physics);
+}
+
+.concept-item.phys-border {
+  border-left: 3px solid var(--accent-physics);
+}
+
+.concept-item strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.term-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.term-item .term-word {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 0.88rem;
+}
+
+.formula-card {
+  background: var(--surface-3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  border: 1px solid rgba(102,187,106,0.15);
+}
+
+.formula-card .formula-note {
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.exam-tip {
+  background: rgba(179,136,255,0.08);
+  border: 1px solid rgba(179,136,255,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.exam-tip::before {
+  content: '▸ ';
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.footer-note {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .topic-body { padding-left: 18px; }
+  .term-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="back-link">
+  <a href="index.html">← Back to Hub</a>
+</div>
+
+<div class="hero">
+  <h1>Fysik 2</h1>
+  <p class="subtitle">Study Sprint — Structured Syllabus Roadmap</p>
+  <div class="badge-row">
+    <span class="badge phys">Swedish Gymnasium Fysik 2</span>
+  </div>
+</div>
+
+<div class="content">
+
+<div id="panel-physics">
+  <div class="intro-card">
+    <h3>Swedish Gymnasium — Fysik 2 (100p)</h3>
+    <p>Fysik 2 builds on Fysik 1 and covers mechanics in two dimensions, oscillations and waves, electromagnetism, atomic physics, astrophysics, and the nature of physics as a discipline. Below is every core content area from Skolverket's centralt innehål, broken down into exam-ready subtopics. Click any topic to expand detailed notes.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-value phys">6</div><div class="stat-label">Core Areas</div></div>
+      <div class="stat"><div class="stat-value phys">~35</div><div class="stat-label">Subtopics</div></div>
+      <div class="stat"><div class="stat-value phys">100p</div><div class="stat-label">Course Points</div></div>
+    </div>
+  </div>
+
+  <!-- ===== P1: RÖRELSE OCH KRAFTER ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('p1')">
+      <div class="section-number phys">01</div>
+      <div class="section-title">Rörelse och Krafter — Motion & Forces</div>
+      <span class="section-arrow open" id="arrow-p1">▸</span>
+    </div>
+    <div class="topic-list" id="body-p1">
+
+      <!-- P1.1 -->
+      <div class="topic" id="topic-p1-1">
+        <div class="topic-header" onclick="toggleTopic('p1-1')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">2D Motion in Gravitational Fields</div>
+            <div class="topic-detail">Projectile motion: horizontal launch and angled launch. Decomposing velocity into x/y components. Trajectory equations, max height, range.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Independence of horizontal and vertical motion:</strong> In projectile motion, the horizontal component of velocity remains constant (no air resistance), while the vertical component is affected by gravitational acceleration g = 9.81 m/s². These two components act independently of each other.</div>
+            <div class="concept-item phys-border"><strong>Horizontal launch (horisontellt kast):</strong> Object launched horizontally from a height. Initial vertical velocity = 0. Horizontal distance depends on launch speed and fall time. The path is a parabola.</div>
+            <div class="concept-item phys-border"><strong>Angled launch (snett kast):</strong> Object launched at angle θ to the horizontal. Initial velocity is decomposed into v₀ₓ = v₀·cos θ and v₀ᵧ = v₀·sin θ. Maximum height occurs when vertical velocity = 0. Range is maximised at θ = 45° (no air resistance).</div>
+            <div class="concept-item phys-border"><strong>Symmetry of trajectory:</strong> For level ground, time to reach max height = time to fall back. The trajectory is symmetric about the highest point. Total flight time T = 2v₀ sinθ / g.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Projectile (projektil):</span> An object moving under the influence of gravity alone after being launched.</div>
+              <div class="term-item"><span class="term-word">Trajectory (bana):</span> The curved path followed by a projectile through space — parabolic in uniform gravity.</div>
+              <div class="term-item"><span class="term-word">Range (räckvidd):</span> The horizontal distance covered by a projectile from launch to landing.</div>
+              <div class="term-item"><span class="term-word">Component (komponent):</span> The projection of a vector along an axis (x or y). Used to break velocity into horizontal and vertical parts.</div>
+              <div class="term-item"><span class="term-word">Free fall (fritt fall):</span> Motion under gravity alone, with no air resistance. Acceleration = g downward.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">x = v₀ₓ · t = v₀ · cosθ · t<div class="formula-note">Horizontal displacement (constant velocity)</div></div>
+            <div class="formula-card">y = v₀ᵧ · t − ½gt² = v₀ · sinθ · t − ½gt²<div class="formula-note">Vertical displacement</div></div>
+            <div class="formula-card">vᵧ = v₀ · sinθ − g·t<div class="formula-note">Vertical velocity at time t</div></div>
+            <div class="formula-card">H_max = v₀²·sin²θ / (2g)<div class="formula-note">Maximum height</div></div>
+            <div class="formula-card">R = v₀²·sin(2θ) / g<div class="formula-note">Range on level ground</div></div>
+            <div class="formula-card">T = 2v₀·sinθ / g<div class="formula-note">Total flight time on level ground</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate time of flight, max height, or range given initial speed and angle — decompose first, then use kinematics separately for x and y.</div>
+            <div class="exam-tip">Determine the velocity (magnitude and direction) at any point during flight — find vₓ and vᵧ, then use Pythagoras and tan⁻¹.</div>
+            <div class="exam-tip">Horizontal launch from a table/cliff: given height and horizontal speed, find where the object lands.</div>
+            <div class="exam-tip">Sketch or interpret trajectory graphs: x(t) is linear, y(t) is parabolic, vᵧ(t) is linear.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P1.2 -->
+      <div class="topic" id="topic-p1-2">
+        <div class="topic-header" onclick="toggleTopic('p1-2')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">2D Motion in Electric Fields</div>
+            <div class="topic-detail">Charged particle deflection in uniform electric fields. Parabolic trajectories. Comparison with gravitational projectile motion.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Analogy with gravity:</strong> A charged particle entering a uniform electric field perpendicular to its velocity follows a parabolic path — exactly analogous to projectile motion, but with electric force replacing gravity.</div>
+            <div class="concept-item phys-border"><strong>Uniform electric field:</strong> Between parallel plates with potential difference V and separation d, the field E = V/d is uniform. The force on a charge q is F = qE, giving acceleration a = qE/m.</div>
+            <div class="concept-item phys-border"><strong>Deflection of charged particles:</strong> A positive charge is deflected toward the negative plate; a negative charge toward the positive plate. The horizontal velocity remains constant while the vertical velocity changes due to the electric force.</div>
+            <div class="concept-item phys-border"><strong>Applications:</strong> Cathode ray tubes, ink-jet printers, mass spectrometers, and particle accelerators all use electric field deflection.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Electric field (elektriskt fält), E:</span> A region where a charged particle experiences a force. Measured in N/C or V/m.</div>
+              <div class="term-item"><span class="term-word">Uniform field (homogent fält):</span> A field with the same strength and direction at every point — produced between parallel plates.</div>
+              <div class="term-item"><span class="term-word">Deflection (avböjning):</span> The change in path of a charged particle due to an electric (or magnetic) field.</div>
+              <div class="term-item"><span class="term-word">Potential difference (spänning), V:</span> The energy per unit charge between two points. Measured in volts (V).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">E = V / d<div class="formula-note">Electric field between parallel plates</div></div>
+            <div class="formula-card">F = qE<div class="formula-note">Force on a charge in an electric field</div></div>
+            <div class="formula-card">a = qE / m = qV / (md)<div class="formula-note">Acceleration of charged particle</div></div>
+            <div class="formula-card">y = ½ · (qE/m) · t²<div class="formula-note">Vertical deflection (entering perpendicular to field)</div></div>
+            <div class="formula-card">x = v₀ · t<div class="formula-note">Horizontal displacement (constant velocity)</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Relate motion in electric field to projectile motion — both have constant horizontal velocity and uniformly accelerated motion perpendicular to initial velocity.</div>
+            <div class="exam-tip">Given mass, charge, voltage, and plate separation, calculate deflection at a point or find plate length needed to achieve a target deflection.</div>
+            <div class="exam-tip">Determine direction of deflection based on signs of charge and field direction.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P1.3 -->
+      <div class="topic" id="topic-p1-3">
+        <div class="topic-header" onclick="toggleTopic('p1-3')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Circular Motion & Centripetal Force</div>
+            <div class="topic-detail">Uniform circular motion. Centripetal acceleration and force. Angular velocity, period, frequency. Real forces: friction, tension, gravity, normal force.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Uniform circular motion:</strong> Motion at constant speed in a circle. Although speed is constant, velocity is not (direction changes). Therefore there is acceleration toward the centre (centripetal acceleration).</div>
+            <div class="concept-item phys-border"><strong>Centripetal acceleration (centripetal acceleration):</strong> Always points toward the centre of the circle. Magnitude: aₒ = v²/r = ω²r, where v is speed, r is radius, ω is angular velocity.</div>
+            <div class="concept-item phys-border"><strong>Centripetal force:</strong> The net force toward the centre that causes centripetal acceleration. Fₒ = mv²/r = mω²r. This is not a new type of force — it's the resultant of real forces (friction, tension, gravity, normal force, etc.) that point toward the centre.</div>
+            <div class="concept-item phys-border"><strong>Real forces providing centripetal force:</strong> Car turning on flat road — friction. Satellite orbiting → gravity. Object swinging on string → tension. Ball rolling on inside of circular track → normal force. Identify the real force(s), then set it equal to mv²/r.</div>
+            <div class="concept-item phys-border"><strong>Angular quantities:</strong> Angular velocity ω = Δθ/Δt (rad/s). Period T = time for one revolution. Frequency f = 1/T = revolutions per second. Relationships: v = ωr, ω = 2π/T = 2πf.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Centripetal (centripetal):</span> Directed toward the centre; always used for acceleration and force in circular motion.</div>
+              <div class="term-item"><span class="term-word">Angular velocity, ω (vinkelhastighet):</span> Rate of change of angle. Unit: rad/s. Related to period: ω = 2π/T.</div>
+              <div class="term-item"><span class="term-word">Period, T (period):</span> Time for one complete revolution. Unit: seconds.</div>
+              <div class="term-item"><span class="term-word">Frequency, f (frekvens):</span> Number of revolutions per unit time. Unit: Hz (s⁻¹). f = 1/T.</div>
+              <div class="term-item"><span class="term-word">Radian (radian):</span> Unit of angle. One complete circle = 2π radians = 360°.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">a_c = v² / r = ω²r<div class="formula-note">Centripetal acceleration</div></div>
+            <div class="formula-card">F_c = mv² / r = mω²r<div class="formula-note">Centripetal force</div></div>
+            <div class="formula-card">v = 2πr / T = ωr<div class="formula-note">Speed in circular motion</div></div>
+            <div class="formula-card">ω = 2π / T = 2πf<div class="formula-note">Angular velocity</div></div>
+            <div class="formula-card">T = 1 / f<div class="formula-note">Period-frequency relationship</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Identify the real force(s) providing centripetal force in a given scenario (car on curve → friction, satellite → gravity, etc.).</div>
+            <div class="exam-tip">Calculate speed, radius, or centripetal force for objects in circular paths — always draw a free-body diagram first.</div>
+            <div class="exam-tip">Banking of roads: explain why inclined curves reduce reliance on friction (component of normal force provides centripetal force).</div>
+            <div class="exam-tip">Vertical circles: at the top, both gravity and normal/tension point inward; at the bottom, they oppose each other.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P1.4 -->
+      <div class="topic" id="topic-p1-4">
+        <div class="topic-header" onclick="toggleTopic('p1-4')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Torque & Rotational Equilibrium (Vridmoment)</div>
+            <div class="topic-detail">Torque = F × d. Clockwise vs counterclockwise moments. Conditions for static equilibrium. Lever problems, beams, and balancing.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Torque (vridmoment, τ):</strong> The rotational effect of a force. Depends on the force magnitude, the distance from the pivot, and the angle. τ = F · d · sinθ, where d is the distance from the pivot to the point where the force is applied.</div>
+            <div class="concept-item phys-border"><strong>Moment arm (momentarm):</strong> The perpendicular distance from the line of action of the force to the pivot point. When force is perpendicular to the lever arm, moment arm = lever arm length.</div>
+            <div class="concept-item phys-border"><strong>Conditions for static equilibrium:</strong> (1) Net force = 0 (translational equilibrium). (2) Net torque = 0 about any pivot point (rotational equilibrium). Both must hold simultaneously.</div>
+            <div class="concept-item phys-border"><strong>Centre of mass / gravity:</strong> The point where the entire weight of an object can be considered to act. For a uniform beam, this is the geometric centre.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Torque (vridmoment, τ):</span> The measure of a force's tendency to cause rotation about a pivot. Unit: N·m.</div>
+              <div class="term-item"><span class="term-word">Pivot / fulcrum (vridpunkt):</span> The fixed point around which rotation occurs.</div>
+              <div class="term-item"><span class="term-word">Lever arm (hävarm):</span> The distance from the pivot to the point of force application.</div>
+              <div class="term-item"><span class="term-word">Static equilibrium (statisk jämvikt):</span> A state where an object is at rest with zero net force and zero net torque.</div>
+              <div class="term-item"><span class="term-word">Couple (kraftpar):</span> Two equal and opposite parallel forces that produce pure rotation (net force = 0 but net torque ≠ 0).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">τ = F · d · sinθ<div class="formula-note">Torque (general case)</div></div>
+            <div class="formula-card">τ = F · d⊥<div class="formula-note">Torque using perpendicular distance (moment arm)</div></div>
+            <div class="formula-card">Σ τ_clockwise = Σ τ_counterclockwise<div class="formula-note">Condition for rotational equilibrium</div></div>
+            <div class="formula-card">Σ F = 0 (both x and y components)<div class="formula-note">Condition for translational equilibrium</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate torque given force and distance; be careful with the perpendicular distance (moment arm).</div>
+            <div class="exam-tip">Solve equilibrium problems (lever systems, beams, suspended objects) by setting net force = 0 and net torque = 0.</div>
+            <div class="exam-tip">Choose an appropriate pivot point to simplify torque calculations (often the point with unknown forces).</div>
+            <div class="exam-tip">Distinguish between torque and force; understand that a system can be in rotational equilibrium but not translational (or vice versa).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== P2: OSCILLATIONER OCH VÅGOR ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('p2')">
+      <div class="section-number phys">02</div>
+      <div class="section-title">Oscillationer och Vågor — Oscillations & Waves</div>
+      <span class="section-arrow open" id="arrow-p2">▸</span>
+    </div>
+    <div class="topic-list" id="body-p2">
+
+      <!-- P2.1 -->
+      <div class="topic" id="topic-p2-1">
+        <div class="topic-header" onclick="toggleTopic('p2-1')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Simple Harmonic Motion (SHM)</div>
+            <div class="topic-detail">Defining SHM: F = -kx, restoring force. Equilibrium and displacement. Period, amplitude, energy.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Simple Harmonic Motion (SHM):</strong> Motion where the acceleration is proportional to displacement but opposite in direction: a = -ω²x. Results in a restoring force F = -kx (Hooke's Law). The motion is periodic, oscillating around equilibrium.</div>
+            <div class="concept-item phys-border"><strong>Restoring force:</strong> The force that always acts toward equilibrium. Magnitude increases with distance from equilibrium. For a spring: F = -kx, where k is the spring constant (stiffness). For a pendulum: F = -mg sinθ ≈ -mg(θ) for small angles.</div>
+            <div class="concept-item phys-border"><strong>Equilibrium and displacement:</strong> Equilibrium is where the net force is zero. Displacement x is measured from equilibrium. Amplitude A is the maximum displacement (where velocity = 0).</div>
+            <div class="concept-item phys-border"><strong>Energy in SHM:</strong> Total mechanical energy E = ½kA² is constant. At equilibrium: all kinetic. At maximum displacement: all potential. Continuous exchange between kinetic and potential energy.</div>
+            <div class="concept-item phys-border"><strong>Period and frequency:</strong> Period T = 2π√(m/k) for a spring. T = 2π√(L/g) for a simple pendulum. Both independent of amplitude (isochronous). Frequency f = 1/T.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Amplitude, A:</span> Maximum displacement from equilibrium. Unit: meters.</div>
+              <div class="term-item"><span class="term-word">Period, T:</span> Time for one complete oscillation. Unit: seconds.</div>
+              <div class="term-item"><span class="term-word">Frequency, f:</span> Number of oscillations per second. Unit: Hz. f = 1/T.</div>
+              <div class="term-item"><span class="term-word">Angular frequency, ω:</span> ω = 2πf = 2π/T. Unit: rad/s. Related to SHM equation: a = -ω²x.</div>
+              <div class="term-item"><span class="term-word">Spring constant, k:</span> Measures stiffness of spring. Larger k → stiffer spring → higher frequency. Unit: N/m.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">F = -kx<div class="formula-note">Restoring force (Hooke's Law)</div></div>
+            <div class="formula-card">a = -ω²x<div class="formula-note">Acceleration in SHM</div></div>
+            <div class="formula-card">T = 2π√(m/k)<div class="formula-note">Period of mass on spring</div></div>
+            <div class="formula-card">T = 2π√(L/g)<div class="formula-note">Period of simple pendulum (small angle)</div></div>
+            <div class="formula-card">E_total = ½kA²<div class="formula-note">Total mechanical energy (constant)</div></div>
+            <div class="formula-card">E_kinetic = ½mv², E_potential = ½kx²<div class="formula-note">Distribution at any position</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Determine if a motion is SHM: acceleration must be proportional to displacement and opposite in direction (a = -ω²x).</div>
+            <div class="exam-tip">Calculate period or frequency from mass and spring constant (or length and gravity for pendulum).</div>
+            <div class="exam-tip">Use energy conservation: total E = ½kA² is constant; at any position, E = ½kx² + ½mv².</div>
+            <div class="exam-tip">Sketch displacement, velocity, and acceleration graphs for SHM; note that v leads x by 90°, and a leads v by 90°.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2.2 -->
+      <div class="topic" id="topic-p2-2">
+        <div class="topic-header" onclick="toggleTopic('p2-2')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Damping & Resonance</div>
+            <div class="topic-detail">Damped oscillations: amplitude decay. Damping constants and energy loss. Resonance: natural frequency, driving frequency, amplitude at resonance.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Damping:</strong> A resistive force (e.g., air resistance, friction) proportional to velocity: F_damp = -bv. Opposes motion, removing mechanical energy from the system. Amplitude decreases exponentially: A(t) = A₀e^(-t/τ), where τ is the time constant.</div>
+            <div class="concept-item phys-border"><strong>Types of damping:</strong> Underdamped (oscillates as it decays), critically damped (fastest return to equilibrium without oscillating), overdamped (slow return without oscillating). For exam purposes, usually underdamped.</div>
+            <div class="concept-item phys-border"><strong>Resonance:</strong> When a system is driven by an external periodic force at its natural frequency f₀, amplitude grows significantly. The natural frequency is f₀ = √(k/m) / (2π) for a spring-mass system, independent of damping.</div>
+            <div class="concept-item phys-border"><strong>Resonance condition:</strong> Amplitude is maximum when the driving frequency equals the natural frequency (f_drive = f₀). If damping is small, resonance amplitude can be very large. Larger damping → lower peak amplitude, broader resonance curve.</div>
+            <div class="concept-item phys-border"><strong>Applications and examples:</strong> Bridges: wind at natural frequency → large oscillations → failure. Radio tuning: select station by setting LC circuit to resonant frequency. Mechanical vibration isolation: choose damping to minimize vibration transmission.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Damping (dämpning):</span> Resistance to motion (e.g., friction, air resistance) that removes energy from oscillations.</div>
+              <div class="term-item"><span class="term-word">Damping constant, b (dämpningskonstant):</span> Coefficient in damping force F = -bv. Larger b → stronger damping.</div>
+              <div class="term-item"><span class="term-word">Natural frequency, f₀ (egenfrekvens):</span> Frequency at which a system oscillates freely (no driving force). For spring: f₀ = √(k/m)/(2π).</div>
+              <div class="term-item"><span class="term-word">Driving frequency, f_drive:</span> Frequency of external periodic force applied to the system.</div>
+              <div class="term-item"><span class="term-word">Resonance (resonans):</span> Large amplitude oscillations when f_drive = f₀.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">F_damp = -bv<div class="formula-note">Damping force</div></div>
+            <div class="formula-card">A(t) = A₀ e^(-t/τ)<div class="formula-note">Amplitude decay (underdamped)</div></div>
+            <div class="formula-card">f₀ = √(k/m) / (2π)<div class="formula-note">Natural frequency for spring-mass</div></div>
+            <div class="formula-card">Resonance occurs when f_drive = f₀<div class="formula-note">Condition for maximum amplitude</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Sketch amplitude vs. time for damped oscillation; understand that amplitude decays exponentially while frequency remains constant.</div>
+            <div class="exam-tip">Relate natural frequency to spring constant and mass; explain why lighter objects or stiffer springs oscillate faster.</div>
+            <div class="exam-tip">Explain resonance qualitatively: when driving frequency matches natural frequency, the system is continuously "pushed" in phase with its motion → amplitude builds up.</div>
+            <div class="exam-tip">Discuss real-world examples: bridge resonance, radio tuning, car suspension design.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2.3 -->
+      <div class="topic" id="topic-p2-3">
+        <div class="topic-header" onclick="toggleTopic('p2-3')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Wave Properties & Wave Equation</div>
+            <div class="topic-detail">Wavelength λ, frequency f, speed v. Transverse vs. longitudinal waves. Sinusoidal wave equation: y = A sin(kx - ωt).</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Wave definition:</strong> A disturbance that propagates through a medium (or vacuum for EM waves) transferring energy. Characterized by wavelength λ (distance between adjacent crests/troughs or compressions/rarefactions), frequency f (oscillations per second), and speed v.</div>
+            <div class="concept-item phys-border"><strong>Wave speed relation:</strong> v = fλ. Speed is determined by the medium (e.g., sound speed in air ≈ 340 m/s; in water ≈ 1480 m/s; light speed c = 3×10⁸ m/s in vacuum). Speed is independent of amplitude or frequency.</div>
+            <div class="concept-item phys-border"><strong>Transverse waves:</strong> Oscillation perpendicular to direction of propagation (e.g., waves on a string, light). Particles move up and down while wave travels left/right.</div>
+            <div class="concept-item phys-border"><strong>Longitudinal waves:</strong> Oscillation parallel to direction of propagation (e.g., sound, seismic P-waves). Particles compress and rarefy along the direction of wave travel.</div>
+            <div class="concept-item phys-border"><strong>Wave equation:</strong> y(x,t) = A sin(kx − ωt), where A is amplitude, k = 2π/λ is wave number, ω = 2πf is angular frequency. Describes the displacement of any point on the medium at any time.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Wavelength, λ:</span> Distance between two adjacent points in phase (e.g., crest to crest). Unit: meters.</div>
+              <div class="term-item"><span class="term-word">Frequency, f:</span> Number of complete oscillations per second. Unit: Hz. f = v/λ.</div>
+              <div class="term-item"><span class="term-word">Wave speed, v:</span> Speed at which the wave pattern travels. v = fλ. Unit: m/s.</div>
+              <div class="term-item"><span class="term-word">Amplitude, A:</span> Maximum displacement of a particle from equilibrium. Unit: meters.</div>
+              <div class="term-item"><span class="term-word">Wave number, k:</span> k = 2π/λ (rad/m). Related to wavelength inversely.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">v = f · λ<div class="formula-note">Fundamental wave relation</div></div>
+            <div class="formula-card">y(x,t) = A sin(kx − ωt)<div class="formula-note">Sinusoidal wave equation</div></div>
+            <div class="formula-card">k = 2π / λ<div class="formula-note">Wave number</div></div>
+            <div class="formula-card">ω = 2π · f<div class="formula-note">Angular frequency</div></div>
+            <div class="formula-card">f = 1 / T<div class="formula-note">Frequency from period</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Use v = fλ to find any unknown (speed, frequency, or wavelength) given the other two.</div>
+            <div class="exam-tip">Distinguish between wave speed (determined by medium) and particle speed (depends on amplitude and frequency).</div>
+            <div class="exam-tip">Interpret and sketch the wave equation y = A sin(kx − ωt): at fixed time, it shows spatial pattern; at fixed position, it shows temporal oscillation.</div>
+            <div class="exam-tip">Determine the direction of wave travel from the wave equation: if it's sin(kx − ωt), wave travels in +x direction; sin(kx + ωt) travels in −x direction.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2.4 -->
+      <div class="topic" id="topic-p2-4">
+        <div class="topic-header" onclick="toggleTopic('p2-4')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Interference & Standing Waves</div>
+            <div class="topic-detail">Superposition. Constructive/destructive interference. Standing waves on strings: fixed ends, harmonics, nodes, antinodes.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Superposition principle:</strong> When two waves travel through the same medium, the net displacement at any point is the sum of displacements from each wave. This allows constructive and destructive interference to occur.</div>
+            <div class="concept-item phys-border"><strong>Constructive interference:</strong> Waves are in phase (path difference = nλ, n = 0,1,2,...). Amplitudes add. Resultant amplitude = A₁ + A₂. Occurs when wave crests/troughs align.</div>
+            <div class="concept-item phys-border"><strong>Destructive interference:</strong> Waves are out of phase (path difference = (n+½)λ). Amplitudes subtract. If A₁ = A₂, complete cancellation (amplitude = 0). Occurs when crest of one meets trough of another.</div>
+            <div class="concept-item phys-border"><strong>Standing waves:</strong> Result when two waves of equal frequency travel in opposite directions on a string with fixed ends. Appears stationary (nodes and antinodes don't move along the string).</div>
+            <div class="concept-item phys-border"><strong>Nodes and antinodes:</strong> Nodes are points of zero displacement (destructive interference). Antinodes are points of maximum displacement (constructive interference). On a string of length L with fixed ends: L = n(λ/2), n = 1,2,3,... giving allowed harmonics.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Superposition (superposition):</span> Principle that displacement is the vector sum of individual wave displacements.</div>
+              <div class="term-item"><span class="term-word">Interference (interferens):</span> The result of superposition when two waves combine (constructive or destructive).</div>
+              <div class="term-item"><span class="term-word">Node (nod):</span> A point on a standing wave where displacement is always zero.</div>
+              <div class="term-item"><span class="term-word">Antinode (antinod):</span> A point on a standing wave where displacement is maximum (amplitude = A₁ + A₂).</div>
+              <div class="term-item"><span class="term-word">Harmonic (överton):</span> A mode of vibration at a specific allowed frequency. First harmonic (fundamental) has one half-wavelength on string; second has two half-wavelengths, etc.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Path difference for constructive interference: Δ = nλ (n = 0, 1, 2, ...)<div class="formula-note"></div></div>
+            <div class="formula-card">Path difference for destructive interference: Δ = (n+½)λ<div class="formula-note"></div></div>
+            <div class="formula-card">L = n(λ/2)<div class="formula-note">Standing wave on string with fixed ends (n = 1, 2, 3, ...)</div></div>
+            <div class="formula-card">f_n = nv / (2L)<div class="formula-note">Frequency of nth harmonic</div></div>
+            <div class="formula-card">f_2 = 2f₁, f_3 = 3f₁, etc.<div class="formula-note">Overtones are integer multiples of fundamental</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Determine constructive vs. destructive interference from path difference: if Δ is integer multiple of λ → constructive; if (n+½)λ → destructive.</div>
+            <div class="exam-tip">On a string or pipe with fixed ends, standing waves occur at wavelengths where L = n(λ/2). Calculate wavelength, frequency, or length given the harmonic number.</div>
+            <div class="exam-tip">Sketch standing waves: mark nodes (zero displacement) and antinodes (maximum displacement). Fundamental mode has 1 half-wavelength, second harmonic has 2, etc.</div>
+            <div class="exam-tip">Connect standing waves to musical instruments: longer strings → lower frequencies (larger wavelengths). Harmonics determine timbre.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== P3: ELEKTROMAGNETISM ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('p3')">
+      <div class="section-number phys">03</div>
+      <div class="section-title">Elektromagnetism — Electromagnetism</div>
+      <span class="section-arrow open" id="arrow-p3">▸</span>
+    </div>
+    <div class="topic-list" id="body-p3">
+
+      <!-- P3.1 -->
+      <div class="topic" id="topic-p3-1">
+        <div class="topic-header" onclick="toggleTopic('p3-1')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Electromagnetic Induction & Faraday's Law</div>
+            <div class="topic-detail">Magnetic flux. EMF and induced currents. Lenz's Law. Changing flux through coil.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Magnetic flux, Φ:</strong> Φ = B·A·cosθ, where B is magnetic field strength, A is area, θ is angle between B and normal to area. Unit: Weber (Wb) = T·m². Higher flux means stronger field or larger area perpendicular to field.</div>
+            <div class="concept-item phys-border"><strong>Faraday's Law:</strong> EMF induced in a coil is proportional to the rate of change of magnetic flux: ε = −N(dΦ/dt), where N is number of turns. Negative sign is Lenz's Law — induced EMF opposes the change.</div>
+            <div class="concept-item phys-border"><strong>Lenz's Law:</strong> The direction of induced current is such that its magnetic field opposes the change in flux. If flux through coil increases, induced current creates a field opposite to the external field (and vice versa). This reflects conservation of energy — you must do work against the induced magnetic force to change flux.</div>
+            <div class="concept-item phys-border"><strong>Sources of changing flux:</strong> (1) Moving a magnet in/out of a coil. (2) Moving a coil in/out of a magnetic field. (3) Rotating a coil in a constant field. (4) Changing current in a nearby coil (mutual inductance). (5) Changing the area of a coil.</div>
+            <div class="concept-item phys-border"><strong>Self-inductance, L:</strong> A coil induces an EMF in itself when current changes: ε = −L(dI/dt). L depends on coil geometry (number of turns, area, length). Unit: Henry (H) = Wb/A.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Magnetic flux, Φ (magnetisk flöde):</span> Product of magnetic field and perpendicular area. Unit: Weber (Wb).</div>
+              <div class="term-item"><span class="term-word">EMF (electromotive force) (elektromotorisk kraft):</span> Potential difference that drives current. Generated by changing flux. Unit: volt (V).</div>
+              <div class="term-item"><span class="term-word">Induced current (inducerad ström):</span> Current flowing in a conductor due to a changing magnetic field.</div>
+              <div class="term-item"><span class="term-word">Self-inductance, L (självinduktans):</span> Property of a coil that causes it to oppose changes in its own current.</div>
+              <div class="term-item"><span class="term-word">Mutual inductance, M (ömsesidig induktans):</span> The effect of current change in one coil on EMF in a nearby coil.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Φ = B · A · cos(θ)<div class="formula-note">Magnetic flux</div></div>
+            <div class="formula-card">ε = −N · (dΦ/dt)<div class="formula-note">Faraday's Law (induced EMF)</div></div>
+            <div class="formula-card">ε = −L · (dI/dt)<div class="formula-note">Self-induced EMF</div></div>
+            <div class="formula-card">Direction from Lenz's Law<div class="formula-note">Induced current opposes change in flux</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate magnetic flux given field strength, area, and orientation angle.</div>
+            <div class="exam-tip">Use Faraday's Law to find induced EMF from a rate of change of flux (moving magnet, rotating coil, changing current).</div>
+            <div class="exam-tip">Apply Lenz's Law to determine the direction of induced current and explain why work must be done to change flux.</div>
+            <div class="exam-tip">Distinguish between self-inductance (coil opposes its own current changes) and mutual inductance (one coil affects another).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3.2 -->
+      <div class="topic" id="topic-p3-2">
+        <div class="topic-header" onclick="toggleTopic('p3-2')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">AC Circuits & Transformers</div>
+            <div class="topic-detail">Alternating current (AC): V(t) = V₀ sin(ωt). RMS values. Transformers: voltage/current relationships, power transfer.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Alternating current (AC):</strong> Current or voltage that varies sinusoidally with time: V(t) = V₀ sin(ωt) or I(t) = I₀ sin(ωt). Frequency is typically 50 Hz (Europe) or 60 Hz (North America). AC can transmit power over long distances more efficiently than DC (lower power loss in transmission lines).</div>
+            <div class="concept-item phys-border"><strong>RMS (Root Mean Square) values:</strong> For a sinusoidal waveform, V_rms = V₀/√2 and I_rms = I₀/√2. RMS values are what an AC multimeter reads and what most AC power calculations use. For example, household "120 V AC" is actually 120 V_rms ≈ 170 V peak.</div>
+            <div class="concept-item phys-border"><strong>Transformers:</strong> Device using two coils and magnetic induction to change voltage and current. Ideal transformer: V_primary/V_secondary = N_primary/N_secondary = I_secondary/I_primary. Power is conserved: V_primary × I_primary = V_secondary × I_secondary.</div>
+            <div class="concept-item phys-border"><strong>Step-up vs. step-down:</strong> Step-up transformer (N_secondary > N_primary) increases voltage but decreases current. Step-down (N_secondary < N_primary) decreases voltage but increases current. Used in power distribution: step-up near power plant (high V, low I) to reduce transmission losses, then step-down near homes.</div>
+            <div class="concept-item phys-border"><strong>Transformer losses:</strong> Ideal transformers have 100% efficiency. Real transformers have losses due to coil resistance (I²R heating) and core losses (hysteresis). Efficiency typically 95–99%.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Alternating current, AC (växelström):</span> Current that reverses direction periodically. Sine wave is most common.</div>
+              <div class="term-item"><span class="term-word">RMS value (effektivvärde):</span> Root mean square; equivalent DC value that delivers same power. V_rms = V₀/√2 ≈ 0.707 V₀.</div>
+              <div class="term-item"><span class="term-word">Peak value (toppvärde):</span> Maximum instantaneous value of AC voltage or current. Also called amplitude.</div>
+              <div class="term-item"><span class="term-word">Transformer (transformer):</span> Device that changes voltage/current of AC using electromagnetic induction.</div>
+              <div class="term-item"><span class="term-word">Turns ratio (lindningsförhållande):</span> Ratio N_secondary/N_primary determines voltage and current transformation.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">V(t) = V₀ sin(ωt)<div class="formula-note">Sinusoidal AC voltage</div></div>
+            <div class="formula-card">V_rms = V₀ / √2<div class="formula-note">RMS voltage from peak</div></div>
+            <div class="formula-card">I_rms = I₀ / √2<div class="formula-note">RMS current from peak</div></div>
+            <div class="formula-card">V₁/V₂ = N₁/N₂<div class="formula-note">Ideal transformer voltage relation</div></div>
+            <div class="formula-card">I₁/I₂ = N₂/N₁<div class="formula-note">Ideal transformer current relation</div></div>
+            <div class="formula-card">P = V_rms · I_rms (AC), P = VI (DC)<div class="formula-note">Power in AC circuits (RMS values)</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Convert between peak and RMS values: V_rms = V₀/√2. Household and grid voltages are always given as RMS.</div>
+            <div class="exam-tip">Apply ideal transformer equations to find secondary voltage/current given turns ratio and primary values.</div>
+            <div class="exam-tip">Use power conservation in transformers: P₁ = P₂, so V₁I₁ = V₂I₂. A step-up transformer increases voltage but decreases current (and vice versa).</div>
+            <div class="exam-tip">Explain why AC is preferred for power transmission: high voltage allows low current, reducing I²R losses in transmission lines.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3.3 -->
+      <div class="topic" id="topic-p3-3">
+        <div class="topic-header" onclick="toggleTopic('p3-3')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Electromagnetic Waves & Maxwell's Equations</div>
+            <div class="topic-detail">Displacement current. Maxwell equations (overview). EM wave generation. Speed of light c = 1/√(ε₀μ₀).</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Displacement current:</strong> A changing electric field acts like a current in generating a magnetic field. Maxwell added the term dE/dt to Ampère's Law, showing that a time-varying electric field produces a magnetic field even without physical current. This asymmetry was key to predicting EM waves.</div>
+            <div class="concept-item phys-border"><strong>Maxwell's Equations (overview):</strong> (1) Gauss's Law: electric charges create electric fields. (2) No magnetic monopoles: magnetic field lines form closed loops. (3) Faraday's Law: changing magnetic flux induces electric field. (4) Ampère-Maxwell Law: currents and changing electric flux create magnetic field. Together, these show that accelerating charges produce propagating EM waves.</div>
+            <div class="concept-item phys-border"><strong>EM wave generation:</strong> An oscillating (or accelerating) electric charge creates a time-varying electric field, which (by displacement current) creates a changing magnetic field. These two time-varying fields propagate together as a transverse wave perpendicular to each other and to the direction of travel.</div>
+            <div class="concept-item phys-border"><strong>Speed of light:</strong> Maxwell showed c = 1/√(ε₀μ₀) ≈ 3×10⁸ m/s. This theoretical prediction, matching the measured speed of light, provided evidence that light is an EM wave. All EM waves (radio, infrared, visible, ultraviolet, X-rays, gamma rays) travel at the same speed in vacuum.</div>
+            <div class="concept-item phys-border"><strong>EM spectrum:</strong> Classified by frequency/wavelength: radio (low frequency), microwaves, infrared, visible, ultraviolet, X-rays, gamma rays (high frequency). Different parts interact with matter differently.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Displacement current (förskjutningsström):</span> The effect of a changing electric field; acts like current in creating magnetic field.</div>
+              <div class="term-item"><span class="term-word">Electromagnetic wave (elektromagnetisk våg):</span> Transverse wave combining oscillating E and B fields, perpendicular to each other and direction of travel.</div>
+              <div class="term-item"><span class="term-word">Speed of light, c (ljushastighet):</span> 3×10⁸ m/s in vacuum. All EM waves travel at this speed in vacuum.</div>
+              <div class="term-item"><span class="term-word">Wavelength and frequency:</span> For all EM waves: c = fλ. Higher frequency → shorter wavelength.</div>
+              <div class="term-item"><span class="term-word">Polarization (polarisering):</span> Direction of the oscillating electric field. Can be linear, circular, or elliptical.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">c = 1 / √(ε₀μ₀)<div class="formula-note">Speed of light from permittivity & permeability</div></div>
+            <div class="formula-card">c = f · λ<div class="formula-note">Wave relation for EM waves (c ≈ 3×10⁸ m/s)</div></div>
+            <div class="formula-card">ε₀ ≈ 8.85 × 10⁻¹² F/m, μ₀ = 4π × 10⁻⁷ H/m<div class="formula-note">Fundamental constants</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Understand that light is an EM wave: oscillating E and B fields perpendicular to each other and to propagation direction.</div>
+            <div class="exam-tip">Use c = fλ to relate frequency and wavelength for any EM wave (radio, visible, X-ray, etc.).</div>
+            <div class="exam-tip">Sketch an EM wave: E oscillating in one plane, B perpendicular to it, both perpendicular to direction of propagation.</div>
+            <div class="exam-tip">Discuss evidence for EM waves: Maxwell's prediction of c from ε₀ and μ₀ matched measured light speed, supporting wave nature of light.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== P4: ATOMFYSIK ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('p4')">
+      <div class="section-number phys">04</div>
+      <div class="section-title">Atomfysik — Atomic Physics</div>
+      <span class="section-arrow open" id="arrow-p4">▸</span>
+    </div>
+    <div class="topic-list" id="body-p4">
+
+      <!-- P4.1 -->
+      <div class="topic" id="topic-p4-1">
+        <div class="topic-header" onclick="toggleTopic('p4-1')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Photons & Photoelectric Effect</div>
+            <div class="topic-detail">Photon energy E = hf. Einstein's photoelectric equation. Work function, kinetic energy of electrons, stopping potential.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Photons:</strong> Light and EM radiation consist of discrete packets of energy called photons. Energy of a photon: E = hf = hc/λ, where h is Planck's constant (6.626×10⁻³⁴ J·s). Higher frequency (shorter wavelength) → higher energy photon.</div>
+            <div class="concept-item phys-border"><strong>Photoelectric effect:</strong> When light shines on a metal surface, electrons are ejected if the photon energy exceeds a threshold. The process is instantaneous and doesn't depend on light intensity (brightness), only on frequency — supporting the photon picture.</div>
+            <div class="concept-item phys-border"><strong>Einstein's photoelectric equation:</strong> E_photon = W + KE_max, where W is the work function (minimum energy to release an electron) and KE_max is the maximum kinetic energy of ejected electrons. Rearranging: KE_max = hf − W. Higher frequency → higher KE of electrons.</div>
+            <div class="concept-item phys-border"><strong>Threshold frequency:</strong> f_threshold = W/h. Below this frequency, no electrons are ejected, no matter how intense the light. This was unexplained by classical wave theory but natural in the photon model.</div>
+            <div class="concept-item phys-border"><strong>Stopping potential:</strong> The retarding potential difference that just stops the most energetic electrons: e·V_s = KE_max, so KE_max = eV_s. A graph of stopping potential vs. frequency is linear with slope h/e.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Photon (foton):</span> A quantum of EM radiation with energy E = hf.</div>
+              <div class="term-item"><span class="term-word">Work function, W (arbetsfunktion):</span> Minimum energy needed to release an electron from a metal surface. Unit: joules (J) or electron volts (eV).</div>
+              <div class="term-item"><span class="term-word">Kinetic energy (rörelseenergi):</span> Energy of motion. For electrons: KE = ½mv².</div>
+              <div class="term-item"><span class="term-word">Stopping potential, V_s (stopppotential):</span> Potential that decelerates the most energetic electrons to zero velocity.</div>
+              <div class="term-item"><span class="term-word">Planck's constant, h (Plancks konstant):</span> 6.626×10⁻³⁴ J·s. Fundamental constant relating energy and frequency.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">E = h · f = h · c / λ<div class="formula-note">Photon energy</div></div>
+            <div class="formula-card">E = h · f − W<div class="formula-note">Einstein's photoelectric equation (rearranged)</div></div>
+            <div class="formula-card">KE_max = h · f − W<div class="formula-note">Maximum kinetic energy of ejected electrons</div></div>
+            <div class="formula-card">f_threshold = W / h<div class="formula-note">Minimum frequency for photoelectric effect</div></div>
+            <div class="formula-card">KE_max = e · V_s<div class="formula-note">Kinetic energy in terms of stopping potential</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate photon energy from frequency or wavelength using E = hf or E = hc/λ.</div>
+            <div class="exam-tip">Apply Einstein's equation: KE_max = hf − W. Given frequency and work function, find electron's maximum kinetic energy.</div>
+            <div class="exam-tip">Determine the threshold frequency below which no photoelectric effect occurs. Sketch a graph of KE_max vs. frequency (straight line with slope h/e).</div>
+            <div class="exam-tip">Explain why intensity doesn't affect the kinetic energy of ejected electrons, only the number ejected — supporting photon model.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P4.2 -->
+      <div class="topic" id="topic-p4-2">
+        <div class="topic-header" onclick="toggleTopic('p4-2')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Bohr Model & Atomic Spectra</div>
+            <div class="topic-detail">Electron energy levels. Transitions and photon emission/absorption. Series of lines: Balmer (visible), Lyman (UV), Paschen (IR).</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Bohr model:</strong> Niels Bohr proposed that electrons orbit at specific energy levels (quantum numbers n = 1, 2, 3, ...). Electrons in hydrogen: E_n = −13.6 eV / n². Ground state (n=1): E₁ = −13.6 eV. Excited states are less negative (higher energy). Electrons don't radiate continuously; they jump between levels.</div>
+            <div class="concept-item phys-border"><strong>Energy transitions:</strong> An electron can absorb a photon and jump to a higher level (excited state) or emit a photon and fall to a lower level. Energy of photon: hf = |ΔE| = |E_final − E_initial|. Only specific energies are absorbed/emitted (discrete spectra).</div>
+            <div class="concept-item phys-border"><strong>Spectral series:</strong> Different series correspond to transitions ending at different levels: Lyman series (n_final = 1, transitions from n ≥ 2; UV), Balmer series (n_final = 2, transitions from n ≥ 3; visible), Paschen series (n_final = 3, transitions from n ≥ 4; IR).</div>
+            <div class="concept-item phys-border"><strong>Ionization energy:</strong> Energy needed to remove an electron from ground state to infinity (n = ∞). For hydrogen: 13.6 eV. Matches energy needed to excite from n=1 to n=∞.</div>
+            <div class="concept-item phys-border"><strong>Absorption and emission spectra:</strong> White light through a cool gas → continuous spectrum with dark absorption lines (atoms absorb specific frequencies). Hot gas → emission spectrum with bright lines on dark background (atoms emit after excitation). The lines match exactly.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Quantum number, n (kvanttal):</span> Integer (1, 2, 3, ...) labeling electron energy levels in an atom.</div>
+              <div class="term-item"><span class="term-word">Energy level (energinivå):</span> Allowed discrete energy value for an electron in an atom.</div>
+              <div class="term-item"><span class="term-word">Ground state (grundtillstånd):</span> Lowest energy state (n=1). Most stable; electrons prefer this.</div>
+              <div class="term-item"><span class="term-word">Excited state (exciterat tillstånd):</span> Higher energy state (n ≥ 2). Unstable; electron falls to lower level, emitting a photon.</div>
+              <div class="term-item"><span class="term-word">Ionization energy (joniseringsenergi):</span> Energy to remove an electron completely (n → ∞).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">E_n = −13.6 eV / n² (hydrogen)<div class="formula-note">Energy of electron at level n</div></div>
+            <div class="formula-card">h · f = ΔE = E_final − E_initial<div class="formula-note">Photon energy from energy transition</div></div>
+            <div class="formula-card">f = (13.6 eV / h) · (1/n₁² − 1/n₂²)<div class="formula-note">Frequency of emitted/absorbed photon (hydrogen)</div></div>
+            <div class="formula-card">Ionization energy = 13.6 eV (hydrogen, n=1)<div class="formula-note">Energy to remove electron to infinity</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate energy level using E_n = −13.6/n² for hydrogen.</div>
+            <div class="exam-tip">Find photon frequency or wavelength from energy transition: hf = |ΔE|, or use c = fλ.</div>
+            <div class="exam-tip">Determine which spectral series a transition belongs to (Lyman if n_final=1, Balmer if n_final=2, etc.).</div>
+            <div class="exam-tip">Explain the difference between absorption and emission spectra; sketch both for hydrogen.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P4.3 -->
+      <div class="topic" id="topic-p4-3">
+        <div class="topic-header" onclick="toggleTopic('p4-3')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Quantum Numbers & Orbitals</div>
+            <div class="topic-detail">Principal (n), orbital angular momentum (l), magnetic (m_l), spin (m_s). Shapes of s, p, d orbitals. Pauli exclusion principle.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Quantum numbers:</strong> Four quantum numbers fully describe an electron's state: (1) Principal quantum number n (1, 2, 3, ...) → energy level and distance from nucleus. (2) Orbital angular momentum quantum number l (0 to n−1; 0=s, 1=p, 2=d, 3=f, ...) → shape of orbital. (3) Magnetic quantum number m_l (−l to +l) → orientation of orbital in space. (4) Spin quantum number m_s (±½) → intrinsic angular momentum (spin-up or spin-down).</div>
+            <div class="concept-item phys-border"><strong>Orbital shapes:</strong> s-orbitals are spherical. p-orbitals are dumbbell-shaped (three per subshell: p_x, p_y, p_z). d-orbitals are more complex four-lobed shapes (five per subshell). f-orbitals are even more complex (seven per subshell). The shape reflects probability distribution of finding electron — not a classical orbit.</div>
+            <div class="concept-item phys-border"><strong>Subshells and capacity:</strong> Each subshell (n,l) can hold 2(2l+1) electrons. s-subshell: 2 electrons. p-subshell: 6 electrons. d-subshell: 10 electrons. f-subshell: 14 electrons.</div>
+            <div class="concept-item phys-border"><strong>Pauli Exclusion Principle:</strong> No two electrons in an atom can have the same set of four quantum numbers. Consequence: each orbital (defined by n, l, m_l) can hold at most 2 electrons (with opposite spins). This principle explains electron configurations and chemical properties.</div>
+            <div class="concept-item phys-border"><strong>Electron configuration:</strong> Written as 1s² 2s² 2p⁶ 3s² 3p¹, etc. Describes how electrons fill orbitals. Follows Aufbau principle (filling lowest energy first) and Hund's rule (maximize parallel spins before pairing). Determines chemical behavior.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Principal quantum number, n (huvudkvanttal):</span> n = 1, 2, 3, ... Determines energy level and shell.</div>
+              <div class="term-item"><span class="term-word">Orbital angular momentum, l (orbitalrörelsemängdsmoment):</span> l = 0, 1, 2, 3, ... for s, p, d, f orbitals. Related to shape of orbital.</div>
+              <div class="term-item"><span class="term-word">Magnetic quantum number, m_l (magnetisk kvanttal):</span> m_l = −l to +l. Determines orientation in space (e.g., three p-orbitals: m_l = −1, 0, +1).</div>
+              <div class="term-item"><span class="term-word">Spin quantum number, m_s (spinkvanttal):</span> m_s = ±½. Intrinsic angular momentum; two values per orbital (spin-up and spin-down).</div>
+              <div class="term-item"><span class="term-word">Orbital (orbital):</span> Quantum state of one electron, defined by n, l, m_l. Graphically, a region where electron is likely found.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">n = 1, 2, 3, ...<div class="formula-note">Principal quantum number</div></div>
+            <div class="formula-card">l = 0 to (n − 1)<div class="formula-note">Orbital angular momentum: 0=s, 1=p, 2=d, 3=f</div></div>
+            <div class="formula-card">m_l = −l, ..., 0, ..., +l<div class="formula-note">Magnetic quantum number (2l+1 values)</div></div>
+            <div class="formula-card">m_s = ±½<div class="formula-note">Spin quantum number</div></div>
+            <div class="formula-card">Max electrons per subshell = 2(2l+1)<div class="formula-note">s:2, p:6, d:10, f:14</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write electron configurations using quantum numbers; determine how many electrons are in each subshell.</div>
+            <div class="exam-tip">Describe orbital shapes: s (spherical), p (dumbbell), d (complex four-lobed).</div>
+            <div class="exam-tip">Apply Pauli Exclusion Principle: at most 2 electrons per orbital (opposite spins). Determine maximum electrons in a given shell or subshell.</div>
+            <div class="exam-tip">Relate electron configuration to chemical properties; predict valence electrons and bonding.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== P5: KÄRNFYSIK OCH RADIOAKTIVITET ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('p5')">
+      <div class="section-number phys">05</div>
+      <div class="section-title">Kärnfysik och Radioaktivitet — Nuclear Physics & Radioactivity</div>
+      <span class="section-arrow open" id="arrow-p5">▸</span>
+    </div>
+    <div class="topic-list" id="body-p5">
+
+      <!-- P5.1 -->
+      <div class="topic" id="topic-p5-1">
+        <div class="topic-header" onclick="toggleTopic('p5-1')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Nuclear Structure & Binding Energy</div>
+            <div class="topic-detail">Protons, neutrons, isotopes. Mass defect and binding energy. Nuclear stability. Semi-empirical mass formula.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Nuclear composition:</strong> Nucleus contains protons (charge +e, mass ≈ 1 u) and neutrons (charge 0, mass ≈ 1 u). Atomic number Z = number of protons (defines element). Mass number A = Z + N (number of nucleons). Isotopes are atoms of same element with different N (same Z, different A).</div>
+            <div class="concept-item phys-border"><strong>Mass defect:</strong> The mass of a nucleus is slightly less than the sum of its constituent nucleons (protons + neutrons). The missing mass Δm = Z·m_p + N·m_n − m_nucleus is converted to binding energy B.E. = Δm·c².</div>
+            <div class="concept-item phys-border"><strong>Binding energy per nucleon:</strong> B.E. / A reflects nuclear stability. Plot of B.E./A vs. A shows: light nuclei and very heavy nuclei have lower B.E./A (less stable); nuclei near iron-56 have maximum B.E./A (most stable). This explains why fusion (combining light nuclei) and fission (splitting heavy nuclei) both release energy.</div>
+            <div class="concept-item phys-border"><strong>Strong nuclear force:</strong> Attractive force between nucleons, acts at very short range (~1 fm). Overcomes proton-proton electrostatic repulsion in nucleus. Not fully understood (unlike EM and gravity), but well-described by nuclear models.</div>
+            <div class="concept-item phys-border"><strong>Nuclear stability:</strong> For light nuclei (A < 20), stable nuclei have N ≈ Z. For heavier nuclei, stable nuclei have N > Z (extra neutrons stabilize against proton repulsion). Beyond bismuth-209, all nuclei are radioactive.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Atomic number, Z (atomnummer):</span> Number of protons. Defines element.</div>
+              <div class="term-item"><span class="term-word">Mass number, A (masstall):</span> Total nucleons (protons + neutrons). Z + N.</div>
+              <div class="term-item"><span class="term-word">Nucleon (nukleon):</span> Generic term for proton or neutron.</div>
+              <div class="term-item"><span class="term-word">Isotope (isotop):</span> Atoms of same element (same Z) with different mass number (different N).</div>
+              <div class="term-item"><span class="term-word">Binding energy (bindningsenergi):</span> Energy released when nucleons bind together. B.E. = Δm·c².</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Mass defect: Δm = Z·m_p + N·m_n − m_nucleus<div class="formula-note">Mass difference (in u or kg)</div></div>
+            <div class="formula-card">B.E. = Δm · c²<div class="formula-note">Binding energy (in joules)</div></div>
+            <div class="formula-card">B.E. (in MeV) = Δm (in u) × 931.5 MeV/u<div class="formula-note">Conversion: 1 u = 931.5 MeV/c²</div></div>
+            <div class="formula-card">B.E. per nucleon = B.E. / A<div class="formula-note">Measure of nuclear stability</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate mass defect from constituent nucleons; convert to binding energy using E = mc².</div>
+            <div class="exam-tip">Interpret B.E./A vs. A graph: recognize that iron-56 is most stable, and that both fusion (light → medium) and fission (heavy → medium) release energy.</div>
+            <div class="exam-tip">Identify stable vs. unstable nuclei: light nuclei stable with N≈Z; heavy nuclei require N > Z. Bismuth-209 is heaviest stable nucleus.</div>
+            <div class="exam-tip">Calculate Q-value (energy released) in nuclear reactions using mass-energy equivalence.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P5.2 -->
+      <div class="topic" id="topic-p5-2">
+        <div class="topic-header" onclick="toggleTopic('p5-2')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Radioactivity & Decay Modes</div>
+            <div class="topic-detail">Alpha, beta, gamma decay. Decay equations. Half-life. Activity and decay constant.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Radioactivity:</strong> Spontaneous emission of particles/radiation from unstable nuclei to reach a more stable state. Three main types: alpha (α), beta (β), and gamma (γ) decay. Radioactive decay is random (probabilistic) and exponential.</div>
+            <div class="concept-item phys-border"><strong>Alpha decay:</strong> Nucleus emits an alpha particle (⁴He nucleus: 2 protons + 2 neutrons). Parent nucleus loses 2 protons and 2 neutrons: A → A−4, Z → Z−2. Example: ²³⁸U → ²³⁴Th + ⁴He. Alpha particles are highly ionizing but low range.</div>
+            <div class="concept-item phys-border"><strong>Beta-minus (β⁻) decay:</strong> A neutron converts to proton, electron, and antineutrino. Parent nucleus: A → A, Z → Z+1. Example: ¹⁴C → ¹⁴N + e⁻ + ν̄. Beta particles are electrons; moderately ionizing, longer range than alpha.</div>
+            <div class="concept-item phys-border"><strong>Beta-plus (β⁺) decay:</strong> A proton converts to neutron, positron, and neutrino. A → A, Z → Z−1. Example: ¹¹C → ¹¹B + e⁺ + ν. Less common than β⁻.</div>
+            <div class="concept-item phys-border"><strong>Gamma decay:</strong> Nucleus in excited state emits a gamma ray (high-energy photon) and drops to lower energy state. A and Z unchanged. Often accompanies alpha or beta decay. Gamma rays are highly penetrating.</div>
+            <div class="concept-item phys-border"><strong>Half-life, T₁/₂:</strong> Time for half of a sample to decay. After one half-life, 50% remains; after two, 25%; after three, 12.5%, etc. N(t) = N₀ · (½)^(t/T₁/₂) = N₀ · e^(−λt), where λ = ln(2)/T₁/₂ is decay constant. Half-life is independent of sample size and temperature.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Alpha particle (alfapartikel):</span> Helium-4 nucleus: ⁴He or ⁴₂He. Emitted in alpha decay.</div>
+              <div class="term-item"><span class="term-word">Beta particle (betapartikel):</span> Electron (β⁻) or positron (β⁺) emitted in beta decay.</div>
+              <div class="term-item"><span class="term-word">Gamma ray (gammastrålning):</span> High-energy photon emitted by excited nucleus.</div>
+              <div class="term-item"><span class="term-word">Half-life, T₁/₂ (halveringstid):</span> Time for radioactive sample to decay to half its original amount.</div>
+              <div class="term-item"><span class="term-word">Decay constant, λ (sönderfallskonstant):</span> Probability of decay per unit time. λ = ln(2)/T₁/₂.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">N(t) = N₀ · (½)^(t/T₁/₂)<div class="formula-note">Radioactive decay (half-life form)</div></div>
+            <div class="formula-card">N(t) = N₀ · e^(−λt)<div class="formula-note">Radioactive decay (exponential form)</div></div>
+            <div class="formula-card">λ = ln(2) / T₁/₂<div class="formula-note">Decay constant from half-life</div></div>
+            <div class="formula-card">Activity A = λN<div class="formula-note">Number of decays per second (Bq)</div></div>
+            <div class="formula-card">A(t) = A₀ · e^(−λt)<div class="formula-note">Activity decay</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write balanced nuclear equations for alpha, beta, and gamma decay. Conservation: A (mass number) and Z (atomic number) must be conserved.</div>
+            <div class="exam-tip">Calculate amount remaining after a given time using half-life: N = N₀ · (½)^(t/T₁/₂).</div>
+            <div class="exam-tip">Use exponential decay formula N = N₀e^(−λt) if given decay constant.</div>
+            <div class="exam-tip">Distinguish between decay constant (λ), half-life (T₁/₂), and activity (A). Know that A = λN and A decreases exponentially.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P5.3 -->
+      <div class="topic" id="topic-p5-3">
+        <div class="topic-header" onclick="toggleTopic('p5-3')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Fission & Fusion</div>
+            <div class="topic-detail">Nuclear fission: chain reactions, critical mass. Nuclear fusion: conditions, energy release. Applications in power generation.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Nuclear fission:</strong> Heavy nucleus (A > 230) splits into two smaller fragments, releasing energy and 2–3 neutrons. Example: ²³⁵U + n → ²³⁶U* → ⁹²Kr + ¹⁴¹Ba + 3n + energy. Energy released: typically 200 MeV per fission, due to binding energy increase (fragments have higher B.E./A than original).</div>
+            <div class="concept-item phys-border"><strong>Chain reaction:</strong> One fission releases neutrons that cause more fissions. If each fission triggers ≥1 additional fission on average, reaction is self-sustaining (critical). If <1 → reaction dies out. If >1 → exponential growth (nuclear explosion). Control rods absorb neutrons to maintain steady state (nuclear reactor).</div>
+            <div class="concept-item phys-border"><strong>Critical mass:</strong> Minimum mass of fissile material (e.g., U-235) needed for chain reaction. Depends on material shape and purity. For bare sphere: ~10 kg of U-235, ~15 kg of Pu-239.</div>
+            <div class="concept-item phys-border"><strong>Nuclear fusion:</strong> Two light nuclei combine to form heavier nucleus, releasing energy. Example: ²H + ³H → ⁴He + n + 17.6 MeV. Requires extreme temperature/pressure to overcome Coulomb barrier. Occurs naturally in stars (powers the sun). Controlled fusion in reactors (ITER, etc.) not yet achieved commercially.</div>
+            <div class="concept-item phys-border"><strong>Fusion vs. fission:</strong> Both release energy because products have higher B.E./A. Fusion: light → medium (higher B.E./A). Fission: heavy → medium. Fusion produces less radioactive waste and is theoretically cleaner, but is harder to control. Fission is commercially viable now.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Fission (kärnklyvning):</span> Splitting of heavy nucleus into two fragments.</div>
+              <div class="term-item"><span class="term-word">Fusion (kärnfusion):</span> Combination of two light nuclei into one heavier nucleus.</div>
+              <div class="term-item"><span class="term-word">Chain reaction (kedjereaktion):</span> Self-sustaining sequence where neutrons from one fission trigger more fissions.</div>
+              <div class="term-item"><span class="term-word">Critical mass (kritisk massa):</span> Minimum mass for self-sustaining chain reaction.</div>
+              <div class="term-item"><span class="term-word">Coulomb barrier (Coulombbarriär):</span> Electrostatic repulsion between positively charged nuclei, must be overcome for fusion.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Q-value = (M_initial − M_final) · c²<div class="formula-note">Energy released in nuclear reaction</div></div>
+            <div class="formula-card">For fission: Q ≈ 200 MeV per ²³⁵U nucleus<div class="formula-note"></div></div>
+            <div class="formula-card">For fusion (e.g., deuterium-tritium): Q ≈ 17.6 MeV<div class="formula-note"></div></div>
+            <div class="formula-card">Power output = number of reactions per second × energy per reaction<div class="formula-note"></div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write balanced fission equations; identify products and neutrons. Calculate energy release using mass-energy equivalence.</div>
+            <div class="exam-tip">Explain chain reactions: one fission triggers others. Control requires k (multiplication factor) = 1 (critical). k > 1 → exponential growth.</div>
+            <div class="exam-tip">Compare fission and fusion: both release energy, but from opposite ends of B.E./A curve. Fusion more difficult but cleaner (theoretically).</div>
+            <div class="exam-tip">Discuss applications: fission in nuclear power plants, fusion in stars and research reactors. Address safety and waste concerns.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== P6: ASTROFYSIK ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('p6')">
+      <div class="section-number phys">06</div>
+      <div class="section-title">Astrofysik — Astrophysics</div>
+      <span class="section-arrow open" id="arrow-p6">▸</span>
+    </div>
+    <div class="topic-list" id="body-p6">
+
+      <!-- P6.1 -->
+      <div class="topic" id="topic-p6-1">
+        <div class="topic-header" onclick="toggleTopic('p6-1')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Stellar Evolution & The HR Diagram</div>
+            <div class="topic-detail">Hertzsprung-Russell diagram: luminosity vs. temperature. Main sequence. Red giants, white dwarfs, supergiants. Stellar lifecycles.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Hertzsprung-Russell (HR) diagram:</strong> Plot of stellar luminosity (brightness) vs. surface temperature (or spectral type). Most stars lie on the main sequence (diagonal band), fusing hydrogen in their cores. Upper right: cool, bright giants/supergiants. Lower left: hot, dim white dwarfs.</div>
+            <div class="concept-item phys-border"><strong>Main sequence:</strong> Longest phase of a star's life. Hydrostatic equilibrium: inward gravity balanced by outward pressure from fusion in core. Massive stars burn fuel faster → shorter main sequence life. Sun has ~10 billion year main sequence; will last ~5 billion more.</div>
+            <div class="concept-item phys-border"><strong>Red giants:</strong> Star exhausts core hydrogen, begins fusing hydrogen in shell around helium core. Expands and cools (moves up and right on HR diagram). Example: Betelgeuse. Later fuses helium in core → asymptotic giant branch (AGB).</div>
+            <div class="concept-item phys-border"><strong>White dwarfs:</strong> Remnant of low/medium-mass star after losing outer layers. Hot, Earth-sized, composed of degenerate matter (electrons packed so tightly they resist further compression via Pauli principle). No longer fusing. Slowly cools to become black dwarf (theoretical; universe too young for any yet).</div>
+            <div class="concept-item phys-border"><strong>Supergiants and neutron stars:</strong> Massive stars (M > 8 M_sun) end as supergiants, then core collapse. Either explode as supernova (leaving neutron star or black hole) or form black hole directly.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Luminosity, L (luminositet):</span> Total power radiated by a star. Unit: watts (W) or solar luminosities (L_sun ≈ 3.8 × 10²⁶ W).</div>
+              <div class="term-item"><span class="term-word">Spectral type (spektralklass):</span> Classification by temperature: O (hottest, blue), B, A, F, G, K, M (coolest, red). Sun is G-type (yellow).</div>
+              <div class="concept-item phys-border"><strong>Stefan-Boltzmann Law:</strong> L = 4πR² σT⁴, where R is radius, T is surface temperature, σ is Stefan-Boltzmann constant (5.67×10⁻⁸ W/(m²K⁴)). Hotter and larger stars are brighter.</div>
+              <div class="term-item"><span class="term-word">Hydrostatic equilibrium (hydrostatisk jämvikt):</span> Balance of inward gravity and outward pressure (thermal, radiation, degeneracy). Determines star's structure and stability.</div>
+              <div class="term-item"><span class="term-word">White dwarf (vit dvärg):</span> Dense, Earth-sized stellar remnant. Supported by electron degeneracy pressure, not fusion.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">L = 4π R² σ T⁴<div class="formula-note">Stefan-Boltzmann Law for luminosity</div></div>
+            <div class="formula-card">Luminosity ∝ M³ (on main sequence)<div class="formula-note">Mass-luminosity relation: more massive stars are brighter</div></div>
+            <div class="formula-card">Lifetime ∝ M / L ∝ M⁻² (main sequence)<div class="formula-note">Massive stars burn fuel faster and die sooner</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Interpret the HR diagram: main sequence is diagonal; giants are top-right; white dwarfs are bottom-left.</div>
+            <div class="exam-tip">Determine a star's spectral type from temperature; relate color to position on HR diagram.</div>
+            <div class="exam-tip">Apply Stefan-Boltzmann Law: compare luminosity of two stars given radii and temperatures.</div>
+            <div class="exam-tip">Explain stellar lifecycle: main sequence → red giant → white dwarf (low/medium mass) or supernova → neutron star (high mass).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P6.2 -->
+      <div class="topic" id="topic-p6-2">
+        <div class="topic-header" onclick="toggleTopic('p6-2')">
+          <div class="topic-dot phys"></div>
+          <div class="topic-content">
+            <div class="topic-name">Cosmology & The Expanding Universe</div>
+            <div class="topic-detail">Big Bang theory. Hubble expansion. Cosmic microwave background (CMB). Dark matter and dark energy. Age of universe.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item phys-border"><strong>Hubble expansion:</strong> Galaxies recede from us with velocities proportional to distance: v = H₀ · d, where H₀ ≈ 70 km/s/Mpc is the Hubble constant. Implies the universe is expanding and was once smaller and hotter (Big Bang).</div>
+            <div class="concept-item phys-border"><strong>Big Bang theory:</strong> The universe began as an infinitely hot, dense point (~13.8 billion years ago) and has been expanding ever since. Supported by: (1) Hubble expansion, (2) Cosmic microwave background radiation (ancient light from early universe), (3) abundance of light elements (¹H, ⁴He, etc.).</div>
+            <div class="concept-item phys-border"><strong>Cosmic microwave background (CMB):</strong> Relic radiation from ~380,000 years after Big Bang, when universe cooled enough for atoms to form (recombination). Temperature ~2.7 K. Remarkably uniform (isotropic), with tiny fluctuations that grew into galaxies. COBE/WMAP/Planck satellites mapped it precisely.</div>
+            <div class="concept-item phys-border"><strong>Dark matter:</strong> Invisible matter comprising ~85% of universe's matter (only ~15% is ordinary baryonic matter). Evidence: galaxy rotation curves (too fast without extra mass), gravitational lensing, CMB patterns. Nature unknown; candidates include WIMPs, axions.</div>
+            <div class="concept-item phys-border"><strong>Dark energy:</strong> Mysterious component causing accelerated expansion (~68% of universe's total energy density). Discovered in 1998 via observations of distant supernovae. Physical nature unknown; perhaps cosmological constant (Λ) or scalar field. Dominates late-time universe.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Hubble constant, H₀ (Hubbles konstant):</span> Rate of expansion: v = H₀ · d. Unit: km/s/Mpc. Current value ~70 km/s/Mpc.</div>
+              <div class="term-item"><span class="term-word">Redshift, z (rödförskjutning):</span> For receding objects, light is redshifted: z = Δλ/λ. At low velocities, z ≈ v/c.</div>
+              <div class="term-item"><span class="term-word">Cosmic microwave background (kosmisk mikrovågsbakgrund):</span> Ancient thermal radiation from early universe, now ~2.7 K.</div>
+              <div class="term-item"><span class="term-word">Dark matter (mörk materia):</span> Non-luminous matter making up ~85% of matter.</div>
+              <div class="term-item"><span class="term-word">Dark energy (mörk energi):</span> Component causing accelerated expansion (~68% of total energy density).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">v = H₀ · d<div class="formula-note">Hubble's Law: recession velocity from distance</div></div>
+            <div class="formula-card">z = (λ_observed − λ_rest) / λ_rest<div class="formula-note">Redshift</div></div>
+            <div class="formula-card">Age of universe ≈ 1 / H₀ ≈ 13.8 billion years<div class="formula-note">Hubble time (crude estimate of age)</div></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Apply Hubble's Law: v = H₀ · d. Calculate distance or velocity given the other and H₀.</div>
+            <div class="exam-tip">Explain evidence for Big Bang: Hubble expansion, CMB, light element abundances.</div>
+            <div class="exam-tip">Discuss dark matter and dark energy: they comprise ~95% of universe; ordinary matter is ~5%. Their natures are major open questions.</div>
+            <div class="exam-tip">Estimate age of universe: Age ≈ 1/H₀ (Hubble time). Current consensus is ~13.8 Gyr (Planck 2018).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<div class="footer-note">
+  Study Sprint — Built for structured, Harvard-level preparation<br>
+  Sources: Skolverket centralt innehål (Fysik 2)
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

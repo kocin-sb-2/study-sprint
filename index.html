@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Sprint — Master Syllabus Hub</title>
+<meta name="description" content="Every concept, term, and formula for IB HL and Swedish Gymnasium — organized for exam success.">
+<meta property="og:title" content="Study Sprint — Master Syllabus Hub">
+<meta property="og:description" content="Every concept, term, and formula for IB HL and Swedish Gymnasium — organized for exam success.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent-physics: #4fc3f7;
+  --accent-chem: #ff8a65;
+  --accent-math: #b388ff;
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-teal: #4db6ac;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 70px 24px 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background:
+    radial-gradient(ellipse at 20% 40%, rgba(79,195,247,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 40%, rgba(255,138,101,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(179,136,255,0.05) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-20px, 10px) rotate(2deg); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent-physics), var(--accent-chem), var(--accent-math));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  position: relative;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.hero .tagline {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  position: relative;
+  opacity: 0.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ===== SYSTEM GROUPS ===== */
+.systems {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.system-group {
+  margin-bottom: 48px;
+}
+
+.system-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.system-badge {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.system-badge.swe {
+  background: rgba(255,213,79,0.12);
+  color: var(--accent-gold);
+  border: 1px solid rgba(255,213,79,0.25);
+}
+
+.system-badge.ib {
+  background: rgba(102,187,106,0.12);
+  color: var(--accent-green);
+  border: 1px solid rgba(102,187,106,0.25);
+}
+
+.system-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* ===== SUBJECT CARDS ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.subject-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.subject-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+
+.subject-card.physics::before { background: var(--accent-physics); }
+.subject-card.chemistry::before { background: var(--accent-chem); }
+.subject-card.math::before { background: var(--accent-math); }
+
+.subject-card:hover {
+  border-color: rgba(255,255,255,0.12);
+  background: var(--surface-2);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.card-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+}
+
+.card-icon.physics { background: rgba(79,195,247,0.12); color: var(--accent-physics); }
+.card-icon.chemistry { background: rgba(255,138,101,0.12); color: var(--accent-chem); }
+.card-icon.math { background: rgba(179,136,255,0.12); color: var(--accent-math); }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.card-course {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.card-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.card-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.card-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+.card-stat .num { font-weight: 500; }
+.card-stat .num.physics { color: var(--accent-physics); }
+.card-stat .num.chemistry { color: var(--accent-chem); }
+.card-stat .num.math { color: var(--accent-math); }
+
+.card-stat .lbl {
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+}
+
+.subject-card:hover .card-arrow {
+  transform: translateX(4px);
+}
+
+/* ===== FOOTER ===== */
+.footer-note {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .hero { padding: 50px 20px 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Study Sprint</h1>
+  <p class="subtitle">Structured Syllabus Master Guide</p>
+  <p class="tagline">Every concept, term, and formula you need — organized for exam success. Click any subject to explore.</p>
+</div>
+
+<div class="systems">
+
+  <!-- ====== SWEDISH SYSTEM ====== -->
+  <div class="system-group">
+    <div class="system-label">
+      <span class="system-badge swe">&#127480;&#127466; Swedish</span>
+      <span class="system-title">Gymnasium Courses</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="subject-card physics" href="fysik2.html">
+        <div class="card-icon physics" aria-label="Physics">&#9883;</div>
+        <div class="card-title">Fysik 2</div>
+        <div class="card-course">100 GYMNASIEPOÄNG</div>
+        <div class="card-desc">Mechanics in 2D, oscillations & waves, electromagnetism, astrophysics, and the nature of physics. Complete Skolverket centralt innehåll coverage.</div>
+        <div class="card-stats">
+          <div class="card-stat"><span class="num physics">5</span> <span class="lbl">Sections</span></div>
+          <div class="card-stat"><span class="num physics">~26</span> <span class="lbl">Topics</span></div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="subject-card chemistry" href="kemi2.html">
+        <div class="card-icon chemistry" aria-label="Chemistry">&#9879;</div>
+        <div class="card-title">Kemi 2</div>
+        <div class="card-course">100 GYMNASIEPOÄNG</div>
+        <div class="card-desc">Organic chemistry, biochemistry, analytical chemistry, chemical equilibrium & kinetics. Full centralt innehåll breakdown.</div>
+        <div class="card-stats">
+          <div class="card-stat"><span class="num chemistry">5</span> <span class="lbl">Sections</span></div>
+          <div class="card-stat"><span class="num chemistry">~24</span> <span class="lbl">Topics</span></div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="subject-card math" href="matematik5.html">
+        <div class="card-icon math" aria-label="Mathematics">&#120021;</div>
+        <div class="card-title">Matematik 5</div>
+        <div class="card-course">100 GYMNASIEPOÄNG</div>
+        <div class="card-desc">Differential equations, complex numbers, discrete mathematics, combinatorics, number theory, and advanced proof techniques.</div>
+        <div class="card-stats">
+          <div class="card-stat"><span class="num math">4</span> <span class="lbl">Sections</span></div>
+          <div class="card-stat"><span class="num math">~18</span> <span class="lbl">Topics</span></div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ====== IB SYSTEM ====== -->
+  <div class="system-group">
+    <div class="system-label">
+      <span class="system-badge ib">IB DP</span>
+      <span class="system-title">Diploma Programme — Higher Level</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="subject-card physics" href="ib-physics-hl.html">
+        <div class="card-icon physics" aria-label="Physics">&#9883;</div>
+        <div class="card-title">Physics HL</div>
+        <div class="card-course">FIRST ASSESSMENT 2025</div>
+        <div class="card-desc">Themes A–E: mechanics, thermal physics, waves, fields, electromagnetic induction, quantum & nuclear physics. SL + HL extensions.</div>
+        <div class="card-stats">
+          <div class="card-stat"><span class="num physics">5</span> <span class="lbl">Themes</span></div>
+          <div class="card-stat"><span class="num physics">~30</span> <span class="lbl">Topics</span></div>
+          <div class="card-stat"><span class="num physics">240h</span> <span class="lbl">Hours</span></div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="subject-card chemistry" href="ib-chemistry-hl.html">
+        <div class="card-icon chemistry" aria-label="Chemistry">&#9879;</div>
+        <div class="card-title">Chemistry HL</div>
+        <div class="card-course">FIRST ASSESSMENT 2025</div>
+        <div class="card-desc">Structure & Reactivity: particulate matter, bonding, classification, energetics, kinetics, equilibrium, acids/bases, redox, organic mechanisms.</div>
+        <div class="card-stats">
+          <div class="card-stat"><span class="num chemistry">7</span> <span class="lbl">Sections</span></div>
+          <div class="card-stat"><span class="num chemistry">~22</span> <span class="lbl">Topics</span></div>
+          <div class="card-stat"><span class="num chemistry">180h</span> <span class="lbl">Hours</span></div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="subject-card math" href="ib-math-aa-hl.html">
+        <div class="card-icon math" aria-label="Mathematics">&#120021;</div>
+        <div class="card-title">Math AA HL</div>
+        <div class="card-course">ANALYSIS & APPROACHES</div>
+        <div class="card-desc">Algebra, functions, trigonometry, extensive calculus (differentiation & integration), vectors, complex numbers, statistics & probability, proof.</div>
+        <div class="card-stats">
+          <div class="card-stat"><span class="num math">5</span> <span class="lbl">Topics</span></div>
+          <div class="card-stat"><span class="num math">~28</span> <span class="lbl">Subtopics</span></div>
+          <div class="card-stat"><span class="num math">240h</span> <span class="lbl">Hours</span></div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">
+  Study Sprint — Built for structured, exam-focused preparation<br>
+  Sources: Skolverket centralt innehåll · IBO Subject Guides (First Assessment 2025)
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

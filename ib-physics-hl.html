@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Physics HL — Study Sprint</title>
+<meta name="description" content="Complete IB Physics HL syllabus guide — mechanics, waves, fields, quantum and nuclear physics. First Assessment 2025.">
+<meta property="og:title" content="IB Physics HL — Study Sprint">
+<meta property="og:description" content="Complete IB Physics HL syllabus guide — mechanics, waves, fields, quantum and nuclear physics. First Assessment 2025.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent: #4fc3f7;
+  --accent-dim: rgba(79,195,247,0.12);
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-purple: #b388ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Source Sans 3',sans-serif; line-height:1.6; min-height:100vh; }
+
+.back-link { padding:20px 24px 0; max-width:900px; margin:0 auto; }
+.back-link a { display:inline-flex; align-items:center; gap:8px; color:var(--accent); text-decoration:none; font-size:0.9rem; font-weight:500; transition:all 0.3s; }
+.back-link a:hover { opacity:0.7; transform:translateX(-2px); }
+
+.hero { padding:40px 24px 30px; text-align:center; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(ellipse at 50% 50%, rgba(79,195,247,0.07) 0%, transparent 60%); animation:drift 20s ease-in-out infinite alternate; }
+@keyframes drift { 0%{transform:translate(0,0) rotate(0deg);} 100%{transform:translate(-20px,10px) rotate(2deg);} }
+.hero h1 { font-family:'Playfair Display',serif; font-weight:900; font-size:clamp(2rem,5vw,3.2rem); position:relative; color:var(--accent); margin-bottom:8px; }
+.hero .subtitle { font-size:1rem; color:var(--text-muted); font-weight:300; position:relative; }
+.hero .badge-row { display:flex; gap:12px; justify-content:center; margin-top:20px; flex-wrap:wrap; position:relative; }
+.badge { padding:6px 16px; border-radius:20px; font-size:0.8rem; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; background:var(--accent-dim); color:var(--accent); border:1px solid rgba(79,195,247,0.25); }
+
+.content { max-width:900px; margin:0 auto; padding:0 24px 80px; }
+.section { margin-bottom:36px; animation:fadeUp 0.4s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+.section-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; cursor:pointer; user-select:none; }
+.section-number { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-weight:500; font-size:0.9rem; flex-shrink:0; background:var(--accent-dim); color:var(--accent); }
+.section-title { font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; flex:1; }
+.section-arrow { color:var(--text-muted); transition:transform 0.3s; font-size:1.2rem; }
+.section-arrow.open { transform:rotate(90deg); }
+.topic-list { display:flex; flex-direction:column; gap:6px; }
+
+.topic { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; transition:all 0.2s; }
+.topic:hover { border-color:rgba(255,255,255,0.1); background:var(--surface-2); }
+.topic-header { padding:14px 18px; display:flex; align-items:flex-start; gap:12px; cursor:pointer; user-select:none; }
+.topic-dot { width:8px; height:8px; border-radius:50%; margin-top:7px; flex-shrink:0; background:var(--accent); }
+.topic-dot.hl { background:var(--accent-purple); }
+.topic-content { flex:1; }
+.topic-name { font-weight:600; font-size:0.95rem; margin-bottom:2px; }
+.topic-detail { font-size:0.85rem; color:var(--text-muted); line-height:1.5; }
+.topic-expand-icon { color:var(--text-muted); font-size:0.85rem; margin-top:5px; transition:transform 0.3s; flex-shrink:0; }
+.topic.expanded .topic-expand-icon { transform:rotate(90deg); }
+.topic.expanded { border-color:rgba(255,255,255,0.12); }
+
+.hl-tag { display:inline-block; padding:1px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; background:rgba(179,136,255,0.15); color:var(--accent-purple); margin-left:6px; vertical-align:middle; letter-spacing:0.5px; }
+
+.topic-body { display:none; padding:0 18px 18px 38px; border-top:1px solid var(--border); }
+.topic.expanded .topic-body { display:block; animation:fadeIn 0.3s ease; }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+
+.info-block { margin-top:16px; }
+.info-block-title { font-family:'JetBrains Mono',monospace; font-size:0.75rem; font-weight:500; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.info-block-title.concepts { color:var(--accent); }
+.info-block-title.terms { color:var(--accent-gold); }
+.info-block-title.formulas { color:var(--accent-green); }
+.info-block-title.exam { color:var(--accent-purple); }
+
+.concept-item { background:var(--surface-2); border-radius:8px; padding:12px 14px; margin-bottom:8px; font-size:0.88rem; line-height:1.65; border-left:3px solid var(--accent); }
+.concept-item strong { color:var(--text); font-weight:600; }
+.term-grid { display:grid; grid-template-columns:1fr; gap:6px; }
+.term-item { background:var(--surface-2); border-radius:8px; padding:10px 14px; font-size:0.85rem; line-height:1.55; }
+.term-item .term-word { font-weight:700; color:var(--accent-gold); font-size:0.88rem; }
+.formula-card { background:var(--surface-3); border-radius:8px; padding:10px 14px; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--accent-green); border:1px solid rgba(102,187,106,0.15); }
+.formula-card .formula-note { font-family:'Source Sans 3',sans-serif; color:var(--text-muted); font-size:0.8rem; margin-top:4px; }
+.exam-tip { background:rgba(179,136,255,0.08); border:1px solid rgba(179,136,255,0.15); border-radius:8px; padding:10px 14px; margin-bottom:6px; font-size:0.85rem; line-height:1.55; }
+.exam-tip::before { content:'▸ '; color:var(--accent-purple); font-weight:700; }
+
+.intro-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:32px; }
+.intro-card h3 { font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:10px; }
+.intro-card p { color:var(--text-muted); font-size:0.9rem; line-height:1.7; }
+.stat-row { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
+.stat { background:var(--surface-2); border-radius:8px; padding:12px 16px; flex:1; min-width:100px; text-align:center; }
+.stat-value { font-family:'JetBrains Mono',monospace; font-size:1.5rem; font-weight:500; color:var(--accent); }
+.stat-label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+
+.footer-note { text-align:center; padding:40px 24px; color:var(--text-muted); font-size:0.8rem; border-top:1px solid var(--border); max-width:900px; margin:0 auto; }
+.hidden { display:none; }
+@media (max-width:600px) { .topic-body { padding-left:18px; } }
+</style>
+</head>
+<body>
+
+<div class="back-link"><a href="index.html">← Back to Hub</a></div>
+
+<div class="hero">
+  <h1>IB Physics HL</h1>
+  <p class="subtitle">Study Sprint — Complete Syllabus Guide</p>
+  <div class="badge-row">
+    <span class="badge">IB DP Physics Higher Level</span>
+    <span class="badge">First Assessment 2025</span>
+  </div>
+</div>
+
+<div class="content">
+  <div class="intro-card">
+    <h3>IB Diploma Programme — Physics HL</h3>
+    <p>The new IB Physics curriculum is organised around five themes: Space, Time & Motion; The Particulate Nature of Matter; Wave Behaviour; Fields; and Nuclear & Quantum Physics. HL extensions are marked with purple tags. Click any topic to reveal detailed notes.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-value">5</div><div class="stat-label">Themes</div></div>
+      <div class="stat"><div class="stat-value">~28</div><div class="stat-label">Topics</div></div>
+      <div class="stat"><div class="stat-value">240h</div><div class="stat-label">Teaching</div></div>
+      <div class="stat"><div class="stat-value">40h</div><div class="stat-label">Practical</div></div>
+    </div>
+  </div>
+
+  <!-- ===== THEME A ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('a')">
+      <div class="section-number">A</div>
+      <div class="section-title">Space, Time and Motion</div>
+      <span class="section-arrow open" id="arrow-a">▸</span>
+    </div>
+    <div class="topic-list" id="body-a">
+
+      <div class="topic" id="topic-a1"><div class="topic-header" onclick="toggleTopic('a1')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">A.1 — Kinematics</div><div class="topic-detail">Displacement, velocity, acceleration. Equations of motion. Graphs of motion. Projectile motion.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Displacement vs distance:</strong> Displacement is the straight-line distance with direction from start to finish (vector). Distance is the total path length (scalar). An object can travel a large distance but have zero displacement (e.g., circular path).</div>
+            <div class="concept-item"><strong>Velocity and acceleration:</strong> Velocity = rate of change of displacement (vector). Speed = rate of change of distance (scalar). Acceleration = rate of change of velocity. All three can be read from graphs: slope of s-t = v, slope of v-t = a, area under v-t = displacement.</div>
+            <div class="concept-item"><strong>SUVAT equations:</strong> For uniform acceleration: v = u + at, s = ut + ½at², v² = u² + 2as, s = ½(u+v)t. Only valid when acceleration is constant. Choose the equation that uses the three known quantities plus the one unknown.</div>
+            <div class="concept-item"><strong>Projectile motion:</strong> Horizontal component: constant velocity (aₓ = 0). Vertical component: constant acceleration (aᵧ = g = 9.81 m/s²). The two components are independent. Decompose initial velocity: vₓ = v₀cosθ, vᵧ = v₀sinθ.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title terms">Key Terms & Definitions</div><div class="term-grid">
+            <div class="term-item"><span class="term-word">Displacement (s):</span> The change in position of an object; a vector quantity with magnitude and direction. SI unit: m.</div>
+            <div class="term-item"><span class="term-word">Instantaneous velocity:</span> The velocity at a specific moment in time; the gradient of a displacement-time graph at that point.</div>
+            <div class="term-item"><span class="term-word">Uniform acceleration:</span> Acceleration that remains constant in magnitude and direction over time.</div>
+            <div class="term-item"><span class="term-word">Free fall:</span> Motion under gravity alone, with no air resistance. All objects experience the same acceleration g regardless of mass.</div>
+          </div></div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">v = u + at<div class="formula-note">Final velocity</div></div>
+            <div class="formula-card">s = ut + ½at²<div class="formula-note">Displacement</div></div>
+            <div class="formula-card">v² = u² + 2as<div class="formula-note">Velocity-displacement relation</div></div>
+            <div class="formula-card">s = ½(u + v)t<div class="formula-note">Displacement using average velocity</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Extract information from motion graphs: gradient of s-t = velocity, gradient of v-t = acceleration, area under v-t = displacement.</div>
+            <div class="exam-tip">Projectile problems: always decompose into x and y, solve separately, link through time.</div>
+            <div class="exam-tip">State assumptions clearly: "air resistance is negligible", "acceleration is constant".</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-a2"><div class="topic-header" onclick="toggleTopic('a2')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">A.2 — Forces and Momentum</div><div class="topic-detail">Newton's laws. Free-body diagrams. Friction, drag. Impulse. Momentum conservation. Collisions.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Newton's three laws:</strong> 1st: An object remains at rest or in uniform motion unless acted on by a net external force (inertia). 2nd: F_net = ma — net force equals mass times acceleration. 3rd: Every action has an equal and opposite reaction (forces act on different objects).</div>
+            <div class="concept-item"><strong>Free-body diagrams:</strong> Show ALL forces acting on a single object as arrows from the centre of mass. Include weight (mg down), normal force (perpendicular to surface), friction (opposing motion along surface), tension, applied forces, drag.</div>
+            <div class="concept-item"><strong>Linear momentum:</strong> p = mv (vector). The law of conservation of momentum: in an isolated system (no external forces), total momentum before = total momentum after. Applies to all collisions and explosions.</div>
+            <div class="concept-item"><strong>Impulse:</strong> J = FΔt = Δp. The area under a force-time graph equals the change in momentum. Airbags and crumple zones increase Δt to reduce F for the same Δp.</div>
+            <div class="concept-item"><strong>Types of collision:</strong> Elastic: both momentum and KE conserved. Inelastic: momentum conserved, KE not conserved (some converted to heat/sound). Perfectly inelastic: objects stick together — maximum KE loss.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title terms">Key Terms & Definitions</div><div class="term-grid">
+            <div class="term-item"><span class="term-word">Net force (resultant force):</span> The vector sum of all forces acting on an object.</div>
+            <div class="term-item"><span class="term-word">Momentum (p):</span> The product of an object's mass and velocity. A vector quantity. Unit: kg·m/s or N·s.</div>
+            <div class="term-item"><span class="term-word">Impulse (J):</span> The change in momentum of an object, equal to force × time. Unit: N·s.</div>
+            <div class="term-item"><span class="term-word">Friction:</span> A contact force opposing relative motion between surfaces. Static friction ≤ μₛN; kinetic friction = μₖN.</div>
+          </div></div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">F_net = ma<div class="formula-note">Newton's second law</div></div>
+            <div class="formula-card">p = mv<div class="formula-note">Linear momentum</div></div>
+            <div class="formula-card">J = FΔt = Δp = mv − mu<div class="formula-note">Impulse-momentum theorem</div></div>
+            <div class="formula-card">Σp_before = Σp_after<div class="formula-note">Conservation of momentum</div></div>
+            <div class="formula-card">f = μN<div class="formula-note">Friction force (μ = coefficient, N = normal force)</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Always draw a free-body diagram first. Resolve forces into components along convenient axes.</div>
+            <div class="exam-tip">Collision problems: use conservation of momentum. Check if elastic by comparing KE before and after.</div>
+            <div class="exam-tip">Explain safety features (airbags, seatbelts, helmets) using impulse: increasing time reduces force.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-a3"><div class="topic-header" onclick="toggleTopic('a3')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">A.3 — Work, Energy and Power</div><div class="topic-detail">Work done. Kinetic and potential energy. Conservation of energy. Power. Efficiency.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Work done:</strong> W = Fs cosθ, where θ is the angle between force and displacement. Work is a scalar. Only the component of force parallel to displacement does work. If force is perpendicular to displacement, W = 0 (e.g., centripetal force).</div>
+            <div class="concept-item"><strong>Kinetic and potential energy:</strong> KE = ½mv². Gravitational PE = mgh (near Earth's surface). Elastic PE = ½kx². The work-energy theorem: net work done on an object = change in its kinetic energy.</div>
+            <div class="concept-item"><strong>Conservation of energy:</strong> Energy cannot be created or destroyed, only transferred or transformed. In an isolated system: total energy is constant. In practice, some energy is always dissipated as thermal energy (friction, drag).</div>
+            <div class="concept-item"><strong>Power and efficiency:</strong> Power = energy transferred / time = W/t = Fv. Efficiency = useful energy output / total energy input × 100%. Always less than 100% due to energy dissipation.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">W = Fs cosθ<div class="formula-note">Work done by a force</div></div>
+            <div class="formula-card">E_k = ½mv²<div class="formula-note">Kinetic energy</div></div>
+            <div class="formula-card">E_p = mgh<div class="formula-note">Gravitational potential energy (near surface)</div></div>
+            <div class="formula-card">P = W/t = Fv<div class="formula-note">Power</div></div>
+            <div class="formula-card">η = (useful output / total input) × 100%<div class="formula-note">Efficiency</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Energy conservation problems: set up E_total(initial) = E_total(final), including all forms (KE, PE, work done by friction).</div>
+            <div class="exam-tip">Sankey diagrams: width of arrows represents energy. Useful output + wasted = total input.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-a4"><div class="topic-header" onclick="toggleTopic('a4')"><div class="topic-dot hl"></div><div class="topic-content"><div class="topic-name">A.4 — Rigid Body Mechanics <span class="hl-tag">HL</span></div><div class="topic-detail">Torque. Rotational equilibrium. Moment of inertia. Angular momentum. Rotational kinetic energy.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Torque (τ):</strong> The rotational equivalent of force. τ = Fr sinθ = F × moment arm. Causes angular acceleration. Net torque = 0 for rotational equilibrium. Unit: N·m.</div>
+            <div class="concept-item"><strong>Moment of inertia (I):</strong> The rotational equivalent of mass — resistance to angular acceleration. Depends on mass and how it is distributed relative to the axis. τ_net = Iα (Newton's 2nd law for rotation).</div>
+            <div class="concept-item"><strong>Angular momentum:</strong> L = Iω (analogous to p = mv). Conservation: in the absence of external torques, total angular momentum is constant. Explains why a spinning figure skater speeds up when pulling arms in (I decreases, ω increases).</div>
+            <div class="concept-item"><strong>Rotational kinetic energy:</strong> E_rot = ½Iω². A rolling object has both translational KE (½mv²) and rotational KE (½Iω²). Total KE = ½mv² + ½Iω².</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">τ = Fr sinθ<div class="formula-note">Torque</div></div>
+            <div class="formula-card">τ_net = Iα<div class="formula-note">Newton's 2nd law for rotation</div></div>
+            <div class="formula-card">L = Iω<div class="formula-note">Angular momentum</div></div>
+            <div class="formula-card">E_rot = ½Iω²<div class="formula-note">Rotational kinetic energy</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Rolling problems: use energy conservation with E_total = ½mv² + ½Iω² + mgh. Remember v = ωr for rolling without slipping.</div>
+            <div class="exam-tip">Conservation of angular momentum: identify when external torque is zero and apply L_before = L_after.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-a5"><div class="topic-header" onclick="toggleTopic('a5')"><div class="topic-dot hl"></div><div class="topic-content"><div class="topic-name">A.5 — Galilean and Special Relativity <span class="hl-tag">HL</span></div><div class="topic-detail">Reference frames. Lorentz factor. Time dilation. Length contraction. Relativistic energy.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Einstein's postulates:</strong> (1) The laws of physics are the same in all inertial reference frames. (2) The speed of light in a vacuum (c ≈ 3×10⁸ m/s) is the same for all observers regardless of their motion or the motion of the source.</div>
+            <div class="concept-item"><strong>Lorentz factor:</strong> γ = 1/√(1 − v²/c²). Always ≥ 1. Approaches 1 at low speeds. Approaches infinity as v → c. This factor appears in all relativistic equations.</div>
+            <div class="concept-item"><strong>Time dilation:</strong> A moving clock runs slower: Δt = γΔt₀, where Δt₀ is the proper time (measured in the rest frame of the clock). Muon experiments confirm this — muons survive longer than expected because their "clocks" run slow.</div>
+            <div class="concept-item"><strong>Length contraction:</strong> A moving object is shortened in the direction of motion: L = L₀/γ, where L₀ is the proper length (measured at rest). Only affects the direction of motion.</div>
+            <div class="concept-item"><strong>Relativistic energy:</strong> Total energy E = γmc². Rest energy E₀ = mc². Kinetic energy E_k = (γ−1)mc². The mass-energy equivalence means mass is a form of energy.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">γ = 1 / √(1 − v²/c²)<div class="formula-note">Lorentz factor</div></div>
+            <div class="formula-card">Δt = γΔt₀<div class="formula-note">Time dilation</div></div>
+            <div class="formula-card">L = L₀ / γ<div class="formula-note">Length contraction</div></div>
+            <div class="formula-card">E = γmc² , E₀ = mc² , E_k = (γ−1)mc²<div class="formula-note">Relativistic energy</div></div>
+            <div class="formula-card">p = γmv<div class="formula-note">Relativistic momentum</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Identify proper time (Δt₀) and proper length (L₀) — always measured in the object's rest frame.</div>
+            <div class="exam-tip">Calculate γ first, then apply to time dilation, length contraction, or energy equations.</div>
+            <div class="exam-tip">Explain muon decay as evidence for time dilation (or equivalently, length contraction from the muon's frame).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== THEME B ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('b')">
+      <div class="section-number">B</div>
+      <div class="section-title">The Particulate Nature of Matter</div>
+      <span class="section-arrow open" id="arrow-b">▸</span>
+    </div>
+    <div class="topic-list" id="body-b">
+
+      <div class="topic" id="topic-b1"><div class="topic-header" onclick="toggleTopic('b1')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">B.1 — Thermal Energy Transfers</div><div class="topic-detail">Temperature. Internal energy. Specific heat capacity. Phase changes. Latent heat. Thermal conduction.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Temperature vs internal energy:</strong> Temperature measures the average KE of particles. Internal energy is the total KE + PE of all particles. Two objects can have the same temperature but different internal energies (different masses or states).</div>
+            <div class="concept-item"><strong>Specific heat capacity (c):</strong> The energy needed to raise 1 kg of a substance by 1 K. Q = mcΔT. Water has a high c (4180 J/kg·K), which is why it's used as a coolant and moderates climate.</div>
+            <div class="concept-item"><strong>Phase changes and latent heat:</strong> During a phase change, temperature stays constant — energy goes into breaking/forming intermolecular bonds, not increasing KE. Q = mL, where L is specific latent heat (fusion for melting, vaporisation for boiling).</div>
+            <div class="concept-item"><strong>Methods of heat transfer:</strong> Conduction (through solids, particle vibrations), convection (bulk movement of fluids), radiation (EM waves, no medium needed). Rate of conduction: Q/t = kAΔT/d.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Q = mcΔT<div class="formula-note">Heat for temperature change</div></div>
+            <div class="formula-card">Q = mL<div class="formula-note">Heat for phase change</div></div>
+            <div class="formula-card">Q/t = kAΔT/d<div class="formula-note">Rate of thermal conduction</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Heating curve problems: calculate energy for each stage (heating, phase change, heating) separately then sum.</div>
+            <div class="exam-tip">Explain why temperature remains constant during a phase change in terms of breaking intermolecular bonds.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-b2"><div class="topic-header" onclick="toggleTopic('b2')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">B.2 — Greenhouse Effect</div><div class="topic-detail">Albedo, emissivity, solar constant. Greenhouse gases. Energy balance models.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Solar constant and albedo:</strong> Solar constant S ≈ 1361 W/m². Albedo α = fraction of incident radiation reflected. Earth's average α ≈ 0.3. Power absorbed = S(1−α)πR². For energy balance, Earth must radiate as much as it absorbs.</div>
+            <div class="concept-item"><strong>Greenhouse effect:</strong> Earth's surface emits IR radiation. Greenhouse gases (CO₂, CH₄, H₂O, N₂O) absorb and re-emit IR in all directions, trapping energy. This raises surface temperature above what it would be without an atmosphere (~255 K → ~288 K).</div>
+            <div class="concept-item"><strong>Enhanced greenhouse effect:</strong> Human activities increase greenhouse gas concentrations, intensifying the natural greenhouse effect and causing global warming. This is distinct from the natural greenhouse effect, which makes Earth habitable.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">P_absorbed = S(1−α)πR²<div class="formula-note">Power absorbed by a planet</div></div>
+            <div class="formula-card">P_emitted = σAT⁴ = σ(4πR²)T⁴<div class="formula-note">Power radiated (Stefan-Boltzmann)</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Derive equilibrium temperature by setting absorbed power = emitted power. Explain why actual T is higher (greenhouse effect).</div>
+            <div class="exam-tip">Distinguish between the natural greenhouse effect (beneficial) and the enhanced greenhouse effect (problematic).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-b3"><div class="topic-header" onclick="toggleTopic('b3')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">B.3 — Gas Laws</div><div class="topic-detail">Ideal gas model. PV = nRT. Kinetic molecular theory. Pressure-volume-temperature relationships.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Ideal gas assumptions:</strong> (1) Negligible particle volume. (2) No intermolecular forces except during collisions. (3) Perfectly elastic collisions. (4) Random motion. (5) Large number of particles. Real gases deviate at high P (volume matters) and low T (forces matter).</div>
+            <div class="concept-item"><strong>Gas laws:</strong> Boyle's law: PV = const (at constant T). Charles' law: V/T = const (at constant P). Gay-Lussac's: P/T = const (at constant V). All combined: PV = nRT.</div>
+            <div class="concept-item"><strong>Kinetic molecular theory:</strong> Pressure arises from particle collisions with container walls. Average KE of particles: E̅_k = 3/2 kT, where k = 1.38 × 10⁻²³ J/K (Boltzmann constant). Temperature is directly proportional to average KE.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">PV = nRT (R = 8.314 J/(mol·K))<div class="formula-note">Ideal gas equation</div></div>
+            <div class="formula-card">PV = NkT (k = 1.38 × 10⁻²³ J/K)<div class="formula-note">Using Boltzmann constant and number of particles</div></div>
+            <div class="formula-card">E̅_k = 3/2 kT<div class="formula-note">Average kinetic energy per particle</div></div>
+            <div class="formula-card">P₁V₁/T₁ = P₂V₂/T₂<div class="formula-note">Combined gas law (constant n)</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Always convert temperature to Kelvin before using gas laws.</div>
+            <div class="exam-tip">Explain gas behaviour using kinetic theory: increasing T → faster particles → more frequent/harder collisions → higher P.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-b4"><div class="topic-header" onclick="toggleTopic('b4')"><div class="topic-dot hl"></div><div class="topic-content"><div class="topic-name">B.4 — Thermodynamics <span class="hl-tag">HL</span></div><div class="topic-detail">First law. Internal energy. Entropy. Second law. Heat engines. Carnot cycle.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>First law of thermodynamics:</strong> Q = ΔU + W. Heat added to a system either increases internal energy or does work on surroundings (or both). This is energy conservation applied to thermal systems.</div>
+            <div class="concept-item"><strong>P-V diagrams:</strong> Work done BY a gas = area under the curve on a P-V diagram. Isothermal (constant T): PV = const, hyperbola. Isobaric (constant P): horizontal line. Isovolumetric (constant V): vertical line. Adiabatic (Q = 0): steeper than isothermal.</div>
+            <div class="concept-item"><strong>Second law and entropy:</strong> Entropy (S) is a measure of disorder. In any natural process, total entropy of the universe increases. Heat flows spontaneously from hot to cold, never the reverse. No heat engine can be 100% efficient.</div>
+            <div class="concept-item"><strong>Carnot cycle:</strong> The most efficient possible heat engine operating between two temperatures. η_Carnot = 1 − T_cold/T_hot. All real engines are less efficient than Carnot.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Q = ΔU + W<div class="formula-note">First law of thermodynamics</div></div>
+            <div class="formula-card">W = PΔV (at constant pressure)<div class="formula-note">Work done by gas at constant P</div></div>
+            <div class="formula-card">η = W/Q_H = 1 − Q_C/Q_H<div class="formula-note">Heat engine efficiency</div></div>
+            <div class="formula-card">η_Carnot = 1 − T_C/T_H<div class="formula-note">Maximum (Carnot) efficiency</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">P-V diagram problems: identify the process type, calculate work (area), and apply the first law.</div>
+            <div class="exam-tip">Always use Kelvin for Carnot efficiency calculations. Explain why no engine reaches 100% efficiency.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-b5"><div class="topic-header" onclick="toggleTopic('b5')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">B.5 — Current and Circuits</div><div class="topic-detail">EMF. Current. Resistance. Ohm's law. Kirchhoff's laws. Series and parallel circuits. Power.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Current and EMF:</strong> Current I = charge per unit time = Q/t = nAvd (drift velocity equation). EMF (ε) is the energy per unit charge provided by a source. Potential difference (V) is energy per unit charge dissipated in a component.</div>
+            <div class="concept-item"><strong>Resistance and Ohm's law:</strong> R = V/I. Ohm's law: V ∝ I for ohmic conductors (at constant temperature). Resistance depends on material (ρ), length (L), and cross-sectional area (A): R = ρL/A.</div>
+            <div class="concept-item"><strong>Kirchhoff's laws:</strong> Junction rule: ΣI_in = ΣI_out (conservation of charge). Loop rule: ΣV around any closed loop = 0 (conservation of energy). Use these to solve complex circuits.</div>
+            <div class="concept-item"><strong>Series and parallel:</strong> Series: same current, voltages add, R_total = R₁ + R₂. Parallel: same voltage, currents add, 1/R_total = 1/R₁ + 1/R₂. Internal resistance: ε = I(R + r), V_terminal = ε − Ir.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">V = IR<div class="formula-note">Ohm's law</div></div>
+            <div class="formula-card">P = IV = I²R = V²/R<div class="formula-note">Electrical power</div></div>
+            <div class="formula-card">ε = I(R + r)<div class="formula-note">EMF with internal resistance</div></div>
+            <div class="formula-card">R = ρL/A<div class="formula-note">Resistance from resistivity</div></div>
+            <div class="formula-card">Series: R_T = R₁ + R₂ + ...<div class="formula-note">Resistors in series</div></div>
+            <div class="formula-card">Parallel: 1/R_T = 1/R₁ + 1/R₂ + ...<div class="formula-note">Resistors in parallel</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Circuit analysis: apply Kirchhoff's laws systematically. Label current directions and voltage polarities consistently.</div>
+            <div class="exam-tip">Internal resistance: plot V vs I for a cell — gradient = −r, y-intercept = ε.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== THEME C ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('c')">
+      <div class="section-number">C</div>
+      <div class="section-title">Wave Behaviour</div>
+      <span class="section-arrow open" id="arrow-c">▸</span>
+    </div>
+    <div class="topic-list" id="body-c">
+
+      <div class="topic" id="topic-c1"><div class="topic-header" onclick="toggleTopic('c1')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">C.1 — Simple Harmonic Motion</div><div class="topic-detail">SHM definition. Equations of motion. Energy in SHM. Damping and resonance.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>SHM definition:</strong> Acceleration is proportional to displacement from equilibrium and directed toward equilibrium: a = −ω²x. This produces sinusoidal oscillation. Examples: mass-spring, simple pendulum (small angles).</div>
+            <div class="concept-item"><strong>SHM equations:</strong> x = x₀ sin(ωt) or x₀ cos(ωt). v = ωx₀ cos(ωt) → v_max = ωx₀ at equilibrium. a = −ω²x₀ sin(ωt) → a_max = ω²x₀ at extremes. ω = 2π/T = 2πf.</div>
+            <div class="concept-item"><strong>Energy in SHM:</strong> E_k = ½mω²(x₀² − x²). E_p = ½mω²x². Total energy E = ½mω²x₀² = constant. Continuous exchange between KE and PE.</div>
+            <div class="concept-item"><strong>Damping and resonance:</strong> Damping reduces amplitude over time (light, heavy, critical). Resonance occurs when driving frequency = natural frequency → maximum amplitude. Damping reduces the peak resonance amplitude and broadens the resonance curve.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">a = −ω²x<div class="formula-note">Defining equation of SHM</div></div>
+            <div class="formula-card">T = 2π√(m/k) [spring] , T = 2π√(L/g) [pendulum]<div class="formula-note">Periods of common SHM systems</div></div>
+            <div class="formula-card">v = ±ω√(x₀² − x²)<div class="formula-note">Velocity at displacement x</div></div>
+            <div class="formula-card">E_total = ½mω²x₀²<div class="formula-note">Total energy in SHM</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Sketch x-t, v-t, a-t, and energy graphs for SHM. Know the phase relationships between them.</div>
+            <div class="exam-tip">Sketch resonance curves showing the effect of damping on peak amplitude and peak frequency.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c2"><div class="topic-header" onclick="toggleTopic('c2')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">C.2 — Wave Model</div><div class="topic-detail">Transverse and longitudinal waves. Wavelength, frequency, speed. Superposition. EM spectrum.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Wave types:</strong> Transverse: oscillation perpendicular to wave direction (light, water waves, EM waves). Longitudinal: oscillation parallel to wave direction (sound). Both transfer energy without transferring matter.</div>
+            <div class="concept-item"><strong>Wave equation:</strong> v = fλ. Wave speed depends on the medium, not on frequency or amplitude. In a given medium, changing f changes λ inversely.</div>
+            <div class="concept-item"><strong>EM spectrum:</strong> Radio → Microwave → IR → Visible → UV → X-ray → Gamma. All travel at c = 3×10⁸ m/s in vacuum. Differ in frequency/wavelength. All are transverse waves.</div>
+            <div class="concept-item"><strong>Superposition:</strong> When waves meet, their displacements add algebraically. Constructive (in phase) → larger amplitude. Destructive (out of phase) → smaller amplitude. This leads to interference and standing wave patterns.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">v = fλ<div class="formula-note">Wave equation</div></div>
+            <div class="formula-card">T = 1/f<div class="formula-note">Period-frequency relationship</div></div>
+            <div class="formula-card">I ∝ A² (and I ∝ 1/r² for point source)<div class="formula-note">Intensity relations</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Distinguish transverse from longitudinal. Give examples of each. Only transverse waves can be polarised.</div>
+            <div class="exam-tip">Order the EM spectrum by frequency or wavelength. Know uses and dangers of each type.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c3"><div class="topic-header" onclick="toggleTopic('c3')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">C.3 — Wave Phenomena</div><div class="topic-detail">Reflection, refraction, diffraction, interference. Double-slit. <span class="hl-tag">HL</span> Single-slit. Resolution.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Snell's law:</strong> n₁ sinθ₁ = n₂ sinθ₂. Total internal reflection occurs when θ > θ_c (from denser to less dense medium). sinθ_c = n₂/n₁.</div>
+            <div class="concept-item"><strong>Diffraction:</strong> Waves spread when passing through a gap or around an obstacle. Maximum diffraction when gap size ≈ wavelength. Explains why sound diffracts around doors but light doesn't (light λ is tiny).</div>
+            <div class="concept-item"><strong>Double-slit interference:</strong> Constructive: d sinθ = nλ. Destructive: d sinθ = (n+½)λ. Fringe spacing: s = λD/d. Central maximum is brightest; all fringes have equal intensity (idealised).</div>
+            <div class="concept-item"><strong>HL: Single-slit diffraction:</strong> Central maximum is twice as wide as other maxima. First minimum at θ = λ/b (b = slit width). The actual double-slit pattern is the interference pattern modulated by the single-slit diffraction envelope.</div>
+            <div class="concept-item"><strong>HL: Resolution (Rayleigh criterion):</strong> Two sources are just resolved when the central maximum of one falls on the first minimum of the other: θ = 1.22λ/b. Smaller λ or larger aperture b → better resolution.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">n₁ sinθ₁ = n₂ sinθ₂<div class="formula-note">Snell's law</div></div>
+            <div class="formula-card">d sinθ = nλ<div class="formula-note">Double-slit constructive interference</div></div>
+            <div class="formula-card">s = λD/d<div class="formula-note">Fringe spacing</div></div>
+            <div class="formula-card">θ = λ/b [HL: single-slit first minimum]<div class="formula-note">Single-slit diffraction</div></div>
+            <div class="formula-card">θ = 1.22λ/b [HL: Rayleigh criterion]<div class="formula-note">Angular resolution limit</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Double-slit calculations: find λ, d, or fringe spacing. Explain what happens when wavelength or slit separation changes.</div>
+            <div class="exam-tip">HL: Sketch the combined double-slit + single-slit pattern and explain the diffraction envelope.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c4"><div class="topic-header" onclick="toggleTopic('c4')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">C.4 — Standing Waves and Resonance</div><div class="topic-detail">Nodes, antinodes. Harmonics. Strings and pipes. Boundary conditions.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Standing waves:</strong> Formed by superposition of two identical waves travelling in opposite directions. No net energy transfer. Nodes (zero displacement) and antinodes (maximum displacement) are fixed in position.</div>
+            <div class="concept-item"><strong>Strings (fixed at both ends):</strong> Nodes at both ends. Fundamental (1st harmonic): L = λ/2. nth harmonic: L = nλ/2. All harmonics present.</div>
+            <div class="concept-item"><strong>Open pipe:</strong> Antinodes at both open ends. Same harmonics as strings: L = nλ/2, all harmonics present.</div>
+            <div class="concept-item"><strong>Closed pipe (one end closed):</strong> Node at closed end, antinode at open end. Only odd harmonics: L = nλ/4 (n = 1, 3, 5...). Fundamental frequency is half that of an open pipe of same length.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">L = nλ/2 (n = 1,2,3,...)<div class="formula-note">String / open pipe</div></div>
+            <div class="formula-card">L = nλ/4 (n = 1,3,5,...)<div class="formula-note">Closed pipe (odd harmonics only)</div></div>
+            <div class="formula-card">f_n = nf₁<div class="formula-note">nth harmonic frequency</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Draw standing wave patterns for 1st, 2nd, 3rd harmonics in strings and pipes. Label nodes (N) and antinodes (A).</div>
+            <div class="exam-tip">Calculate fundamental frequency given pipe/string length and wave speed.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-c5"><div class="topic-header" onclick="toggleTopic('c5')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">C.5 — Doppler Effect</div><div class="topic-detail">Moving source and observer. Applications. <span class="hl-tag">HL</span> Doppler for EM waves. Redshift.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Doppler effect for sound:</strong> Approaching source → shorter λ → higher frequency. Receding source → longer λ → lower frequency. The effect depends on the velocities of both source and observer relative to the medium.</div>
+            <div class="concept-item"><strong>HL: Doppler for EM waves:</strong> Since EM waves need no medium, the formula simplifies: Δf/f = v/c for v << c. This gives the redshift/blueshift used in astronomy to measure how fast galaxies are moving.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">f' = f × v/(v ± v_s)<div class="formula-note">Moving source (−approaching, +receding)</div></div>
+            <div class="formula-card">f' = f × (v ± v_o)/v<div class="formula-note">Moving observer (+approaching, −receding)</div></div>
+            <div class="formula-card">Δf/f ≈ Δλ/λ ≈ v/c (for v << c)<div class="formula-note">HL: Doppler for EM radiation</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate observed frequency for moving source or observer. Carefully choose signs.</div>
+            <div class="exam-tip">HL: Use Δf/f = v/c to find the speed of a galaxy from its redshift.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== THEME D ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('d')">
+      <div class="section-number">D</div>
+      <div class="section-title">Fields</div>
+      <span class="section-arrow open" id="arrow-d">▸</span>
+    </div>
+    <div class="topic-list" id="body-d">
+
+      <div class="topic" id="topic-d1"><div class="topic-header" onclick="toggleTopic('d1')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">D.1 — Gravitational Fields</div><div class="topic-detail">Newton's law of gravitation. Field strength. Gravitational potential. Orbits. Kepler's laws.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Newton's law of gravitation:</strong> F = GMm/r². Every mass attracts every other mass. Force is proportional to product of masses and inversely proportional to distance squared. G = 6.67 × 10⁻¹¹ N·m²/kg².</div>
+            <div class="concept-item"><strong>Gravitational field strength:</strong> g = F/m = GM/r². The field strength at Earth's surface ≈ 9.81 N/kg. It decreases with altitude as 1/r².</div>
+            <div class="concept-item"><strong>Gravitational potential (HL):</strong> V_g = −GM/r. Negative because work must be done against gravity to move to infinity. Potential at infinity = 0. Escape velocity: v_esc = √(2GM/r).</div>
+            <div class="concept-item"><strong>Orbits:</strong> For a circular orbit: gravitational force provides centripetal force. GMm/r² = mv²/r → v = √(GM/r). Orbital period T² ∝ r³ (Kepler's 3rd law). Geostationary orbit: T = 24h, above equator.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">F = GMm/r²<div class="formula-note">Newton's law of gravitation</div></div>
+            <div class="formula-card">g = GM/r²<div class="formula-note">Gravitational field strength</div></div>
+            <div class="formula-card">V_g = −GM/r<div class="formula-note">Gravitational potential</div></div>
+            <div class="formula-card">v_orbit = √(GM/r)<div class="formula-note">Orbital speed</div></div>
+            <div class="formula-card">T² = (4π²/GM)r³<div class="formula-note">Kepler's 3rd law</div></div>
+            <div class="formula-card">v_esc = √(2GM/r)<div class="formula-note">Escape velocity</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Orbital calculations: set gravitational force = centripetal force to derive orbital speed and period.</div>
+            <div class="exam-tip">Explain why astronauts feel "weightless" in orbit (they are in free fall, not zero gravity).</div>
+            <div class="exam-tip">HL: Calculate escape velocity. Explain why V_g is always negative.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-d2"><div class="topic-header" onclick="toggleTopic('d2')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">D.2 — Electric and Magnetic Fields</div><div class="topic-detail">Coulomb's law. Electric field and potential. Magnetic fields from currents. Lorentz force.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Coulomb's law:</strong> F = kq₁q₂/r² where k = 8.99 × 10⁹ N·m²/C². Like charges repel, opposite charges attract. Same inverse-square form as gravity but can be repulsive.</div>
+            <div class="concept-item"><strong>Electric field:</strong> E = F/q = kQ/r² (point charge). Field lines point from + to −. Uniform field between parallel plates: E = V/d. Force on charge: F = qE.</div>
+            <div class="concept-item"><strong>Electric potential:</strong> V = kQ/r (point charge). The work done per unit charge to bring a test charge from infinity. Potential is scalar — can be positive or negative. Equipotential lines are perpendicular to field lines.</div>
+            <div class="concept-item"><strong>Magnetic fields:</strong> Current-carrying wire produces circular field (right-hand rule). Solenoid produces uniform internal field. B_wire = μ₀I/(2πr). B_solenoid = μ₀nI. Force on current in field: F = BIL sinθ. Force on moving charge: F = qvB sinθ.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">F = kq₁q₂/r²<div class="formula-note">Coulomb's law</div></div>
+            <div class="formula-card">E = kQ/r² (point charge), E = V/d (parallel plates)<div class="formula-note">Electric field strength</div></div>
+            <div class="formula-card">V = kQ/r<div class="formula-note">Electric potential (point charge)</div></div>
+            <div class="formula-card">F = BIL sinθ<div class="formula-note">Force on current-carrying wire</div></div>
+            <div class="formula-card">F = qvB sinθ<div class="formula-note">Lorentz force on moving charge</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Compare gravitational and electric fields: both 1/r² but electric can repel; electric is much stronger.</div>
+            <div class="exam-tip">Use right/left-hand rules to find force direction on charges and current-carrying wires in B-fields.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-d3"><div class="topic-header" onclick="toggleTopic('d3')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">D.3 — Motion in Electromagnetic Fields</div><div class="topic-detail">Charged particles in E and B fields. Circular motion in B-field. Velocity selector. Mass spectrometer.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Particle in electric field:</strong> F = qE gives constant acceleration (like projectile motion with a = qE/m instead of g). Parabolic path if entering perpendicular to field.</div>
+            <div class="concept-item"><strong>Particle in magnetic field:</strong> F = qvB (perpendicular to both v and B) → circular motion. r = mv/(qB). The magnetic force does no work (always ⊥ to v), so speed is unchanged.</div>
+            <div class="concept-item"><strong>Velocity selector:</strong> Crossed E and B fields: only particles with v = E/B pass straight through (electric and magnetic forces balance). Used in mass spectrometers to select particles of a specific speed.</div>
+            <div class="concept-item"><strong>Mass spectrometer:</strong> Ionise → accelerate through V → select speed (velocity selector) → deflect in B-field. Radius r = mv/(qB). Different masses → different radii → separation and identification.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">r = mv/(qB)<div class="formula-note">Radius of circular path in B-field</div></div>
+            <div class="formula-card">v = E/B<div class="formula-note">Velocity selector condition</div></div>
+            <div class="formula-card">qV = ½mv²<div class="formula-note">KE gained by charge accelerated through V</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Describe the path of a charged particle entering perpendicular to a uniform B-field and calculate the radius.</div>
+            <div class="exam-tip">Explain how a mass spectrometer works step-by-step: ionisation → acceleration → deflection → detection.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-d4"><div class="topic-header" onclick="toggleTopic('d4')"><div class="topic-dot hl"></div><div class="topic-content"><div class="topic-name">D.4 — Induction <span class="hl-tag">HL</span></div><div class="topic-detail">Magnetic flux. Faraday's law. Lenz's law. AC generators. Transformers. Power transmission.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Magnetic flux:</strong> Φ = BA cosθ. The "amount" of B-field passing through an area. Changes in flux induce an EMF. Flux can change by changing B, A, or θ.</div>
+            <div class="concept-item"><strong>Faraday's law:</strong> Induced EMF = −N(ΔΦ/Δt). The magnitude of the induced EMF is proportional to the rate of change of flux linkage. The minus sign represents Lenz's law.</div>
+            <div class="concept-item"><strong>Lenz's law:</strong> The induced current flows in a direction that opposes the change in flux that caused it. This is a consequence of conservation of energy.</div>
+            <div class="concept-item"><strong>AC generator:</strong> A coil rotating in a B-field produces sinusoidal EMF: ε = ε₀ sin(ωt), where ε₀ = NBAω. Peak EMF increases with rotation speed, number of turns, field strength, or coil area.</div>
+            <div class="concept-item"><strong>Transformers:</strong> V_s/V_p = N_s/N_p. Step-up (N_s > N_p) increases voltage. Step-down decreases it. Ideal: P_p = P_s so I_s/I_p = N_p/N_s. High voltage transmission reduces I²R losses in cables.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Φ = BA cosθ<div class="formula-note">Magnetic flux</div></div>
+            <div class="formula-card">ε = −N(ΔΦ/Δt)<div class="formula-note">Faraday's law</div></div>
+            <div class="formula-card">ε₀ = NBAω<div class="formula-note">Peak EMF of AC generator</div></div>
+            <div class="formula-card">V_s/V_p = N_s/N_p<div class="formula-note">Transformer equation</div></div>
+            <div class="formula-card">P_loss = I²R<div class="formula-note">Power loss in transmission lines</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Apply Lenz's law: determine direction of induced current by identifying what change to oppose.</div>
+            <div class="exam-tip">Explain why high-voltage AC is used for power transmission (reduces current → reduces I²R losses).</div>
+            <div class="exam-tip">Transformer calculations: find secondary V or I. Discuss real-world efficiency losses (eddy currents, flux leakage, resistance).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== THEME E ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('e')">
+      <div class="section-number">E</div>
+      <div class="section-title">Nuclear and Quantum Physics</div>
+      <span class="section-arrow open" id="arrow-e">▸</span>
+    </div>
+    <div class="topic-list" id="body-e">
+
+      <div class="topic" id="topic-e1"><div class="topic-header" onclick="toggleTopic('e1')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">E.1 — Structure of the Atom</div><div class="topic-detail">Atomic models. Energy levels. Emission/absorption spectra. Photoelectric effect.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Atomic models:</strong> Thomson (plum pudding) → Rutherford (nuclear, after alpha scattering) → Bohr (quantised orbits) → Quantum mechanical (electron clouds/orbitals). Each model explained more observations than the last.</div>
+            <div class="concept-item"><strong>Energy levels and spectra:</strong> Electrons occupy discrete energy levels. Emission: electron drops to lower level, emits photon with E = hf = E_upper − E_lower. Absorption: photon of exactly the right energy is absorbed, electron jumps up. Line spectra = evidence for quantised energy levels.</div>
+            <div class="concept-item"><strong>Photoelectric effect:</strong> Light ejects electrons from a metal surface. Key observations: (1) Below threshold frequency f₀, no emission regardless of intensity. (2) Max KE of electrons depends on frequency, not intensity. (3) Emission is instantaneous. Explained by photon model: E = hf, E_k(max) = hf − φ.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">E = hf = hc/λ<div class="formula-note">Photon energy</div></div>
+            <div class="formula-card">E_k(max) = hf − φ<div class="formula-note">Photoelectric equation</div></div>
+            <div class="formula-card">hf₀ = φ<div class="formula-note">Threshold frequency and work function</div></div>
+            <div class="formula-card">eV_s = hf − φ<div class="formula-note">Stopping potential (V_s)</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Describe Rutherford's alpha scattering experiment and what it revealed about atomic structure.</div>
+            <div class="exam-tip">Explain why the photoelectric effect supports the particle model of light — focus on threshold frequency and instantaneous emission.</div>
+            <div class="exam-tip">Calculate photon energies and photoelectron KE. Plot E_k(max) vs f — gradient = h, x-intercept = f₀.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-e2"><div class="topic-header" onclick="toggleTopic('e2')"><div class="topic-dot hl"></div><div class="topic-content"><div class="topic-name">E.2 — Quantum Physics <span class="hl-tag">HL</span></div><div class="topic-detail">Wave-particle duality. de Broglie wavelength. Heisenberg uncertainty. Tunnelling.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Wave-particle duality:</strong> All particles have wave-like properties and all waves have particle-like properties. Electrons show diffraction (wave behaviour) and the photoelectric effect shows light as particles (photons). Neither classical wave nor classical particle models alone are complete.</div>
+            <div class="concept-item"><strong>de Broglie wavelength:</strong> λ = h/p = h/(mv). Significant for tiny particles (electrons, neutrons) but negligible for macroscopic objects. Electron diffraction confirms this wavelength is real.</div>
+            <div class="concept-item"><strong>Heisenberg uncertainty principle:</strong> ΔxΔp ≥ h/(4π). You cannot simultaneously know a particle's exact position and exact momentum. This is a fundamental property of nature, not a limitation of measuring instruments. Also: ΔEΔt ≥ h/(4π).</div>
+            <div class="concept-item"><strong>Quantum tunnelling:</strong> A particle can pass through a potential energy barrier even if its KE is less than the barrier height. Probability depends on barrier width and height. Applications: tunnel diode, scanning tunnelling microscope, nuclear fusion in stars.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">λ = h/p = h/(mv)<div class="formula-note">de Broglie wavelength</div></div>
+            <div class="formula-card">ΔxΔp ≥ h/(4π)<div class="formula-note">Heisenberg uncertainty (position-momentum)</div></div>
+            <div class="formula-card">ΔEΔt ≥ h/(4π)<div class="formula-note">Heisenberg uncertainty (energy-time)</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate de Broglie wavelength of an electron accelerated through a given potential difference.</div>
+            <div class="exam-tip">Apply the uncertainty principle to estimate minimum kinetic energy of a confined particle.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-e3"><div class="topic-header" onclick="toggleTopic('e3')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">E.3 — Radioactive Decay</div><div class="topic-detail">Alpha, beta, gamma radiation. Half-life. Decay equations. Activity. Nuclear stability.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Types of radiation:</strong> Alpha (α): ⁴₂He nucleus, +2 charge, most ionising, least penetrating (stopped by paper/skin). Beta-minus (β⁻): electron emitted from nucleus (neutron → proton + electron + antineutrino), moderate ionisation/penetration (stopped by aluminium). Gamma (γ): EM radiation, least ionising, most penetrating (reduced by thick lead/concrete).</div>
+            <div class="concept-item"><strong>Nuclear equations:</strong> Conservation of mass number (A) and atomic number (Z) on both sides. α decay: Z decreases by 2, A by 4. β⁻ decay: Z increases by 1, A unchanged. γ: no change in Z or A (energy released only).</div>
+            <div class="concept-item"><strong>Half-life (t½):</strong> The time for half the radioactive nuclei in a sample to decay. After n half-lives: N = N₀(½)ⁿ. Activity A = λN = A₀e^(−λt), where λ = ln2/t½.</div>
+            <div class="concept-item"><strong>Random and spontaneous:</strong> Radioactive decay is random (cannot predict which nucleus decays next) and spontaneous (not affected by external conditions like temperature or pressure).</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">N = N₀(½)^(t/t½) = N₀e^(−λt)<div class="formula-note">Radioactive decay law</div></div>
+            <div class="formula-card">λ = ln2 / t½<div class="formula-note">Decay constant</div></div>
+            <div class="formula-card">A = λN = A₀e^(−λt)<div class="formula-note">Activity</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write balanced nuclear equations for α and β decay. Ensure A and Z are conserved.</div>
+            <div class="exam-tip">Half-life calculations: find remaining amount, time elapsed, or number of half-lives.</div>
+            <div class="exam-tip">Compare α, β, γ in terms of charge, mass, ionising ability, penetrating power, and what stops them.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-e4"><div class="topic-header" onclick="toggleTopic('e4')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">E.4 — Fission and Fusion</div><div class="topic-detail">Binding energy. Mass defect. Fission chain reactions. Fusion in stars. E = mc².</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Mass defect and binding energy:</strong> The mass of a nucleus is less than the sum of its individual nucleons. This "missing" mass (mass defect, Δm) has been converted to binding energy: E_b = Δmc². Higher binding energy per nucleon = more stable nucleus.</div>
+            <div class="concept-item"><strong>Binding energy per nucleon curve:</strong> Peaks at Fe-56 (most stable). Lighter elements can fuse (moving right up the curve). Heavier elements can undergo fission (moving left up the curve). Both processes release energy because products are more tightly bound.</div>
+            <div class="concept-item"><strong>Nuclear fission:</strong> A heavy nucleus (e.g., U-235) splits into two lighter nuclei + neutrons + energy. Chain reaction: released neutrons cause more fissions. Controlled in reactors (moderator slows neutrons, control rods absorb excess neutrons).</div>
+            <div class="concept-item"><strong>Nuclear fusion:</strong> Light nuclei combine to form a heavier nucleus + energy. Requires extreme temperatures (~10⁷ K) to overcome electrostatic repulsion. Powers the Sun (hydrogen → helium). Very difficult to achieve controlled fusion on Earth.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">E = mc² = Δmc²<div class="formula-note">Mass-energy equivalence</div></div>
+            <div class="formula-card">1 u = 931.5 MeV/c²<div class="formula-note">Atomic mass unit to energy conversion</div></div>
+            <div class="formula-card">Δm = Zm_p + Nm_n − m_nucleus<div class="formula-note">Mass defect</div></div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Calculate mass defect and binding energy from nuclear masses. Convert between u and MeV using 1 u = 931.5 MeV/c².</div>
+            <div class="exam-tip">Use the binding energy per nucleon curve to explain why fission and fusion release energy.</div>
+            <div class="exam-tip">Describe the conditions needed for a sustained fission chain reaction and how a nuclear reactor controls it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic" id="topic-e5"><div class="topic-header" onclick="toggleTopic('e5')"><div class="topic-dot"></div><div class="topic-content"><div class="topic-name">E.5 — Energy Production</div><div class="topic-detail">Fossil fuels. Nuclear power. Renewable energy sources. Sankey diagrams. Efficiency.</div></div><span class="topic-expand-icon">▸</span></div>
+        <div class="topic-body">
+          <div class="info-block"><div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item"><strong>Fossil fuels:</strong> Coal, oil, natural gas. High energy density. Reliable and transportable. Problems: CO₂ emissions (climate change), SO₂/NOₓ (acid rain), finite resource. Thermal power stations: fuel → heat → steam → turbine → generator.</div>
+            <div class="concept-item"><strong>Nuclear power:</strong> Very high energy density. No direct CO₂ emissions during operation. Concerns: radioactive waste (long half-lives), meltdown risk, weapons proliferation, decommissioning costs. Provides baseload power.</div>
+            <div class="concept-item"><strong>Renewable sources:</strong> Solar (photovoltaic and thermal), wind, hydroelectric, tidal, geothermal, biomass. Advantages: sustainable, low emissions. Disadvantages: intermittent (except geothermal), low energy density, large land area, weather-dependent.</div>
+            <div class="concept-item"><strong>Energy density and efficiency:</strong> Specific energy = energy per unit mass (J/kg). Energy density = energy per unit volume (J/m³). Sankey diagrams show energy flow: width = energy, useful output + losses = input. No process is 100% efficient.</div>
+          </div>
+          <div class="info-block"><div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Compare energy sources: advantages, disadvantages, efficiency, environmental impact, reliability.</div>
+            <div class="exam-tip">Draw and interpret Sankey diagrams for power stations. Calculate overall efficiency from input and useful output.</div>
+            <div class="exam-tip">Discuss the energy mix needed for sustainable development — why one source alone is insufficient.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">
+  Study Sprint — Built for structured, Harvard-level preparation<br>
+  Source: IBO Physics Guide (First Assessment 2025)
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

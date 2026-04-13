@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matematik 5 — Swedish Gymnasium Study Guide</title>
+<meta name="description" content="Complete Skolverket syllabus guide for Matematik 5 — differential equations, complex numbers, combinatorics, and proof.">
+<meta property="og:title" content="Matematik 5 — Study Sprint">
+<meta property="og:description" content="Complete Skolverket syllabus guide for Matematik 5 — differential equations, complex numbers, combinatorics, and proof.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent-math: #b388ff;
+  --accent-math-dim: rgba(179,136,255,0.12);
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-purple: #b388ff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.back-link {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 16px 24px 0;
+  color: var(--accent-math);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  border-radius: 6px;
+}
+
+.back-link:hover {
+  background: var(--accent-math-dim);
+  padding-left: 12px;
+}
+
+.hero {
+  padding: 40px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(179,136,255,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 50%, rgba(179,136,255,0.04) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-20px, 10px) rotate(2deg); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.hero h1 .math { color: var(--accent-math); }
+
+.hero .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.hero .badge-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge.math { background: var(--accent-math-dim); color: var(--accent-math); border: 1px solid rgba(179,136,255,0.25); }
+
+.content { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+.section {
+  margin-bottom: 36px;
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-number {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.section-number.math { background: var(--accent-math-dim); color: var(--accent-math); }
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.section-arrow {
+  color: var(--text-muted);
+  transition: transform 0.3s;
+  font-size: 1.2rem;
+}
+
+.section-arrow.open { transform: rotate(90deg); }
+
+.topic-list { display: flex; flex-direction: column; gap: 6px; }
+
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.topic:hover {
+  border-color: rgba(255,255,255,0.1);
+  background: var(--surface-2);
+}
+
+.topic-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.topic-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+.topic-dot.math { background: var(--accent-math); }
+
+.topic-content { flex: 1; }
+
+.topic-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.topic-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.topic-expand-icon {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.topic.expanded .topic-expand-icon { transform: rotate(90deg); }
+.topic.expanded { border-color: rgba(255,255,255,0.12); }
+
+.hl-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(179,136,255,0.15);
+  color: var(--accent-purple);
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
+}
+
+.skill-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(102,187,106,0.15);
+  color: var(--accent-green);
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
+}
+
+.topic-body {
+  display: none;
+  padding: 0 18px 18px 38px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+
+.topic.expanded .topic-body { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.info-block {
+  margin-top: 16px;
+}
+
+.info-block-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-block-title.concepts { color: var(--accent-math); }
+.info-block-title.terms { color: var(--accent-gold); }
+.info-block-title.formulas { color: var(--accent-green); }
+.info-block-title.exam { color: var(--accent-purple); }
+
+.concept-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  border-left: 3px solid var(--border);
+}
+
+.concept-item.math-border { border-left-color: var(--accent-math); }
+
+.concept-item strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.term-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.term-item .term-word {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 0.88rem;
+}
+
+.formula-card {
+  background: var(--surface-3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  border: 1px solid rgba(102,187,106,0.15);
+}
+
+.formula-card .formula-note {
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.exam-tip {
+  background: rgba(179,136,255,0.08);
+  border: 1px solid rgba(179,136,255,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.exam-tip::before {
+  content: '▸ ';
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.intro-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.intro-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.stat-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.stat-value.math { color: var(--accent-math); }
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.footer-note {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .topic-body { padding-left: 18px; }
+  .term-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Back to Hub</a>
+
+<div class="hero">
+  <h1><span class="math">Matematik 5</span></h1>
+  <p class="subtitle">Swedish Gymnasium — 100 gymnasiepoäng Study Guide</p>
+  <div class="badge-row">
+    <span class="badge math">Swedish Gymnasium Matematik 5</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="intro-card">
+    <h3>Swedish Gymnasium — Matematik 5 (100p)</h3>
+    <p>Matematik 5 is an advanced course covering differential equations, complex numbers, discrete mathematics, and formal proof techniques. This guide breaks down every core content area from Skolverket's centralt innehåll into exam-ready subtopics. Click any topic to expand detailed notes, formulas, and exam strategies.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-value math">4</div><div class="stat-label">Core Areas</div></div>
+      <div class="stat"><div class="stat-value math">~19</div><div class="stat-label">Subtopics</div></div>
+      <div class="stat"><div class="stat-value math">100p</div><div class="stat-label">Course Points</div></div>
+    </div>
+  </div>
+
+  <!-- ===== M1: DIFFERENTIALEKVATIONER ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('m1')">
+      <div class="section-number math">01</div>
+      <div class="section-title">Differentialekvationer — Differential Equations</div>
+      <span class="section-arrow open" id="arrow-m1">▸</span>
+    </div>
+    <div class="topic-list" id="body-m1">
+
+      <!-- M1.1 -->
+      <div class="topic" id="topic-m1-1">
+        <div class="topic-header" onclick="toggleTopic('m1-1')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">First-Order Differential Equations</div>
+            <div class="topic-detail">Separable equations, linear first-order ODEs, integrating factors, initial value problems.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Separable Equations:</strong> Of the form dy/dx = f(x)g(y). Separate variables: g(y)⁻¹ dy = f(x) dx. Integrate both sides independently. Works when the equation can be written as a product of a function of x and a function of y.</div>
+            <div class="concept-item math-border"><strong>Linear First-Order ODE:</strong> Standard form: dy/dx + P(x)y = Q(x). Solutions use integrating factor μ(x) = e^(∫P(x)dx). Multiply through: d/dx[μ(x)y] = μ(x)Q(x). Integrate to find y.</div>
+            <div class="concept-item math-border"><strong>Initial Conditions:</strong> Specify a unique solution by giving y(x₀) = y₀. After solving the general solution with arbitrary constant C, apply the condition to find C explicitly. Essential for applied problems.</div>
+            <div class="concept-item math-border"><strong>Integrating Factor Method:</strong> For dy/dx + P(x)y = Q(x), calculate μ(x) = e^(∫P(x)dx) carefully. The product rule then gives d/dx[μy] = μQ(x), which is always integrable.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Ordinary Differential Equation (ODE):</span> An equation involving an unknown function and its derivatives with respect to a single variable.</div>
+              <div class="term-item"><span class="term-word">Order:</span> The highest derivative in the equation (first-order = dy/dx; second-order = d²y/dx²).</div>
+              <div class="term-item"><span class="term-word">General Solution:</span> Contains arbitrary constant(s); represents a family of solutions.</div>
+              <div class="term-item"><span class="term-word">Particular Solution:</span> Obtained by applying initial/boundary conditions; specific curve in the family.</div>
+              <div class="term-item"><span class="term-word">Homogeneous ODE:</span> Right-hand side equals zero (e.g., dy/dx + P(x)y = 0).</div>
+              <div class="term-item"><span class="term-word">Nonhomogeneous ODE:</span> Right-hand side is nonzero (e.g., dy/dx + P(x)y = Q(x) with Q(x) ≠ 0).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">dy/dx = f(x)g(y) ⟹ ∫ dy/g(y) = ∫ f(x) dx<span class="formula-note">Separable equation separation.</span></div>
+            <div class="formula-card">dy/dx + P(x)y = Q(x) with μ(x) = e^(∫P(x)dx)<span class="formula-note">Integrating factor for linear first-order.</span></div>
+            <div class="formula-card">d/dx[μ(x)y] = μ(x)Q(x)<span class="formula-note">After multiplying by integrating factor, always integrable.</span></div>
+            <div class="formula-card">y = e^(-∫P(x)dx) [∫ Q(x)e^(∫P(x)dx) dx + C]<span class="formula-note">General solution for linear first-order ODE.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Solve a separable ODE and apply an initial condition to find a particular solution.</div>
+            <div class="exam-tip">Identify whether an equation is separable or requires an integrating factor.</div>
+            <div class="exam-tip">Calculate the integrating factor and solve a linear first-order ODE step-by-step.</div>
+            <div class="exam-tip">Verify a solution by substitution: differentiate and check it satisfies the original equation.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M1.2 -->
+      <div class="topic" id="topic-m1-2">
+        <div class="topic-header" onclick="toggleTopic('m1-2')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Second-Order Linear ODEs with Constant Coefficients</div>
+            <div class="topic-detail">Homogeneous and nonhomogeneous equations, characteristic equations, fundamental solutions.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Standard Form:</strong> d²y/dx² + a(dy/dx) + by = f(x), where a and b are constants. The complementary (homogeneous) solution y_c satisfies d²y/dx² + a(dy/dx) + by = 0. The particular solution y_p satisfies the full equation.</div>
+            <div class="concept-item math-border"><strong>Characteristic Equation:</strong> Assume y = e^(rx) for homogeneous equation, yielding r² + ar + b = 0. Solve for roots r. The form of y_c depends on whether roots are real, complex, or repeated.</div>
+            <div class="concept-item math-border"><strong>Real Distinct Roots:</strong> If r₁ ≠ r₂ are real, then y_c = C₁e^(r₁x) + C₂e^(r₂x). Two linearly independent exponential solutions.</div>
+            <div class="concept-item math-border"><strong>Complex Roots:</strong> If r = α ± iβ (complex pair), then y_c = e^(αx)[C₁cos(βx) + C₂sin(βx)]. Oscillatory behavior with exponential envelope.</div>
+            <div class="concept-item math-border"><strong>Repeated Real Root:</strong> If r₁ = r₂ = r (double root), then y_c = (C₁ + C₂x)e^(rx). The second solution includes a factor of x.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Characteristic Equation:</span> Polynomial equation r² + ar + b = 0 obtained by substituting y = e^(rx) into the homogeneous ODE.</div>
+              <div class="term-item"><span class="term-word">Complementary Solution (y_c):</span> General solution to the homogeneous equation d²y/dx² + a(dy/dx) + by = 0.</div>
+              <div class="term-item"><span class="term-word">Particular Solution (y_p):</span> Any specific solution to the nonhomogeneous equation.</div>
+              <div class="term-item"><span class="term-word">General Solution:</span> y = y_c + y_p; sum of complementary and particular solutions.</div>
+              <div class="term-item"><span class="term-word">Linear Independence:</span> Two solutions are independent if one is not a scalar multiple of the other; ensures two free constants in y_c.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">d²y/dx² + a(dy/dx) + by = 0 with characteristic equation r² + ar + b = 0<span class="formula-note">Homogeneous second-order linear ODE.</span></div>
+            <div class="formula-card">Δ = a² - 4b determines root type: Δ > 0 (real distinct), Δ = 0 (repeated), Δ < 0 (complex)<span class="formula-note">Discriminant analysis.</span></div>
+            <div class="formula-card">y_c = C₁e^(r₁x) + C₂e^(r₂x) (real distinct roots)<span class="formula-note">General form with two exponential terms.</span></div>
+            <div class="formula-card">y_c = e^(αx)[C₁cos(βx) + C₂sin(βx)] (complex roots r = α ± iβ)<span class="formula-note">Oscillatory solution with exponential envelope.</span></div>
+            <div class="formula-card">y_c = (C₁ + C₂x)e^(rx) (repeated root r)<span class="formula-note">Second solution includes linear term.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Form the characteristic equation from a second-order ODE and identify the root type (real distinct, repeated, or complex).</div>
+            <div class="exam-tip">Write the complementary solution y_c based on root type.</div>
+            <div class="exam-tip">Apply initial conditions y(x₀) and y'(x₀) to find C₁ and C₂.</div>
+            <div class="exam-tip">Solve nonhomogeneous equations by finding y_p (via undetermined coefficients or variation of parameters) and adding y_c.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M1.3 -->
+      <div class="topic" id="topic-m1-3">
+        <div class="topic-header" onclick="toggleTopic('m1-3')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Applications of Differential Equations</div>
+            <div class="topic-detail">Growth/decay models, harmonic motion, mixing problems, Newton's cooling law.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Exponential Growth/Decay:</strong> Model: dy/dt = ky with solution y(t) = y₀e^(kt). If k > 0: exponential growth (population, compound interest). If k < 0: exponential decay (radioactive decay, cooling). Half-life t₁/₂ = ln(2)/|k|.</div>
+            <div class="concept-item math-border"><strong>Logistic Growth:</strong> Model: dy/dt = ky(L - y)/L, where L is carrying capacity. Solution approaches L asymptotically. More realistic for population dynamics than pure exponential growth due to resource constraints.</div>
+            <div class="concept-item math-border"><strong>Newton's Law of Cooling:</strong> dT/dt = k(T - Tₐ), where T is object temperature, Tₐ is ambient temperature. Solution: T(t) = Tₐ + (T₀ - Tₐ)e^(kt). Describes cooling (or warming) of objects in isothermal environment.</div>
+            <div class="concept-item math-border"><strong>Harmonic Motion:</strong> Undamped: d²x/dt² + ω²x = 0 with solution x(t) = A cos(ωt + φ). Damped: d²x/dt² + 2γ(dx/dt) + ω²x = 0. Underdamped oscillates with decaying amplitude; overdamped returns without oscillation.</div>
+            <div class="concept-item math-border"><strong>Mixing Problems:</strong> Tank with inflow/outflow: dA/dt = (rate in) - (rate out). Concentration dynamics modeled by linear first-order ODE. Key: carefully track input/output rates and current concentration.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Growth Constant k:</span> Positive k yields exponential growth; negative k yields exponential decay.</div>
+              <div class="term-item"><span class="term-word">Carrying Capacity L:</span> Maximum sustainable population in logistic growth model.</div>
+              <div class="term-item"><span class="term-word">Half-life:</span> Time for quantity to reduce to half its initial value (e.g., radioactive decay).</div>
+              <div class="term-item"><span class="term-word">Damping:</span> Mechanism that reduces amplitude of oscillations over time (friction, air resistance).</div>
+              <div class="term-item"><span class="term-word">Underdamped:</span> Oscillatory behavior with decaying amplitude.</div>
+              <div class="term-item"><span class="term-word">Overdamped:</span> Non-oscillatory return to equilibrium; slower than critical damping.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">dy/dt = ky ⟹ y(t) = y₀e^(kt)<span class="formula-note">Exponential growth/decay.</span></div>
+            <div class="formula-card">Half-life: t₁/₂ = ln(2)/|k|<span class="formula-note">Time for quantity to halve in exponential decay.</span></div>
+            <div class="formula-card">dT/dt = k(T - Tₐ) ⟹ T(t) = Tₐ + (T₀ - Tₐ)e^(kt)<span class="formula-note">Newton's law of cooling/heating.</span></div>
+            <div class="formula-card">d²x/dt² + 2γ(dx/dt) + ω²x = 0<span class="formula-note">Damped harmonic oscillator equation.</span></div>
+            <div class="formula-card">dy/dt = ky(L - y)/L<span class="formula-note">Logistic growth (solution y → L as t → ∞).</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Set up an exponential growth/decay model from a word problem and solve for unknown parameters using initial conditions.</div>
+            <div class="exam-tip">Calculate half-life or doubling time from the growth constant.</div>
+            <div class="exam-tip">Apply Newton's law of cooling: identify T₀, Tₐ, and k; solve for time to reach a target temperature.</div>
+            <div class="exam-tip">Interpret damped oscillations: describe behavior and predict long-term motion.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M1.4 -->
+      <div class="topic" id="topic-m1-4">
+        <div class="topic-header" onclick="toggleTopic('m1-4')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Direction Fields and Qualitative Analysis</div>
+            <div class="topic-detail">Slope fields, phase portraits, equilibrium points, stability analysis without solving explicitly.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Direction Field (Slope Field):</strong> For ODE dy/dx = f(x,y), plot small line segments with slope f(x,y) at grid points (x,y). Visualizes solution behavior without solving. Integral curves follow the field direction.</div>
+            <div class="concept-item math-border"><strong>Equilibrium Points:</strong> For autonomous ODE dy/dx = f(y), equilibrium occurs where f(y) = 0. At equilibrium, y does not change (dy/dx = 0). Graphically, equilibrium is horizontal in the direction field.</div>
+            <div class="concept-item math-border"><strong>Stability Analysis:</strong> At equilibrium y = y₀, check f'(y₀). If f'(y₀) < 0: stable (solutions converge). If f'(y₀) > 0: unstable (solutions diverge). If f'(y₀) = 0: higher-order analysis needed. Stable equilibria attract nearby solutions; unstable repel.</div>
+            <div class="concept-item math-border"><strong>Phase Portrait:</strong> Plot equilibria and arrows indicating solution direction in a 1D phase line. For higher dimensions, plot trajectories in (x,y) plane showing evolution of solutions over time.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Autonomous ODE:</span> ODE of the form dy/dx = f(y) with no explicit x-dependence; behavior depends only on current y-value.</div>
+              <div class="term-item"><span class="term-word">Equilibrium (Fixed Point):</span> Value y₀ where f(y₀) = 0; solution remains constant y(x) = y₀.</div>
+              <div class="term-item"><span class="term-word">Stable Equilibrium:</span> Nearby solutions converge to it; corresponds to f'(y₀) < 0.</div>
+              <div class="term-item"><span class="term-word">Unstable Equilibrium:</span> Nearby solutions diverge; corresponds to f'(y₀) > 0.</div>
+              <div class="term-item"><span class="term-word">Integral Curve:</span> Solution curve in the (x,y) plane; everywhere tangent to direction field.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">dy/dx = f(x,y) defines slope at every point; plot small tangent segments<span class="formula-note">Direction field construction.</span></div>
+            <div class="formula-card">For autonomous ODE dy/dx = f(y): equilibrium at f(y) = 0<span class="formula-note">Equilibrium location.</span></div>
+            <div class="formula-card">Stability: check sign of f'(y₀) at equilibrium y₀<span class="formula-note">Stability criterion (linearization).</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Sketch or interpret a direction field for a given ODE dy/dx = f(x,y).</div>
+            <div class="exam-tip">Find equilibrium points of an autonomous ODE and determine their stability.</div>
+            <div class="exam-tip">Draw a phase portrait for an autonomous ODE, showing equilibria and solution behavior.</div>
+            <div class="exam-tip">Use qualitative analysis to predict long-term behavior without explicitly solving the ODE.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M1.5 -->
+      <div class="topic" id="topic-m1-5">
+        <div class="topic-header" onclick="toggleTopic('m1-5')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Existence and Uniqueness Theorems</div>
+            <div class="topic-detail">Picard-Lindelöf theorem, well-posedness, when solutions exist and are unique.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Well-Posedness:</strong> An initial value problem is well-posed if: (1) a solution exists, (2) the solution is unique, (3) the solution depends continuously on initial conditions. Guarantees stability against perturbations.</div>
+            <div class="concept-item math-border"><strong>Picard-Lindelöf Theorem:</strong> For initial value problem dy/dx = f(x,y), y(x₀) = y₀: if f and ∂f/∂y are continuous in a rectangular region containing (x₀,y₀), then a unique solution exists in a neighborhood of x₀. Failure of continuity can lead to non-unique or non-existent solutions.</div>
+            <div class="concept-item math-border"><strong>Continuity Requirement:</strong> Discontinuous f or ∂f/∂y can cause branching (multiple solutions) or gaps (no solution). Example: dy/dx = √y with y(0) = 0 has non-unique solutions y = 0 and y = x²/4.</div>
+            <div class="concept-item math-border"><strong>Existence Without Uniqueness:</strong> Some equations have solutions that exist but are not unique due to non-Lipschitz behavior. Geometrically, integral curves may cross.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Lipschitz Condition:</span> f satisfies a Lipschitz condition if |f(x,y₁) - f(x,y₂)| ≤ L|y₁ - y₂| for some constant L; ensures uniqueness.</div>
+              <div class="term-item"><span class="term-word">Continuity:</span> f is continuous on a region if small changes in (x,y) yield small changes in f(x,y).</div>
+              <div class="term-item"><span class="term-word">Initial Value Problem (IVP):</span> ODE with specified initial condition y(x₀) = y₀.</div>
+              <div class="term-item"><span class="term-word">Maximal Interval of Existence:</span> Largest interval on which a solution is guaranteed to exist.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Picard-Lindelöf: If f and ∂f/∂y continuous in rectangle R containing (x₀,y₀), then unique solution exists<span class="formula-note">Sufficient condition for well-posedness.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Determine whether a given IVP satisfies Picard-Lindelöf conditions; justify existence and uniqueness.</div>
+            <div class="exam-tip">Identify situations where solutions are non-unique (e.g., dy/dx = √y) and explain the failure of continuity.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== M2: KOMPLEXA TAL ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('m2')">
+      <div class="section-number math">02</div>
+      <div class="section-title">Komplexa Tal — Complex Numbers</div>
+      <span class="section-arrow open" id="arrow-m2">▸</span>
+    </div>
+    <div class="topic-list" id="body-m2">
+
+      <!-- M2.1 -->
+      <div class="topic" id="topic-m2-1">
+        <div class="topic-header" onclick="toggleTopic('m2-1')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Complex Arithmetic and Algebraic Properties</div>
+            <div class="topic-detail">Definition, addition, subtraction, multiplication, division, complex conjugate, modulus.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Definition and Form:</strong> Complex number z = a + bi where a (real part) and b (imaginary part) are real numbers, i² = -1. Denote Re(z) = a, Im(z) = b. The set ℂ of complex numbers extends ℝ (real numbers).</div>
+            <div class="concept-item math-border"><strong>Addition and Subtraction:</strong> (a + bi) + (c + di) = (a+c) + (b+d)i. (a + bi) - (c + di) = (a-c) + (b-d)i. Performed component-wise on real and imaginary parts.</div>
+            <div class="concept-item math-border"><strong>Multiplication:</strong> (a + bi)(c + di) = ac - bd + (ad + bc)i. Use FOIL and i² = -1. Commutative and associative; distributive over addition.</div>
+            <div class="concept-item math-border"><strong>Complex Conjugate:</strong> For z = a + bi, conjugate z* = a - bi. Properties: (z + w)* = z* + w*, (zw)* = z*w*, zz* = |z|². Used in division: 1/z = z*/|z|².</div>
+            <div class="concept-item math-border"><strong>Modulus (Absolute Value):</strong> |z| = √(a² + b²) for z = a + bi. Geometric interpretation: distance from origin to point (a,b) in complex plane. Properties: |zw| = |z||w|, |z/w| = |z|/|w|, triangle inequality |z+w| ≤ |z| + |w|.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Real Part:</span> Re(z) = a for z = a + bi.</div>
+              <div class="term-item"><span class="term-word">Imaginary Part:</span> Im(z) = b for z = a + bi (note: Im(z) is real, not imaginary).</div>
+              <div class="term-item"><span class="term-word">Purely Imaginary:</span> Complex number with real part zero (z = bi).</div>
+              <div class="term-item"><span class="term-word">Purely Real:</span> Complex number with imaginary part zero (z = a).</div>
+              <div class="term-item"><span class="term-word">Complex Conjugate:</span> z* obtained by negating the imaginary part; reflects z across the real axis.</div>
+              <div class="term-item"><span class="term-word">Modulus:</span> |z| = √(a² + b²); distance from origin to z in the complex plane.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">(a + bi) + (c + di) = (a+c) + (b+d)i<span class="formula-note">Complex addition.</span></div>
+            <div class="formula-card">(a + bi)(c + di) = (ac - bd) + (ad + bc)i<span class="formula-note">Complex multiplication.</span></div>
+            <div class="formula-card">1/(a + bi) = (a - bi)/(a² + b²)<span class="formula-note">Complex division; multiply by conjugate.</span></div>
+            <div class="formula-card">|z| = √(a² + b²)<span class="formula-note">Modulus of z = a + bi.</span></div>
+            <div class="formula-card">zz* = |z|²<span class="formula-note">Product of z and its conjugate.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Perform arithmetic operations: add, subtract, multiply, or divide complex numbers; simplify results.</div>
+            <div class="exam-tip">Rationalize complex denominators using conjugates.</div>
+            <div class="exam-tip">Calculate modulus and identify real/imaginary parts.</div>
+            <div class="exam-tip">Apply properties: |z₁z₂| = |z₁||z₂|, (zw)* = z*w*.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M2.2 -->
+      <div class="topic" id="topic-m2-2">
+        <div class="topic-header" onclick="toggleTopic('m2-2')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Complex Plane and Geometric Interpretation</div>
+            <div class="topic-detail">Argand diagram, polar coordinates, geometric operations, distance and angles.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Argand Diagram:</strong> 2D plane with real axis (horizontal) and imaginary axis (vertical). Each complex number z = a + bi plots as point (a, b). Addition is vector addition; multiplication involves rotation and scaling.</div>
+            <div class="concept-item math-border"><strong>Modulus as Distance:</strong> |z| = distance from origin (0, 0) to point z. |z - w| = distance between points z and w in the complex plane. Circle |z| = r is centered at origin with radius r.</div>
+            <div class="concept-item math-border"><strong>Argument (Angle):</strong> arg(z) = angle θ such that z = r(cos θ + i sin θ), where r = |z| and θ ∈ [0, 2π) or (-π, π]. tan θ = b/a (careful with quadrant). arg(z₁z₂) = arg(z₁) + arg(z₂) (modulo 2π).</div>
+            <div class="concept-item math-border"><strong>Geometric Operations:</strong> Addition: parallelogram rule. Subtraction: vector from z₂ to z₁ is z₁ - z₂. Multiplication by i: rotates counterclockwise by 90°. Multiplication by r > 0: scaling by factor r.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Argument:</span> Angle θ from positive real axis to line from origin to z; arg(z) ∈ [0, 2π) or arg(z) ∈ (-π, π].</div>
+              <div class="term-item"><span class="term-word">Principal Argument:</span> Usually the unique value in (-π, π] or [0, 2π).</div>
+              <div class="term-item"><span class="term-word">Geometric Multiplication:</span> Multiply moduli, add arguments: |z₁z₂| = |z₁||z₂|, arg(z₁z₂) = arg(z₁) + arg(z₂).</div>
+              <div class="term-item"><span class="term-word">Rotation:</span> Multiplication by e^(iθ) rotates counterclockwise by angle θ.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">|z| = √(a² + b²)<span class="formula-note">Distance from origin.</span></div>
+            <div class="formula-card">arg(z) = arctan(b/a) (adjust for quadrant)<span class="formula-note">Angle from real axis; use atan2(b,a) for correct quadrant.</span></div>
+            <div class="formula-card">|z₁ - z₂| = distance between z₁ and z₂<span class="formula-note">Distance formula in complex plane.</span></div>
+            <div class="formula-card">|z₁z₂| = |z₁||z₂| and arg(z₁z₂) = arg(z₁) + arg(z₂)<span class="formula-note">Multiplication in Argand diagram.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Plot complex numbers on an Argand diagram; find modulus and argument.</div>
+            <div class="exam-tip">Use geometric operations: visualize multiplication, division, rotation in the complex plane.</div>
+            <div class="exam-tip">Solve geometric problems using complex numbers (e.g., finding vertices of polygons, angles).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M2.3 -->
+      <div class="topic" id="topic-m2-3">
+        <div class="topic-header" onclick="toggleTopic('m2-3')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Polar Form and Euler's Formula</div>
+            <div class="topic-detail">r·e^(iθ) form, exponential representation, conversions, trigonometric connections.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Polar Form:</strong> Complex number z = r(cos θ + i sin θ), where r = |z| ≥ 0 (modulus) and θ = arg(z) (argument). Compact notation: z = r∠θ or z = r cis θ (where cis = cos + i sin).</div>
+            <div class="concept-item math-border"><strong>Euler's Formula:</strong> e^(iθ) = cos θ + i sin θ. This profound identity links exponentials and trigonometry. Allows writing z = re^(iθ) in exponential form.</div>
+            <div class="concept-item math-border"><strong>Conversion to Polar:</strong> Given z = a + bi: r = √(a² + b²), θ = arctan(b/a) (adjust for quadrant). Reverse: a = r cos θ, b = r sin θ.</div>
+            <div class="concept-item math-border"><strong>Operations in Polar Form:</strong> Multiplication: (r₁e^(iθ₁))(r₂e^(iθ₂)) = r₁r₂e^(i(θ₁+θ₂)). Division: (r₁e^(iθ₁))/(r₂e^(iθ₂)) = (r₁/r₂)e^(i(θ₁-θ₂)). Exponentiation via De Moivre (next section).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Polar Coordinates (r, θ):</span> r is modulus, θ is argument; represent a point in the complex plane.</div>
+              <div class="term-item"><span class="term-word">Exponential Form z = re^(iθ):</span> Compact notation for complex number using Euler's formula.</div>
+              <div class="term-item"><span class="term-word">cis(θ):</span> Shorthand for cos θ + i sin θ; equals e^(iθ).</div>
+              <div class="term-item"><span class="term-word">Conversion:</span> From rectangular (a + bi) to polar (r, θ) and vice versa.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">e^(iθ) = cos θ + i sin θ<span class="formula-note">Euler's formula; fundamental connection between exponentials and trigonometry.</span></div>
+            <div class="formula-card">z = r e^(iθ) = r(cos θ + i sin θ)<span class="formula-note">Polar (exponential) form with r = |z|, θ = arg(z).</span></div>
+            <div class="formula-card">z₁z₂ = r₁r₂ e^(i(θ₁ + θ₂))<span class="formula-note">Multiplication in polar form: moduli multiply, arguments add.</span></div>
+            <div class="formula-card">z₁/z₂ = (r₁/r₂) e^(i(θ₁ - θ₂))<span class="formula-note">Division in polar form.</span></div>
+            <div class="formula-card">r = √(a² + b²), θ = arctan(b/a) (with quadrant adjustment)<span class="formula-note">Conversion from rectangular to polar.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Convert between rectangular (a + bi) and polar (r e^(iθ)) forms.</div>
+            <div class="exam-tip">Multiply or divide complex numbers using polar form; verify moduli and arguments.</div>
+            <div class="exam-tip">Use Euler's formula to connect trigonometric and exponential representations.</div>
+            <div class="exam-tip">Evaluate expressions like e^(iπ) = -1 using Euler's formula.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M2.4 -->
+      <div class="topic" id="topic-m2-4">
+        <div class="topic-header" onclick="toggleTopic('m2-4')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">De Moivre's Theorem and Powers</div>
+            <div class="topic-detail">Computing nth powers, nth roots, applications to trigonometric identities.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>De Moivre's Theorem:</strong> For z = r(cos θ + i sin θ) and integer n: z^n = r^n(cos(nθ) + i sin(nθ)). In exponential form: (re^(iθ))^n = r^n e^(inθ). Powerful for computing powers without expanding binomially.</div>
+            <div class="concept-item math-border"><strong>nth Roots:</strong> The nth roots of z = re^(iθ) are w_k = r^(1/n) e^(i(θ + 2πk)/n) for k = 0, 1, ..., n-1. There are exactly n distinct nth roots, evenly spaced on a circle of radius r^(1/n), separated by angle 2π/n.</div>
+            <div class="concept-item math-border"><strong>Roots of Unity:</strong> The nth roots of 1 are e^(2πik/n) for k = 0, 1, ..., n-1. Denoted as ω_n^k where ω_n = e^(2πi/n). Geometrically, they form a regular n-gon on the unit circle, centered at origin.</div>
+            <div class="concept-item math-border"><strong>Trigonometric Identities:</strong> De Moivre's theorem connects powers of (cos θ + i sin θ) to multiple-angle formulas. E.g., (cos θ + i sin θ)^3 = cos 3θ + i sin 3θ expands to cos³θ - 3cos θ sin²θ + i(...), yielding cos 3θ = cos³θ - 3cos θ sin²θ.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">De Moivre's Theorem:</span> [r(cos θ + i sin θ)]^n = r^n(cos(nθ) + i sin(nθ)).</div>
+              <div class="term-item"><span class="term-word">nth Root:</span> A complex number w such that w^n = z.</div>
+              <div class="term-item"><span class="term-word">Root of Unity:</span> Complex number z such that z^n = 1; nth roots of unity form regular n-gon on unit circle.</div>
+              <div class="term-item"><span class="term-word">Primitive nth Root of Unity:</span> e^(2πi/n) = ω_n; all nth roots of unity are powers of ω_n.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">z^n = r^n(cos(nθ) + i sin(nθ)) or z^n = r^n e^(inθ)<span class="formula-note">De Moivre's theorem for powers.</span></div>
+            <div class="formula-card">w_k = r^(1/n) e^(i(θ + 2πk)/n) for k = 0, 1, ..., n-1<span class="formula-note">All nth roots of z = r e^(iθ).</span></div>
+            <div class="formula-card">e^(2πik/n) for k = 0, 1, ..., n-1<span class="formula-note">nth roots of unity; sum = 0 for n > 1.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Use De Moivre's theorem to compute high powers of complex numbers efficiently.</div>
+            <div class="exam-tip">Find all nth roots of a complex number; identify the principal root and express others.</div>
+            <div class="exam-tip">Solve equations like z^n = a by converting to polar and finding roots.</div>
+            <div class="exam-tip">Derive trigonometric identities using De Moivre (e.g., cos(2θ), cos(3θ)).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M2.5 -->
+      <div class="topic" id="topic-m2-5">
+        <div class="topic-header" onclick="toggleTopic('m2-5')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Polynomial Equations and Complex Solutions</div>
+            <div class="topic-detail">Fundamental theorem of algebra, factor theorem, complex conjugate roots, solving cubics and quartics.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Fundamental Theorem of Algebra:</strong> Every polynomial p(z) of degree n ≥ 1 with complex (or real) coefficients has at least one complex root. Equivalently, p(z) factors as p(z) = a(z - z₁)(z - z₂)...(z - z_n) for some complex numbers z₁, ..., z_n.</div>
+            <div class="concept-item math-border"><strong>Complex Conjugate Root Theorem:</strong> If p(z) has real coefficients and z₀ = a + bi is a root, then z₀* = a - bi is also a root. Allows factoring real polynomials into real quadratics (irreducible over ℝ).</div>
+            <div class="concept-item math-border"><strong>Factor Theorem:</strong> z₀ is a root of p(z) if and only if (z - z₀) is a factor: p(z) = (z - z₀)q(z) for some polynomial q(z). Degree of q is n - 1.</div>
+            <div class="concept-item math-border"><strong>Polynomial Factorization:</strong> Over ℂ: every polynomial factors completely into linear factors. Over ℝ: factors are linear (from real roots) or irreducible quadratics (from complex conjugate pairs). Find roots via rational root theorem, synthetic division, or formulas (quadratic, cubic, etc.).</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Root (Zero):</span> Value z₀ where p(z₀) = 0.</div>
+              <div class="term-item"><span class="term-word">Multiplicity:</span> If (z - z₀)^m divides p(z) but (z - z₀)^(m+1) does not, then z₀ has multiplicity m.</div>
+              <div class="term-item"><span class="term-word">Complex Conjugate Root Theorem:</span> For polynomials with real coefficients, non-real roots come in conjugate pairs.</div>
+              <div class="term-item"><span class="term-word">Irreducible Quadratic:</span> Real quadratic with no real roots (e.g., x² + 1); factors into linear terms over ℂ.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">p(z) = a_n z^n + a_(n-1) z^(n-1) + ... + a_1 z + a_0<span class="formula-note">General polynomial of degree n.</span></div>
+            <div class="formula-card">p(z) = a(z - z₁)(z - z₂)...(z - z_n)<span class="formula-note">Complete factorization over ℂ (fundamental theorem of algebra).</span></div>
+            <div class="formula-card">For real p: complex roots occur in conjugate pairs<span class="formula-note">Complex conjugate root theorem.</span></div>
+            <div class="formula-card">z = [-b ± √(b² - 4ac)] / (2a)<span class="formula-note">Quadratic formula (works over ℂ).</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Find complex roots of polynomial equations using quadratic formula or factorization.</div>
+            <div class="exam-tip">Apply complex conjugate root theorem to real polynomials; predict root structure.</div>
+            <div class="exam-tip">Factor polynomials completely over ℂ; express as product of linear factors.</div>
+            <div class="exam-tip">Solve cubic or quartic equations; identify multiplicities and repeated roots.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== M3: DISKRET MATEMATIK ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('m3')">
+      <div class="section-number math">03</div>
+      <div class="section-title">Diskret Matematik — Discrete Mathematics</div>
+      <span class="section-arrow open" id="arrow-m3">▸</span>
+    </div>
+    <div class="topic-list" id="body-m3">
+
+      <!-- M3.1 -->
+      <div class="topic" id="topic-m3-1">
+        <div class="topic-header" onclick="toggleTopic('m3-1')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Combinatorics: Permutations and Combinations</div>
+            <div class="topic-detail">Counting principles, permutations, combinations, binomial coefficients, Pascal's triangle.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Multiplication Principle:</strong> If event A has m outcomes and event B has n outcomes, total outcomes = m × n. Extends: (m₁)(m₂)...(m_k) for k events. Fundamental for counting composite outcomes.</div>
+            <div class="concept-item math-border"><strong>Permutations:</strong> Ordered arrangements. P(n,r) = n!/(n-r)! counts arrangements of r objects from n distinct objects. P(n,n) = n! (all n objects). Account for order: AB ≠ BA.</div>
+            <div class="concept-item math-border"><strong>Combinations:</strong> Unordered selections. C(n,r) = n!/[r!(n-r)!] counts subsets of r objects from n distinct objects. Order doesn't matter: {A,B} = {B,A}. Also written as (n choose r).</div>
+            <div class="concept-item math-border"><strong>Binomial Theorem:</strong> (x + y)^n = Σ C(n,k) x^(n-k) y^k for k from 0 to n. Coefficients are binomial coefficients C(n,k). Useful for expanding powers and combinatorial proofs.</div>
+            <div class="concept-item math-border"><strong>Pascal's Triangle:</strong> Triangular array where each entry is sum of two above: C(n,k) = C(n-1,k-1) + C(n-1,k). Row n contains coefficients of (x+y)^n. Pattern: symmetry, row sums = 2^n.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Permutation:</span> Ordered arrangement of objects; order matters.</div>
+              <div class="term-item"><span class="term-word">Combination:</span> Unordered selection of objects; order doesn't matter.</div>
+              <div class="term-item"><span class="term-word">Factorial n!:</span> n! = n × (n-1) × ... × 2 × 1; also 0! = 1.</div>
+              <div class="term-item"><span class="term-word">Binomial Coefficient C(n,k):</span> Number of k-element subsets of an n-element set.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">P(n,r) = n!/(n-r)!<span class="formula-note">Permutations of r from n; order matters.</span></div>
+            <div class="formula-card">C(n,r) = n!/[r!(n-r)!] = P(n,r)/r!<span class="formula-note">Combinations of r from n; order doesn't matter.</span></div>
+            <div class="formula-card">(x + y)^n = Σ_{k=0}^n C(n,k) x^(n-k) y^k<span class="formula-note">Binomial theorem; sum of binomial terms.</span></div>
+            <div class="formula-card">C(n,k) = C(n-1,k-1) + C(n-1,k)<span class="formula-note">Pascal's triangle recurrence.</span></div>
+            <div class="formula-card">Σ_{k=0}^n C(n,k) = 2^n<span class="formula-note">Sum of row n in Pascal's triangle.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Determine whether a counting problem involves permutations or combinations; calculate using formulas.</div>
+            <div class="exam-tip">Expand (x + y)^n using the binomial theorem; find specific coefficients.</div>
+            <div class="exam-tip">Use Pascal's triangle to find binomial coefficients and verify relationships.</div>
+            <div class="exam-tip">Apply multiplication principle to multi-step counting problems.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M3.2 -->
+      <div class="topic" id="topic-m3-2">
+        <div class="topic-header" onclick="toggleTopic('m3-2')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Number Theory Basics</div>
+            <div class="topic-detail">Divisibility, prime numbers, GCD, modular arithmetic, Euclidean algorithm.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Divisibility:</strong> Integer a divides b (a | b) if b = ak for some integer k. Also: a is a divisor of b; b is a multiple of a. Properties: reflexive (a | a), transitive (a | b and b | c ⟹ a | c), linear combination (a | b and a | c ⟹ a | (bx + cy) for any integers x, y).</div>
+            <div class="concept-item math-border"><strong>Prime Numbers:</strong> Integer p > 1 with exactly two positive divisors (1 and p). Fundamental theorem of arithmetic: every integer > 1 factors uniquely (up to order) as product of primes. Used in cryptography and number theory.</div>
+            <div class="concept-item math-border"><strong>Greatest Common Divisor (GCD):</strong> gcd(a,b) is the largest positive integer dividing both a and b. Euclidean algorithm computes gcd efficiently via repeated division. Linear Bézout relation: gcd(a,b) = ax + by for some integers x, y.</div>
+            <div class="concept-item math-border"><strong>Modular Arithmetic:</strong> a ≡ b (mod n) means n | (a - b). Equivalence relation. Operations: (a ± b) mod n = [(a mod n) ± (b mod n)] mod n. Multiplicative inverse: a⁻¹ (mod n) exists iff gcd(a,n) = 1, found via extended Euclidean algorithm.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Divisible:</span> a is divisible by b if b | a (remainder is 0).</div>
+              <div class="term-item"><span class="term-word">Prime:</span> Natural number > 1 with no divisors except 1 and itself.</div>
+              <div class="term-item"><span class="term-word">Composite:</span> Natural number > 1 that is not prime; has prime factorization.</div>
+              <div class="term-item"><span class="term-word">GCD (Greatest Common Divisor):</span> Largest positive integer dividing both numbers.</div>
+              <div class="term-item"><span class="term-word">Coprime (Relatively Prime):</span> gcd(a,b) = 1; a and b share no common prime factors.</div>
+              <div class="term-item"><span class="term-word">Congruence a ≡ b (mod n):</span> a and b have the same remainder when divided by n.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Euclidean Algorithm: gcd(a,b) = gcd(b, a mod b) (repeat until remainder is 0)<span class="formula-note">Efficient computation of GCD.</span></div>
+            <div class="formula-card">Fundamental Theorem of Arithmetic: n = p₁^(e₁) × p₂^(e₂) × ... × p_k^(e_k)<span class="formula-note">Unique prime factorization.</span></div>
+            <div class="formula-card">gcd(a,b) = ax + by (Bézout's identity)<span class="formula-note">Linear combination; x, y found via extended Euclidean algorithm.</span></div>
+            <div class="formula-card">a ≡ b (mod n) ⟺ n | (a - b)<span class="formula-note">Definition of modular congruence.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Use Euclidean algorithm to find GCD of two numbers; express as linear combination (Bézout).</div>
+            <div class="exam-tip">Factor integers into primes; apply fundamental theorem.</div>
+            <div class="exam-tip">Solve modular arithmetic problems: find inverses, solve congruences.</div>
+            <div class="exam-tip">Determine coprimality; apply divisibility properties to proofs.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M3.3 -->
+      <div class="topic" id="topic-m3-3">
+        <div class="topic-header" onclick="toggleTopic('m3-3')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Mathematical Induction</div>
+            <div class="topic-detail">Principle of induction, strong induction, well-ordering, proof structure and verification.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Principle of Mathematical Induction:</strong> To prove P(n) for all n ≥ n₀: (1) Base case: verify P(n₀) is true. (2) Inductive step: assume P(k) (inductive hypothesis), prove P(k+1). If both hold, P(n) is true for all n ≥ n₀. Works because the integers have no descending chains.</div>
+            <div class="concept-item math-border"><strong>Strong Induction:</strong> Variant where inductive hypothesis assumes P(i) for all n₀ ≤ i ≤ k, then proves P(k+1). Stronger (easier to use) than weak induction when later terms depend on multiple predecessors (e.g., Fibonacci, recurrence relations).</div>
+            <div class="concept-item math-border"><strong>Well-Ordering Principle:</strong> Every nonempty set of positive integers has a minimum element. Equivalent to mathematical induction. Often used for existence proofs: assume a counterexample exists, derive contradiction from minimality.</div>
+            <div class="concept-item math-border"><strong>Common Applications:</strong> Summation formulas (Σk = n(n+1)/2), divisibility properties, inequalities (Bernoulli's inequality), combinatorial identities, recurrence relations.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Base Case:</span> Verification that P(n₀) is true (usually n₀ = 0 or 1).</div>
+              <div class="term-item"><span class="term-word">Inductive Hypothesis:</span> Assumption that P(k) is true for some k ≥ n₀.</div>
+              <div class="term-item"><span class="term-word">Inductive Step:</span> Proof that P(k) ⟹ P(k+1).</div>
+              <div class="term-item"><span class="term-word">Strong Induction:</span> Inductive hypothesis assumes P(i) for all i ≤ k, then proves P(k+1).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Σ_{k=1}^n k = n(n+1)/2<span class="formula-note">Sum of first n integers (proven by induction).</span></div>
+            <div class="formula-card">Σ_{k=1}^n k² = n(n+1)(2n+1)/6<span class="formula-note">Sum of squares (proven by induction).</span></div>
+            <div class="formula-card">Σ_{k=0}^n r^k = (r^(n+1) - 1)/(r - 1) for r ≠ 1<span class="formula-note">Geometric series (proven by induction).</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Prove a statement by mathematical induction: clearly state base case, inductive hypothesis, and inductive step.</div>
+            <div class="exam-tip">Use strong induction when base case or inductive step requires multiple previous values.</div>
+            <div class="exam-tip">Apply well-ordering principle to prove existence or non-existence (proof by contradiction).</div>
+            <div class="exam-tip">Verify induction proofs for common formulas: summations, inequalities, divisibility.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M3.4 -->
+      <div class="topic" id="topic-m3-4">
+        <div class="topic-header" onclick="toggleTopic('m3-4')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Graph Theory Basics</div>
+            <div class="topic-detail">Vertices, edges, paths, cycles, Euler and Hamilton paths, trees, connectivity.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Graph Definition:</strong> G = (V, E) where V is set of vertices and E is set of edges (pairs of vertices). Undirected: edges are unordered pairs {u,v}. Directed: edges are ordered pairs (u,v). Weighted graph assigns values to edges. Multigraph allows multiple edges between vertices.</div>
+            <div class="concept-item math-border"><strong>Paths and Cycles:</strong> Walk: sequence of vertices with consecutive edges. Path: walk with no repeated vertices. Cycle: walk starting/ending at same vertex, no other repeats. Connected graph: path between every pair of vertices. Acyclic graph: contains no cycles (like trees).</div>
+            <div class="concept-item math-border"><strong>Euler Path/Circuit:</strong> Path using every edge exactly once. Euler circuit: closed path using every edge once. Exists iff (undirected) connected and all vertices have even degree, or exactly two vertices have odd degree (path exists then). Directed: in-degree = out-degree for circuit.</div>
+            <div class="concept-item math-border"><strong>Hamilton Path/Cycle:</strong> Path visiting every vertex exactly once. Hamilton cycle: closed path visiting every vertex once. No simple criterion (unlike Euler); NP-hard to determine in general. Useful in routing and scheduling problems.</div>
+            <div class="concept-item math-border"><strong>Trees:</strong> Connected acyclic graph. n vertices, n-1 edges. Unique path between any two vertices. Spanning tree: subgraph connecting all vertices with no cycles. Tree properties: minimal connected, maximal acyclic.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Vertex (Node):</span> Fundamental unit in a graph.</div>
+              <div class="term-item"><span class="term-word">Edge:</span> Connection between two vertices.</div>
+              <div class="term-item"><span class="term-word">Degree:</span> Number of edges incident to a vertex (in-degree and out-degree for directed graphs).</div>
+              <div class="term-item"><span class="term-word">Connected:</span> Graph where path exists between every pair of vertices.</div>
+              <div class="term-item"><span class="term-word">Tree:</span> Connected acyclic graph; n vertices have n-1 edges.</div>
+              <div class="term-item"><span class="term-word">Spanning Tree:</span> Subgraph including all vertices and n-1 edges, forming a tree.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Σ deg(v) = 2|E| (handshaking lemma)<span class="formula-note">Sum of degrees equals twice the number of edges.</span></div>
+            <div class="formula-card">Tree with n vertices has n-1 edges<span class="formula-note">Fundamental property of trees.</span></div>
+            <div class="formula-card">Euler path exists ⟺ connected and (0 or 2 vertices have odd degree)<span class="formula-note">Necessary and sufficient condition for Euler path.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Determine connectivity and degree sequence from a graph; apply handshaking lemma.</div>
+            <div class="exam-tip">Find Euler paths/circuits; check degree conditions.</div>
+            <div class="exam-tip">Identify trees and spanning trees; verify edge count and connectivity.</div>
+            <div class="exam-tip">Solve problems about paths, cycles, and graph coloring using graph theory principles.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M3.5 -->
+      <div class="topic" id="topic-m3-5">
+        <div class="topic-header" onclick="toggleTopic('m3-5')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Sequences, Series, and Recursion</div>
+            <div class="topic-detail">Arithmetic and geometric sequences, convergence, telescoping series, recurrence relations.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Arithmetic Sequence:</strong> a_n = a₁ + (n-1)d where d is common difference. Sum: S_n = n(a₁ + a_n)/2 = n[2a₁ + (n-1)d]/2. Linear growth pattern; difference between consecutive terms is constant.</div>
+            <div class="concept-item math-border"><strong>Geometric Sequence:</strong> a_n = a₁ r^(n-1) where r is common ratio. Sum: S_n = a₁(1 - r^n)/(1 - r) for r ≠ 1. Exponential growth/decay. Infinite series: Σ a₁ r^(n-1) = a₁/(1-r) if |r| < 1 (convergent).</div>
+            <div class="concept-item math-border"><strong>Convergence:</strong> Sequence {a_n} converges to L if for any ε > 0, |a_n - L| < ε for all sufficiently large n. Geometric sequence converges to 0 if |r| < 1. Arithmetic sequence diverges unless d = 0.</div>
+            <div class="concept-item math-border"><strong>Recurrence Relations:</strong> Equation relating a_n to previous terms (a_(n-1), a_(n-2), etc.). Example: Fibonacci a_n = a_(n-1) + a_(n-2). Solve via characteristic equation (for linear constant-coefficient), iteration, or closed-form formula. Proved by induction.</div>
+            <div class="concept-item math-border"><strong>Telescoping Series:</strong> Series where consecutive terms partially cancel. Σ (a_n - a_(n+1)) = a₁ - lim a_n. Useful for evaluating sums of rational expressions with partial fractions.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Common Difference d:</span> Constant difference between consecutive terms in arithmetic sequence.</div>
+              <div class="term-item"><span class="term-word">Common Ratio r:</span> Constant ratio between consecutive terms in geometric sequence.</div>
+              <div class="term-item"><span class="term-word">Convergent Series:</span> Infinite series with finite sum (partial sums approach limit).</div>
+              <div class="term-item"><span class="term-word">Divergent Series:</span> Infinite series whose partial sums don't approach a finite limit.</div>
+              <div class="term-item"><span class="term-word">Recurrence Relation:</span> Equation defining a_n in terms of previous terms.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Arithmetic: a_n = a₁ + (n-1)d, S_n = n(a₁ + a_n)/2<span class="formula-note">Arithmetic sequence and sum.</span></div>
+            <div class="formula-card">Geometric: a_n = a₁ r^(n-1), S_n = a₁(1 - r^n)/(1 - r)<span class="formula-note">Geometric sequence and sum (r ≠ 1).</span></div>
+            <div class="formula-card">Geometric series: Σ_{n=0}^∞ r^n = 1/(1-r) if |r| < 1<span class="formula-note">Infinite geometric series (convergent).</span></div>
+            <div class="formula-card">Fibonacci: a_n = a_(n-1) + a_(n-2), closed form a_n = (φ^n - ψ^n)/√5<span class="formula-note">Famous recurrence; φ = (1+√5)/2, ψ = (1-√5)/2.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Identify arithmetic or geometric sequences; find common difference or ratio.</div>
+            <div class="exam-tip">Calculate sum of finite arithmetic/geometric series using formulas.</div>
+            <div class="exam-tip">Evaluate infinite geometric series; check convergence condition |r| < 1.</div>
+            <div class="exam-tip">Solve recurrence relations; find closed-form formulas and prove by induction.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== M4: PROBLEMLÖSNING & BEVISFÖRING ===== -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('m4')">
+      <div class="section-number math">04</div>
+      <div class="section-title">Problemlösning & Bevisföring — Problem Solving & Proof</div>
+      <span class="section-arrow open" id="arrow-m4">▸</span>
+    </div>
+    <div class="topic-list" id="body-m4">
+
+      <!-- M4.1 -->
+      <div class="topic" id="topic-m4-1">
+        <div class="topic-header" onclick="toggleTopic('m4-1')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Proof Techniques and Logical Reasoning</div>
+            <div class="topic-detail">Direct proof, proof by contradiction, proof by contrapositive, logical connectives and quantifiers.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Direct Proof:</strong> Assume hypothesis P; derive conclusion Q through logical steps using definitions, known theorems, and valid inference. Most common and straightforward method. Example: "If n is even, then n² is even. Proof: n = 2k, so n² = 4k² = 2(2k²), which is even."</div>
+            <div class="concept-item math-border"><strong>Proof by Contradiction:</strong> Assume P and NOT Q (negation of conclusion). Derive a logical contradiction (e.g., false statement or P and NOT P). Conclude Q must follow from P. Effective when direct proof is hard. Example: Proving √2 is irrational by assuming it's rational and deriving m, n both even (contradiction).</div>
+            <div class="concept-item math-border"><strong>Proof by Contrapositive:</strong> To prove P ⟹ Q, prove NOT Q ⟹ NOT P (logically equivalent). Useful when contrapositive is simpler. Example: "If n² is even, then n is even" proven via contrapositive: "If n is odd, then n² is odd."</div>
+            <div class="concept-item math-border"><strong>Logical Operators:</strong> AND (∧, both true), OR (∨, at least one true), NOT (¬, negation), IMPLIES (⟹, conditional), IFF (⟺, if and only if, biconditional). De Morgan's laws: ¬(P ∧ Q) = (¬P) ∨ (¬Q), ¬(P ∨ Q) = (¬P) ∧ (¬Q).</div>
+            <div class="concept-item math-border"><strong>Quantifiers:</strong> Universal (∀: "for all"), Existential (∃: "there exists"). Negating: ¬(∀x P(x)) = ∃x ¬P(x), ¬(∃x P(x)) = ∀x ¬P(x). Essential for precise mathematical statements.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Hypothesis (Premise):</span> Assumed statement P in a conditional P ⟹ Q.</div>
+              <div class="term-item"><span class="term-word">Conclusion (Consequent):</span> Statement Q to be proven in P ⟹ Q.</div>
+              <div class="term-item"><span class="term-word">Contrapositive of P ⟹ Q:</span> ¬Q ⟹ ¬P; logically equivalent to original.</div>
+              <div class="term-item"><span class="term-word">Biconditional P ⟺ Q:</span> (P ⟹ Q) ∧ (Q ⟹ P); "if and only if"; P and Q are equivalent.</div>
+              <div class="term-item"><span class="term-word">Tautology:</span> Statement always true (e.g., P ∨ ¬P).</div>
+              <div class="term-item"><span class="term-word">Contradiction:</span> Statement always false (e.g., P ∧ ¬P).</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">De Morgan's Laws: ¬(P ∧ Q) = (¬P) ∨ (¬Q), ¬(P ∨ Q) = (¬P) ∧ (¬Q)<span class="formula-note">Negation of compound propositions.</span></div>
+            <div class="formula-card">Contrapositive: (P ⟹ Q) ≡ (¬Q ⟹ ¬P)<span class="formula-note">Logical equivalence; same truth value.</span></div>
+            <div class="formula-card">Biconditional: (P ⟺ Q) = (P ⟹ Q) ∧ (Q ⟹ P)<span class="formula-note">Two-way implication.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Write a direct proof: clearly state assumptions and logical steps.</div>
+            <div class="exam-tip">Prove a statement using contrapositive when the contrapositive is simpler.</div>
+            <div class="exam-tip">Use proof by contradiction: assume the negation and derive an absurdity.</div>
+            <div class="exam-tip">Negate quantified statements correctly; identify logical structure (AND, OR, IMPLIES).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M4.2 -->
+      <div class="topic" id="topic-m4-2">
+        <div class="topic-header" onclick="toggleTopic('m4-2')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Advanced Problem-Solving Strategies</div>
+            <div class="topic-detail">Working backwards, symmetry, invariants, pigeonhole principle, extreme cases.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Working Backwards:</strong> Start from desired conclusion and reverse-engineer conditions needed. Identify what intermediate results would suffice. Especially useful for olympiad problems and optimization. Example: To maximize f(x), identify critical points by setting f'(x) = 0, then evaluate candidates.</div>
+            <div class="concept-item math-border"><strong>Symmetry:</strong> Recognize symmetric structure to simplify. Symmetric functions (f(x,y) = f(y,x)), symmetric configurations reduce cases. Example: By symmetry, max/min often occur at symmetric points (e.g., maximum of f(x,y) on unit circle at x = y).</div>
+            <div class="concept-item math-border"><strong>Invariants:</strong> Quantity or property unchanged by transformations. Find invariant to establish constraints or impossibilities. Example: Checkerboard coloring invariant shows certain puzzles (rook moves, tiling) are impossible.</div>
+            <div class="concept-item math-border"><strong>Pigeonhole Principle:</strong> If n items into m containers with n > m, at least one container has ≥ 2 items. Generalizes: ⌈n/m⌉ items in some container. Useful for existence proofs. Example: Among 13 people, at least two share a birth month.</div>
+            <div class="concept-item math-border"><strong>Extreme Cases:</strong> Test edge/boundary values, very small/large values, degenerate cases. Constraints on extrema often reveal structure. Example: In optimization, check boundary and critical interior points.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Invariant:</span> Quantity or property preserved under specified operations/transformations.</div>
+              <div class="term-item"><span class="term-word">Symmetric Function:</span> Function unchanged by certain permutations of variables.</div>
+              <div class="term-item"><span class="term-word">Pigeonhole Principle (Dirichlet):</span> With n > m items and m containers, some container has ≥ 2 items.</div>
+              <div class="term-item"><span class="term-word">Degenerate Case:</span> Special/limiting case, often boundary conditions or zero values.</div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title formulas">Key Formulas</div>
+            <div class="formula-card">Pigeonhole: ⌈n/m⌉ items in some container when n items in m containers<span class="formula-note">Ceiling function ensures at least one container has this many.</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Identify symmetric structure to reduce case analysis.</div>
+            <div class="exam-tip">Use invariants to prove impossibility or constrain solutions.</div>
+            <div class="exam-tip">Apply pigeonhole principle for existence proofs.</div>
+            <div class="exam-tip">Test extreme/boundary cases to understand problem behavior.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M4.3 -->
+      <div class="topic" id="topic-m4-3">
+        <div class="topic-header" onclick="toggleTopic('m4-3')">
+          <div class="topic-dot math"></div>
+          <div class="topic-content">
+            <div class="topic-name">Applications to Exam Questions</div>
+            <div class="topic-detail">Multi-step problems, proofs combining multiple techniques, exam question strategies.</div>
+          </div>
+          <span class="topic-expand-icon">▸</span>
+        </div>
+        <div class="topic-body">
+          <div class="info-block">
+            <div class="info-block-title concepts">Key Concepts</div>
+            <div class="concept-item math-border"><strong>Multi-Step Problems:</strong> Break into subproblems; solve each independently or sequentially. Clearly label each step. Use intermediate results to progress. Example: To solve differential equation, identify type (separable vs. linear), apply appropriate solution method, apply initial conditions.</div>
+            <div class="concept-item math-border"><strong>Proof Combination:</strong> Complex proofs often combine multiple techniques. Example: To prove a number-theoretic statement, use induction (structural) + modular arithmetic (number theory) + direct computation. Structure proof logically: lemmas first, main result afterwards.</div>
+            <div class="concept-item math-border"><strong>Exam Strategies:</strong> Show all work (partial credit). State assumptions clearly. For proofs, explicitly write "We need to show [claim]" and "Therefore [claim]" to frame logic. Check special cases (small n, zero, infinity) to catch errors. Organize with clear headings and indentation. Use precise mathematical language.</div>
+            <div class="concept-item math-border"><strong>Time Management:</strong> Read all problems first. Tackle easier problems first for confidence and points. Allocate time proportional to points. Write clearly (graders must read it). Save hardest problems for last. If stuck, move on and return.</div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title terms">Key Terms & Definitions</div>
+            <div class="term-grid">
+              <div class="term-item"><span class="term-word">Lemma:</span> Auxiliary theorem proven to aid main result.</div>
+              <div class="term-item"><span class="term-word">Corollary:</span> Result following easily from a theorem.</div>
+              <div class="term-item"><span class="term-word">Partial Credit:</span> Points awarded for correct method even if final answer is wrong (show all work).</div>
+              <div class="term-item"><span class="term-word">Mathematical Rigor:</span> Precise definitions, justified steps, logical flow; required for proof-heavy exams.</span></div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title exam">Exam Focus</div>
+            <div class="exam-tip">Break complex problems into clearly labeled steps; solve and verify each.</div>
+            <div class="exam-tip">For proofs, state what you're proving and clearly show logical flow.</div>
+            <div class="exam-tip">Check special cases and edge conditions to verify solutions.</div>
+            <div class="exam-tip">Manage time: easier problems first, clear communication, partial work shown.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">
+  Matematik 5 Study Guide — Built for exam preparation<br>
+  Sources: Skolverket centralt innehåll (Matematik 5) · Swedish Gymnasium Curriculum
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

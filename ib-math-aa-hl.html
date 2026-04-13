@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Diploma Programme Mathematics: Analysis and Approaches HL</title>
+<meta name="description" content="Complete IB Math Analysis & Approaches HL syllabus guide — calculus, vectors, complex numbers, statistics, and proof.">
+<meta property="og:title" content="IB Math AA HL — Study Sprint">
+<meta property="og:description" content="Complete IB Math Analysis & Approaches HL syllabus guide — calculus, vectors, complex numbers, statistics, and proof.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="extras.css">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --surface-3: #222d44;
+  --border: #2a3654;
+  --text: #e8ecf4;
+  --text-muted: #8b95aa;
+  --accent-math: #b388ff;
+  --accent-math-dim: rgba(179,136,255,0.12);
+  --accent-gold: #ffd54f;
+  --accent-green: #66bb6a;
+  --accent-purple: #b388ff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.back-link {
+  display: inline-block;
+  margin: 20px 24px;
+  font-size: 0.9rem;
+  color: var(--accent-math);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.back-link:hover { opacity: 0.7; }
+
+.hero {
+  padding: 60px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(179,136,255,0.06) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-20px, 10px) rotate(2deg); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.hero h1 .math { color: var(--accent-math); }
+
+.hero .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.hero .badge-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge.math { background: var(--accent-math-dim); color: var(--accent-math); border: 1px solid rgba(179,136,255,0.25); }
+
+.content { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+.section {
+  margin-bottom: 36px;
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-number {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.section-number.math { background: var(--accent-math-dim); color: var(--accent-math); }
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.section-arrow {
+  color: var(--text-muted);
+  transition: transform 0.3s;
+  font-size: 1.2rem;
+}
+
+.section-arrow.open { transform: rotate(90deg); }
+
+.topic-list { display: flex; flex-direction: column; gap: 6px; }
+
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.topic:hover {
+  border-color: rgba(255,255,255,0.1);
+  background: var(--surface-2);
+}
+
+.topic-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.topic-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+.topic-dot.math { background: var(--accent-math); }
+.topic-dot.hl { background: var(--accent-purple); }
+
+.topic-content { flex: 1; }
+
+.topic-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.topic-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.topic-expand-icon {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.topic.expanded .topic-expand-icon { transform: rotate(90deg); }
+.topic.expanded { border-color: rgba(255,255,255,0.12); }
+
+.hl-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(179,136,255,0.15);
+  color: var(--accent-purple);
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
+}
+
+.topic-body {
+  display: none;
+  padding: 0 18px 18px 38px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+
+.topic.expanded .topic-body { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.info-block {
+  margin-top: 16px;
+}
+
+.info-block-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-block-title.concepts { color: var(--accent-math); }
+.info-block-title.terms { color: var(--accent-gold); }
+.info-block-title.formulas { color: var(--accent-green); }
+.info-block-title.exam { color: var(--accent-purple); }
+
+.concept-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  border-left: 3px solid var(--accent-math);
+}
+
+.concept-item strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.term-item {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.term-item .term-word {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 0.88rem;
+}
+
+.formula-card {
+  background: var(--surface-3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  border: 1px solid rgba(102,187,106,0.15);
+}
+
+.formula-card .formula-note {
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.exam-tip {
+  background: rgba(179,136,255,0.08);
+  border: 1px solid rgba(179,136,255,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.exam-tip::before {
+  content: '▸ ';
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.intro-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.intro-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.stat-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-math);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.footer-note {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .topic-body { padding-left: 18px; }
+  .term-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Back to Hub</a>
+
+<div class="hero">
+  <h1><span class="math">IB Math AA HL</span></h1>
+  <p class="subtitle">Analysis and Approaches — Higher Level Syllabus Roadmap</p>
+  <div class="badge-row">
+    <span class="badge math">IB DP Mathematics AA HL 2025</span>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="intro-card">
+  <h3>IB Diploma Programme — Mathematics: Analysis and Approaches HL</h3>
+  <p>Mathematics: Analysis and Approaches is a rigorous course emphasizing mathematical thinking, problem-solving, and deep understanding of calculus, algebra, and analysis. This comprehensive syllabus covers five core topics tested on Papers 1, 2, and 3. Click any topic to expand detailed notes with key concepts, definitions, formulas, and exam focus.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-value">5</div><div class="stat-label">Core Topics</div></div>
+    <div class="stat"><div class="stat-value">~40</div><div class="stat-label">Subtopics</div></div>
+    <div class="stat"><div class="stat-value">HL</div><div class="stat-label">Level</div></div>
+  </div>
+</div>
+
+<!-- ===== TOPIC 1: NUMBER AND ALGEBRA ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('t1')">
+    <div class="section-number math">01</div>
+    <div class="section-title">Number and Algebra</div>
+    <span class="section-arrow open" id="arrow-t1">▸</span>
+  </div>
+  <div class="topic-list" id="body-t1">
+
+    <!-- 1.1 -->
+    <div class="topic" id="topic-t1-1">
+      <div class="topic-header" onclick="toggleTopic('t1-1')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Sequences and Series</div>
+          <div class="topic-detail">Arithmetic and geometric sequences. Sigma notation. Convergence and sum to infinity. Series formulas.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Arithmetic sequences:</strong> Sequences where consecutive terms differ by a constant d. General term: uₙ = u₁ + (n−1)d. Sum: Sₙ = n/2(2u₁ + (n−1)d).</div>
+          <div class="concept-item"><strong>Geometric sequences:</strong> Sequences where consecutive terms have constant ratio r. General term: uₙ = u₁ · r^(n−1). Sum: Sₙ = u₁(1−rⁿ)/(1−r).</div>
+          <div class="concept-item"><strong>Convergence:</strong> A geometric series converges when |r| < 1. Sum to infinity: S∞ = u₁/(1−r).</div>
+          <div class="concept-item"><strong>Sigma notation:</strong> Σ notation used to represent series concisely. Σ(n=1 to N) uₙ represents the sum of terms from n=1 to N.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Sequence:</span> An ordered list of numbers following a pattern or rule.</div>
+            <div class="term-item"><span class="term-word">Series:</span> The sum of the terms of a sequence.</div>
+            <div class="term-item"><span class="term-word">Common difference (d):</span> The constant difference between consecutive terms in an arithmetic sequence.</div>
+            <div class="term-item"><span class="term-word">Common ratio (r):</span> The constant factor between consecutive terms in a geometric sequence.</div>
+            <div class="term-item"><span class="term-word">Convergent:</span> A series that approaches a finite limit as n → ∞.</div>
+            <div class="term-item"><span class="term-word">Divergent:</span> A series that does not approach a finite limit.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">uₙ = u₁ + (n−1)d<div class="formula-note">Arithmetic sequence general term</div></div>
+          <div class="formula-card">Sₙ = n/2(u₁ + uₙ) = n/2(2u₁ + (n−1)d)<div class="formula-note">Arithmetic series sum</div></div>
+          <div class="formula-card">uₙ = u₁ · r^(n−1)<div class="formula-note">Geometric sequence general term</div></div>
+          <div class="formula-card">Sₙ = u₁(1−rⁿ)/(1−r) = u₁(rⁿ−1)/(r−1)<div class="formula-note">Geometric series sum (r ≠ 1)</div></div>
+          <div class="formula-card">S∞ = u₁/(1−r), |r| < 1<div class="formula-note">Sum to infinity (geometric)</div></div>
+          <div class="formula-card">Σ(k=1 to n) k = n(n+1)/2<div class="formula-note">Sum of first n natural numbers</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding uₙ or Sₙ given initial terms. Determining convergence of geometric series. Using sigma notation to evaluate sums.</div>
+          <div class="exam-tip">Paper 2: Modeling real-world situations with arithmetic/geometric sequences. Proving properties using induction or algebraic methods.</div>
+          <div class="exam-tip">Paper 3: Analysis of infinite series. Finding which terms satisfy given conditions. Proof-based problems on series properties.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.2 -->
+    <div class="topic" id="topic-t1-2">
+      <div class="topic-header" onclick="toggleTopic('t1-2')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Exponents and Logarithms</div>
+          <div class="topic-detail">Laws of exponents. Logarithmic functions and properties. Change of base. Natural logarithm. Solving exponential and logarithmic equations.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Exponent laws:</strong> aᵐ · aⁿ = a^(m+n); aᵐ/aⁿ = a^(m−n); (aᵐ)ⁿ = a^(mn); a⁰ = 1; a^(−n) = 1/aⁿ; a^(1/n) = ⁿ√a.</div>
+          <div class="concept-item"><strong>Logarithm definition:</strong> logₐ(x) = y iff aʸ = x. Logarithm is the inverse of exponential. Domain: x > 0.</div>
+          <div class="concept-item"><strong>Natural logarithm:</strong> ln(x) = logₑ(x). Inverse of eˣ. Crucial in calculus and modeling.</div>
+          <div class="concept-item"><strong>Change of base:</strong> logₐ(x) = ln(x)/ln(a) = log(x)/log(a). Allows converting between different bases for calculation.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Exponent:</span> The power to which a base is raised. In aⁿ, n is the exponent.</div>
+            <div class="term-item"><span class="term-word">Base:</span> The number being raised to a power. In aⁿ, a is the base.</div>
+            <div class="term-item"><span class="term-word">Logarithm:</span> The exponent to which a base must be raised to produce a given number.</div>
+            <div class="term-item"><span class="term-word">Natural log (ln):</span> Logarithm with base e (≈2.718), denoted ln(x).</div>
+            <div class="term-item"><span class="term-word">Common log (log):</span> Logarithm with base 10, denoted log(x).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">aᵐ · aⁿ = a^(m+n); aᵐ/aⁿ = a^(m−n)<div class="formula-note">Product and quotient of powers</div></div>
+          <div class="formula-card">(aᵐ)ⁿ = a^(mn); (ab)ⁿ = aⁿbⁿ<div class="formula-note">Power of a power; power of a product</div></div>
+          <div class="formula-card">logₐ(x) = y ↔ aʸ = x<div class="formula-note">Logarithm-exponential equivalence</div></div>
+          <div class="formula-card">logₐ(xy) = logₐ(x) + logₐ(y); logₐ(x/y) = logₐ(x) − logₐ(y)<div class="formula-note">Logarithm product and quotient rules</div></div>
+          <div class="formula-card">logₐ(xⁿ) = n·logₐ(x)<div class="formula-note">Logarithm power rule</div></div>
+          <div class="formula-card">logₐ(x) = ln(x)/ln(a)<div class="formula-note">Change of base formula</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Simplifying expressions with exponents and logarithms. Solving equations involving exponential and logarithmic functions.</div>
+          <div class="exam-tip">Paper 2: Modeling exponential growth/decay (populations, radioactive decay, compound interest). Proof problems using logarithm properties.</div>
+          <div class="exam-tip">Paper 3: Analyzing behavior of exponential and logarithmic functions. Integration/differentiation of logarithmic functions.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.3 -->
+    <div class="topic" id="topic-t1-3">
+      <div class="topic-header" onclick="toggleTopic('t1-3')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Binomial Theorem <span class="hl-tag">HL</span></div>
+          <div class="topic-detail">Binomial expansion. Pascal's triangle. General term. Fractional and negative exponents for HL.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Binomial theorem:</strong> (a+b)ⁿ = Σ C(n,r) aⁿ⁻ʳ bʳ where C(n,r) = n!/(r!(n−r)!). Works for non-negative integer n.</div>
+          <div class="concept-item"><strong>General term:</strong> Tᵣ₊₁ = C(n,r) aⁿ⁻ʳ bʳ (the (r+1)th term in expansion). Useful for finding specific terms without full expansion.</div>
+          <div class="concept-item"><strong>HL: Fractional/negative exponents:</strong> Binomial theorem extended to (a+b)ᵏ where k is any real number. For |x| < 1: (1+x)ᵏ = 1 + kx + k(k−1)x²/2! + ... (infinite series).</div>
+          <div class="concept-item"><strong>Pascal's triangle:</strong> Triangular array of binomial coefficients. Row n contains C(n,0), C(n,1), ..., C(n,n). Each entry is sum of two entries above it.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Binomial coefficient C(n,r):</span> The number of ways to choose r items from n items. Equals n!/(r!(n−r)!).</div>
+            <div class="term-item"><span class="term-word">Factorial (n!):</span> Product of all positive integers up to n. 0! = 1 by definition.</div>
+            <div class="term-item"><span class="term-word">Expansion:</span> The full polynomial form of (a+b)ⁿ after applying the binomial theorem.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">(a+b)ⁿ = Σ(r=0 to n) C(n,r) aⁿ⁻ʳ bʳ<div class="formula-note">Binomial theorem (integer n ≥ 0)</div></div>
+          <div class="formula-card">Tᵣ₊₁ = C(n,r) aⁿ⁻ʳ bʳ<div class="formula-note">General term (position r+1)</div></div>
+          <div class="formula-card">C(n,r) = n!/(r!(n−r)!)<div class="formula-note">Binomial coefficient</div></div>
+          <div class="formula-card">(1+x)ᵏ = 1 + kx + k(k−1)x²/2! + k(k−1)(k−2)x³/3! + ..., |x| < 1<div class="formula-note">Binomial series for any real k [HL]</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding specific coefficients in (a+b)ⁿ. Identifying middle term or term containing xᵏ.</div>
+          <div class="exam-tip">Paper 2: Proving binomial identities. Using binomial expansion in algebraic proofs.</div>
+          <div class="exam-tip">Paper 3 [HL]: Binomial series for fractional/negative exponents. Convergence analysis. Using series for approximations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.4 -->
+    <div class="topic" id="topic-t1-4">
+      <div class="topic-header" onclick="toggleTopic('t1-4')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Proof by Induction <span class="hl-tag">HL</span></div>
+          <div class="topic-detail">Principle of mathematical induction. Base case, inductive step. Divisibility, series, inequalities proofs.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Principle of mathematical induction:</strong> To prove P(n) true for all n ≥ n₀: (1) Prove P(n₀) is true (base case); (2) Assume P(k) true for some k ≥ n₀ (inductive hypothesis); (3) Prove P(k+1) is true (inductive step). Then P(n) is true for all n ≥ n₀.</div>
+          <div class="concept-item"><strong>Divisibility proofs:</strong> Show that some expression is divisible by a number for all n. Example: Prove that 3ⁿ − 1 is divisible by 2 for all n ≥ 1.</div>
+          <div class="concept-item"><strong>Series sum proofs:</strong> Prove formulas like Σ k = n(n+1)/2 or Σ k² = n(n+1)(2n+1)/6. Use inductive hypothesis Σ(k=1 to m) = formula(m), then add (m+1)th term.</div>
+          <div class="concept-item"><strong>Inequality proofs:</strong> Prove inequalities like 2ⁿ > n for n ≥ 1. Show P(1) true, then assume 2ᵏ > k and prove 2^(k+1) > k+1.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Base case:</span> The initial step where you verify the statement is true for the first value (usually n=1).</div>
+            <div class="term-item"><span class="term-word">Inductive hypothesis:</span> The assumption that the statement is true for n=k, used to prove it for n=k+1.</div>
+            <div class="term-item"><span class="term-word">Inductive step:</span> The logical argument showing that if P(k) is true, then P(k+1) must also be true.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">Σ(k=1 to n) k = n(n+1)/2<div class="formula-note">Sum of first n natural numbers</div></div>
+          <div class="formula-card">Σ(k=1 to n) k² = n(n+1)(2n+1)/6<div class="formula-note">Sum of first n squares</div></div>
+          <div class="formula-card">Σ(k=1 to n) k³ = [n(n+1)/2]²<div class="formula-note">Sum of first n cubes</div></div>
+          <div class="formula-card">Σ(k=1 to n) r^(k−1) = (1−rⁿ)/(1−r), r ≠ 1<div class="formula-note">Geometric series sum (induction proof)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Complete proofs by induction for divisibility, series sums, or simple inequalities given statement.</div>
+          <div class="exam-tip">Paper 2: Construct inductive proofs. Identifying which type of induction problem (divisibility, sum, inequality).</div>
+          <div class="exam-tip">Paper 3: Proving complex identities and inequalities. Derangement, permutation problems via induction.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.5 -->
+    <div class="topic" id="topic-t1-5">
+      <div class="topic-header" onclick="toggleTopic('t1-5')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Complex Numbers <span class="hl-tag">HL</span></div>
+          <div class="topic-detail">Arithmetic operations. Argand diagram. Modulus and argument. Polar form. Euler form. De Moivre's theorem. Roots of polynomials.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Complex numbers:</strong> z = a + bi where i² = −1. a is real part (Re(z)), b is imaginary part (Im(z)). Arithmetic: add/subtract/multiply like binomials; division uses conjugate.</div>
+          <div class="concept-item"><strong>Argand diagram:</strong> Complex number z = a + bi plotted as point (a, b) in 2D plane. Real axis (horizontal), imaginary axis (vertical).</div>
+          <div class="concept-item"><strong>Modulus and argument:</strong> |z| = √(a² + b²) is distance from origin. arg(z) = θ is angle from positive real axis. Usually −π < θ ≤ π.</div>
+          <div class="concept-item"><strong>Polar and Euler forms:</strong> z = r(cosθ + i·sinθ) = r·e^(iθ) where r = |z|, θ = arg(z). Useful for multiplication, division, powers.</div>
+          <div class="concept-item"><strong>De Moivre's theorem:</strong> (cosθ + i·sinθ)ⁿ = cos(nθ) + i·sin(nθ) or (r·e^(iθ))ⁿ = rⁿ·e^(inθ). Simplifies powers and roots of complex numbers.</div>
+          <div class="concept-item"><strong>Roots of polynomials:</strong> Complex roots of polynomials with real coefficients appear in conjugate pairs. HL includes finding nth roots of complex numbers.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Imaginary unit (i):</span> Defined by i² = −1. Allows extension of real numbers to complex numbers.</div>
+            <div class="term-item"><span class="term-word">Complex conjugate:</span> For z = a + bi, conjugate is z* = a − bi. Properties: z·z* = |z|², (z+w)* = z*+w*.</div>
+            <div class="term-item"><span class="term-word">Modulus:</span> |z| = √(a² + b²), the magnitude or distance of z from origin.</div>
+            <div class="term-item"><span class="term-word">Argument:</span> arg(z) = θ, the angle from positive real axis to z, measured counterclockwise.</div>
+            <div class="term-item"><span class="term-word">Polar form:</span> z = r(cosθ + i·sinθ) where r = |z|, θ = arg(z).</div>
+            <div class="term-item"><span class="term-word">Euler form:</span> z = r·e^(iθ), compact notation for polar form.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">z = a + bi; z* = a − bi<div class="formula-note">Complex number and conjugate</div></div>
+          <div class="formula-card">|z| = √(a² + b²) = √(z·z*)<div class="formula-note">Modulus of complex number</div></div>
+          <div class="formula-card">arg(z) = arctan(b/a), adjusted for quadrant<div class="formula-note">Argument of complex number</div></div>
+          <div class="formula-card">z = r(cosθ + i·sinθ) = r·cisθ = r·e^(iθ)<div class="formula-note">Polar and Euler forms</div></div>
+          <div class="formula-card">z₁·z₂ = r₁r₂·e^(i(θ₁+θ₂)); z₁/z₂ = (r₁/r₂)·e^(i(θ₁−θ₂))<div class="formula-note">Multiplication and division in polar form</div></div>
+          <div class="formula-card">zⁿ = rⁿ·e^(inθ) [De Moivre's theorem]<div class="formula-note">Powers in polar form</div></div>
+          <div class="formula-card">z^(1/n) = r^(1/n)·e^(i(θ+2πk)/n), k=0,1,...,n−1<div class="formula-note">nth roots of complex number (n values)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Arithmetic operations on complex numbers. Converting between rectangular and polar forms. Finding modulus/argument.</div>
+          <div class="exam-tip">Paper 2: Solving polynomial equations with complex roots. Using De Moivre's theorem for powers. Geometric interpretation in Argand diagram.</div>
+          <div class="exam-tip">Paper 3: Finding all nth roots. Complex analysis involving limits. Series with complex numbers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.6 -->
+    <div class="topic" id="topic-t1-6">
+      <div class="topic-header" onclick="toggleTopic('t1-6')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Systems of Linear Equations</div>
+          <div class="topic-detail">2×2 and 3×3 systems. Matrix methods [HL]. Row reduction. Consistency and uniqueness of solutions.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Linear systems:</strong> Set of linear equations in multiple variables. Example: 2x + 3y = 5, x − y = 1. Solution is values of variables satisfying all equations simultaneously.</div>
+          <div class="concept-item"><strong>2×2 systems:</strong> Two equations in two unknowns. Can be solved by substitution, elimination, or graphical method. Each equation represents a line; solution is intersection point (if exists).</div>
+          <div class="concept-item"><strong>3×3 systems:</strong> Three equations in three unknowns. Each equation represents a plane. Solution is intersection of three planes (if unique).</div>
+          <div class="concept-item"><strong>HL: Matrix methods:</strong> Write system as Ax = b where A is coefficient matrix, x is variable vector, b is constants. Solve via Gaussian elimination, row reduction, or matrix inversion (x = A⁻¹b if A invertible).</div>
+          <div class="concept-item"><strong>Consistency:</strong> System is consistent if at least one solution exists. Inconsistent if no solution. Underdetermined if infinitely many solutions (dependent equations).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Linear equation:</span> Equation of form a₁x₁ + a₂x₂ + ... + aₙxₙ = b. Variables appear to first power only.</div>
+            <div class="term-item"><span class="term-word">Solution set:</span> All values of variables satisfying every equation in the system.</div>
+            <div class="term-item"><span class="term-word">Consistent system:</span> Has at least one solution.</div>
+            <div class="term-item"><span class="term-word">Inconsistent system:</span> Has no solution.</div>
+            <div class="term-item"><span class="term-word">Coefficient matrix:</span> Matrix containing coefficients of variables. Denoted A in Ax = b.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">ax + by = c; dx + ey = f<div class="formula-note">2×2 linear system</div></div>
+          <div class="formula-card">ax + by + cz = d; ex + fy + gz = h; ix + jy + kz = l<div class="formula-note">3×3 linear system</div></div>
+          <div class="formula-card">Ax = b<div class="formula-note">Matrix form of linear system</div></div>
+          <div class="formula-card">x = A⁻¹b<div class="formula-note">Solution via matrix inversion (when A is invertible)</div></div>
+          <div class="formula-card">Determinant: |A| = ae−bd<div class="formula-note">For 2×2 matrix, non-zero determinant means unique solution</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Solve 2×2 and 3×3 systems by elimination/substitution. Classify as consistent/inconsistent.</div>
+          <div class="exam-tip">Paper 2: HL matrix methods for solving systems. Applications to real-world problems.</div>
+          <div class="exam-tip">Paper 3: HL row reduction and rank analysis. Eigenvalue problems. Systems with parameters (finding when unique/infinite/no solutions).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TOPIC 2: FUNCTIONS ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('t2')">
+    <div class="section-number math">02</div>
+    <div class="section-title">Functions</div>
+    <span class="section-arrow open" id="arrow-t2">▸</span>
+  </div>
+  <div class="topic-list" id="body-t2">
+
+    <!-- 2.1 -->
+    <div class="topic" id="topic-t2-1">
+      <div class="topic-header" onclick="toggleTopic('t2-1')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Function Concepts and Properties</div>
+          <div class="topic-detail">Domain, range, inverse functions. Composition. Transformations of graphs: translations, reflections, stretches.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Function definition:</strong> A relation where each input has exactly one output. f: X → Y means function f maps set X (domain) to set Y. Notation: f(x) = expression.</div>
+          <div class="concept-item"><strong>Domain and range:</strong> Domain is set of all possible input values. Range is set of all possible output values. Domain may be restricted (e.g., cannot divide by zero, cannot take square root of negative in ℝ).</div>
+          <div class="concept-item"><strong>Inverse functions:</strong> f⁻¹ reverses the action of f. If f(a) = b, then f⁻¹(b) = a. For inverse to exist, f must be one-to-one (injective). Domain of f⁻¹ = range of f.</div>
+          <div class="concept-item"><strong>Function composition:</strong> (f ∘ g)(x) = f(g(x)). Apply g first, then apply f to the result. Order matters: f ∘ g ≠ g ∘ f in general.</div>
+          <div class="concept-item"><strong>Graph transformations:</strong> f(x) + k shifts up k units; f(x − k) shifts right k units; −f(x) reflects over x-axis; f(−x) reflects over y-axis; a·f(x) stretches vertically by factor a.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">One-to-one (injective):</span> Each output corresponds to exactly one input. f(a) = f(b) implies a = b.</div>
+            <div class="term-item"><span class="term-word">Onto (surjective):</span> Every element of codomain is an output of f.</div>
+            <div class="term-item"><span class="term-word">Bijection:</span> Function that is both one-to-one and onto. Bijections have inverses.</div>
+            <div class="term-item"><span class="term-word">Composition:</span> (f ∘ g)(x) = f(g(x)). Combining functions by applying one to the output of another.</div>
+            <div class="term-item"><span class="term-word">Translation:</span> Shift of graph horizontally or vertically.</div>
+            <div class="term-item"><span class="term-word">Stretch/compression:</span> Vertical or horizontal scaling of graph.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">f: X → Y; domain is X, range ⊆ Y<div class="formula-note">Function notation and domain/range</div></div>
+          <div class="formula-card">(f ∘ g)(x) = f(g(x))<div class="formula-note">Function composition</div></div>
+          <div class="formula-card">If f(a) = b, then f⁻¹(b) = a<div class="formula-note">Inverse function relationship</div></div>
+          <div class="formula-card">y = f(x) + k shifts up k units; y = f(x−k) shifts right k units<div class="formula-note">Vertical and horizontal translations</div></div>
+          <div class="formula-card">y = a·f(x) stretches vertically by |a|; y = f(bx) compresses horizontally by |b|<div class="formula-note">Vertical and horizontal stretches</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding domains/ranges. Determining if function is one-to-one. Sketching inverse functions and compositions.</div>
+          <div class="exam-tip">Paper 2: Applying transformations to graphs. Finding equations of transformed functions. Proving properties of compositions.</div>
+          <div class="exam-tip">Paper 3: Complex compositions and inverses. Analyzing behavior of composed functions near discontinuities.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.2 -->
+    <div class="topic" id="topic-t2-2">
+      <div class="topic-header" onclick="toggleTopic('t2-2')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Quadratic Functions</div>
+          <div class="topic-detail">Vertex form. Discriminant. Completing the square. Zeros and graphing. Applications.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Quadratic function:</strong> f(x) = ax² + bx + c where a ≠ 0. Parabola: opens upward if a > 0, downward if a < 0. Vertex at x = −b/(2a).</div>
+          <div class="concept-item"><strong>Vertex form:</strong> f(x) = a(x − h)² + k. Vertex is (h, k). h and k are easily read from vertex form. Easier to graph than standard form.</div>
+          <div class="concept-item"><strong>Completing the square:</strong> Rewrite f(x) = ax² + bx + c as vertex form by completing the square. Example: x² + 4x = (x+2)² − 4.</div>
+          <div class="concept-item"><strong>Discriminant:</strong> Δ = b² − 4ac determines nature of roots. If Δ > 0, two distinct real roots. If Δ = 0, one repeated root (vertex on x-axis). If Δ < 0, no real roots.</div>
+          <div class="concept-item"><strong>Zeros and roots:</strong> Zeros of f(x) = ax² + bx + c are solutions to ax² + bx + c = 0. Found by factoring, completing square, or quadratic formula.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Vertex:</span> The turning point of a parabola. For upward-opening, it is the minimum point.</div>
+            <div class="term-item"><span class="term-word">Axis of symmetry:</span> Vertical line through the vertex. For f(x) = ax²+bx+c, it is x = −b/(2a).</div>
+            <div class="term-item"><span class="term-word">Parabola:</span> U-shaped or ∩-shaped curve formed by a quadratic function.</div>
+            <div class="term-item"><span class="term-word">Root (or zero):</span> Value of x where f(x) = 0. Point where parabola crosses x-axis.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">f(x) = ax² + bx + c (standard form)<div class="formula-note">General quadratic function</div></div>
+          <div class="formula-card">f(x) = a(x−h)² + k (vertex form)<div class="formula-note">Vertex at (h, k)</div></div>
+          <div class="formula-card">x = −b/(2a)<div class="formula-note">x-coordinate of vertex (axis of symmetry)</div></div>
+          <div class="formula-card">Δ = b² − 4ac<div class="formula-note">Discriminant</div></div>
+          <div class="formula-card">x = (−b ± √Δ)/(2a)<div class="formula-note">Quadratic formula (roots)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding vertex, axis of symmetry, zeros. Determining discriminant and nature of roots. Sketching parabolas.</div>
+          <div class="exam-tip">Paper 2: Applying quadratic models to real situations (projectile motion, optimization). Solving word problems.</div>
+          <div class="exam-tip">Paper 3: Proving properties of quadratics. Finding conditions on coefficients for certain behavior (roots in intervals, etc.).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.3 -->
+    <div class="topic" id="topic-t2-3">
+      <div class="topic-header" onclick="toggleTopic('t2-3')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Polynomial Functions</div>
+          <div class="topic-detail">Factor and remainder theorems. Zeros and multiplicities. Graphing. End behavior.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Polynomial function:</strong> f(x) = aₙxⁿ + aₙ₋₁xⁿ⁻¹ + ... + a₁x + a₀. Degree n is highest power. Leading coefficient aₙ determines end behavior.</div>
+          <div class="concept-item"><strong>Factor theorem:</strong> (x − a) is a factor of f(x) iff f(a) = 0. If (x−a)^m is a factor but (x−a)^(m+1) is not, then x = a is a zero of multiplicity m.</div>
+          <div class="concept-item"><strong>Remainder theorem:</strong> When f(x) is divided by (x−a), remainder is f(a). Enables quick evaluation and finding factors.</div>
+          <div class="concept-item"><strong>Zeros and multiplicities:</strong> If x = a is zero of multiplicity m > 1, graph touches x-axis at a but doesn't cross (m even) or crosses tangentially (m odd).</div>
+          <div class="concept-item"><strong>End behavior:</strong> For large |x|, polynomial behaves like leading term aₙxⁿ. If n even and aₙ > 0, both ends go up. If n odd and aₙ > 0, left end down, right end up.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Degree:</span> The highest exponent of x in the polynomial.</div>
+            <div class="term-item"><span class="term-word">Leading coefficient:</span> The coefficient of the term with highest degree.</div>
+            <div class="term-item"><span class="term-word">Multiplicity:</span> The number of times a factor appears in the factored form. Determines behavior at the zero.</div>
+            <div class="term-item"><span class="term-word">Fundamental Theorem of Algebra:</span> Polynomial of degree n has exactly n roots (counting multiplicity) in ℂ.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">f(x) = aₙxⁿ + aₙ₋₁xⁿ⁻¹ + ... + a₁x + a₀<div class="formula-note">General polynomial of degree n</div></div>
+          <div class="formula-card">f(x) = (x−r₁)(x−r₂)...(x−rₙ) · q(x)<div class="formula-note">Factored form (r_i are roots)</div></div>
+          <div class="formula-card">If (x−a)^m || f(x), then x = a is zero of multiplicity m<div class="formula-note">Multiplicity definition</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding zeros given polynomial. Using factor/remainder theorem. Determining multiplicities from graphs.</div>
+          <div class="exam-tip">Paper 2: Analyzing end behavior and sketching. Finding polynomial given zeros/conditions. Solving applications.</div>
+          <div class="exam-tip">Paper 3: Proving properties using factor theorem. Complex roots. Analyzing local extrema.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.4 -->
+    <div class="topic" id="topic-t2-4">
+      <div class="topic-header" onclick="toggleTopic('t2-4')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Rational Functions</div>
+          <div class="topic-detail">Asymptotes (vertical, horizontal, oblique). Graphing. Partial fractions [HL].</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Rational function:</strong> f(x) = p(x)/q(x) where p and q are polynomials, q ≠ 0. Domain excludes zeros of denominator.</div>
+          <div class="concept-item"><strong>Vertical asymptotes:</strong> Occur at zeros of denominator (where function is undefined). At x = a: if numerator ≠ 0, then vertical asymptote at x = a.</div>
+          <div class="concept-item"><strong>Horizontal asymptotes:</strong> Behavior as x → ±∞. If deg(p) < deg(q), horizontal asymptote is y = 0. If deg(p) = deg(q), horizontal asymptote is y = (leading coeff of p)/(leading coeff of q).</div>
+          <div class="concept-item"><strong>Oblique/slant asymptotes:</strong> If deg(p) = deg(q) + 1, perform polynomial long division. Quotient (a linear expression) is the oblique asymptote.</div>
+          <div class="concept-item"><strong>HL: Partial fractions:</strong> Decompose rational function into sum of simpler fractions. Used in integration. Example: (2x+5)/(x²+x−2) = A/(x−1) + B/(x+2). Solve for A and B.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Rational function:</span> Ratio of two polynomial functions.</div>
+            <div class="term-item"><span class="term-word">Vertical asymptote:</span> Vertical line x = a where function approaches ±∞.</div>
+            <div class="term-item"><span class="term-word">Horizontal asymptote:</span> Horizontal line y = L that function approaches as x → ±∞.</div>
+            <div class="term-item"><span class="term-word">Oblique asymptote:</span> Non-horizontal, non-vertical line that function approaches (degree of numerator exceeds denominator by 1).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">f(x) = p(x)/q(x)<div class="formula-note">Rational function</div></div>
+          <div class="formula-card">Vertical asymptote at x = a if q(a) = 0 and p(a) ≠ 0<div class="formula-note">Vertical asymptote condition</div></div>
+          <div class="formula-card">If deg(p) < deg(q): horizontal asymptote y = 0<div class="formula-note">When degree of numerator < denominator</div></div>
+          <div class="formula-card">If deg(p) = deg(q): horizontal asymptote y = (lead coeff of p)/(lead coeff of q)<div class="formula-note">When degrees equal</div></div>
+          <div class="formula-card">(px+q)/(x²+5x+6) = A/(x+2) + B/(x+3) [HL]<div class="formula-note">Partial fractions decomposition (linear factors)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Identifying asymptotes. Determining domain. Sketching rational functions. Finding coordinates of key points.</div>
+          <div class="exam-tip">Paper 2: Analyzing end behavior. Solving applications involving rational functions.</div>
+          <div class="exam-tip">Paper 3 [HL]: Partial fractions decomposition. Using decomposed form in integration. Proving asymptote equations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.5 -->
+    <div class="topic" id="topic-t2-5">
+      <div class="topic-header" onclick="toggleTopic('t2-5')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Exponential and Logarithmic Functions</div>
+          <div class="topic-detail">Graphs and properties. Solving equations. Exponential growth/decay modeling. Natural exponential and logarithm.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Exponential function:</strong> f(x) = aˣ where a > 0, a ≠ 1. Domain: all real numbers. Range: positive real numbers. Base a: if a > 1, increasing; if 0 < a < 1, decreasing.</div>
+          <div class="concept-item"><strong>Natural exponential:</strong> f(x) = eˣ where e ≈ 2.718. Fundamental in calculus. Derivative d/dx(eˣ) = eˣ (unique property).</div>
+          <div class="concept-item"><strong>Logarithmic function:</strong> f(x) = logₐ(x) is inverse of aˣ. Domain: positive reals. Range: all reals. Graph is reflection of aˣ across y = x.</div>
+          <div class="concept-item"><strong>Natural logarithm:</strong> f(x) = ln(x) = logₑ(x). Inverse of eˣ. Critical in calculus and modeling. ln(e) = 1, ln(1) = 0.</div>
+          <div class="concept-item"><strong>Exponential growth/decay modeling:</strong> A(t) = A₀·e^(kt) or A(t) = A₀·aᵗ. Used for populations, radioactive decay, cooling, investments. k > 0 is growth; k < 0 is decay.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Exponential function:</span> Function of the form f(x) = aˣ with constant base a > 0, a ≠ 1.</div>
+            <div class="term-item"><span class="term-word">Euler's number (e):</span> Irrational constant ≈ 2.71828. Base of natural exponential and logarithm.</div>
+            <div class="term-item"><span class="term-word">Logarithm:</span> Inverse of exponential. logₐ(x) = y means aʸ = x.</div>
+            <div class="term-item"><span class="term-word">Exponential growth:</span> Quantity increases at a rate proportional to its current value. A(t) = A₀eᵏᵗ, k > 0.</div>
+            <div class="term-item"><span class="term-word">Exponential decay:</span> Quantity decreases at a rate proportional to its current value. A(t) = A₀e^(−kt), k > 0.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">f(x) = aˣ (exponential); f(x) = logₐ(x) (logarithmic)<div class="formula-note">Exponential and logarithmic functions</div></div>
+          <div class="formula-card">f(x) = eˣ (natural exponential); f(x) = ln(x) (natural logarithm)<div class="formula-note">Natural exponential and logarithm</div></div>
+          <div class="formula-card">A(t) = A₀eᵏᵗ<div class="formula-note">Exponential growth/decay model</div></div>
+          <div class="formula-card">Half-life: A(t) = A₀(1/2)^(t/T) where T is half-life<div class="formula-note">Radioactive decay/half-life problems</div></div>
+          <div class="formula-card">Doubling time: t = ln(2)/k (if A(t) = A₀eᵏᵗ)<div class="formula-note">Time for quantity to double</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Solving exponential and logarithmic equations. Evaluating logarithms. Sketching exponential/logarithmic curves.</div>
+          <div class="exam-tip">Paper 2: Modeling real-world exponential situations (population, radioactive decay, investments). Finding parameters from given conditions.</div>
+          <div class="exam-tip">Paper 3: Calculus with exponential/logarithmic functions. Solving differential equations involving growth/decay. Proving limit statements.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.6 -->
+    <div class="topic" id="topic-t2-6">
+      <div class="topic-header" onclick="toggleTopic('t2-6')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Transformations of Graphs</div>
+          <div class="topic-detail">Translations, reflections, stretches. Combined transformations. Finding equations of transformed functions.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Vertical translation:</strong> y = f(x) + k shifts graph up (k > 0) or down (k < 0) by |k| units. Affects y-intercept and all y-coordinates.</div>
+          <div class="concept-item"><strong>Horizontal translation:</strong> y = f(x − h) shifts graph right (h > 0) or left (h < 0) by |h| units. Affects x-intercepts and domain shift.</div>
+          <div class="concept-item"><strong>Vertical reflection:</strong> y = −f(x) reflects over x-axis. Points (a,b) → (a,−b). Flips graph vertically.</div>
+          <div class="concept-item"><strong>Horizontal reflection:</strong> y = f(−x) reflects over y-axis. Points (a,b) → (−a,b). Flips graph horizontally. For even functions, f(−x) = f(x), no change.</div>
+          <div class="concept-item"><strong>Vertical stretch/compression:</strong> y = a·f(x). If |a| > 1, stretches vertically (graph farther from x-axis). If 0 < |a| < 1, compresses vertically (closer to x-axis). Negative a also flips.</div>
+          <div class="concept-item"><strong>Horizontal stretch/compression:</strong> y = f(bx). If 0 < b < 1, stretches horizontally (wider). If b > 1, compresses horizontally (narrower). If b < 0, also reflects horizontally.</div>
+          <div class="concept-item"><strong>Combined transformations:</strong> Apply transformations in correct order. Generally: horizontal transformations first (stretches/reflections), then translations, then vertical transformations.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Translation:</span> Shift of entire graph in one direction (horizontal or vertical).</div>
+            <div class="term-item"><span class="term-word">Reflection:</span> Flip of graph across a line (usually x-axis or y-axis).</div>
+            <div class="term-item"><span class="term-word">Stretch:</span> Scaling that increases distance from axis. Vertical stretch makes graph farther from x-axis; horizontal stretch makes wider.</div>
+            <div class="term-item"><span class="term-word">Compression:</span> Scaling that decreases distance from axis.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">y = f(x) + k (vertical shift by k units)<div class="formula-note">Vertical translation</div></div>
+          <div class="formula-card">y = f(x−h) (horizontal shift by h units)<div class="formula-note">Horizontal translation</div></div>
+          <div class="formula-card">y = −f(x) (reflection over x-axis)<div class="formula-note">Vertical reflection</div></div>
+          <div class="formula-card">y = f(−x) (reflection over y-axis)<div class="formula-note">Horizontal reflection</div></div>
+          <div class="formula-card">y = a·f(x) (vertical stretch by |a|)<div class="formula-note">Vertical stretch/compression</div></div>
+          <div class="formula-card">y = f(bx) (horizontal compress by |b|)<div class="formula-note">Horizontal stretch/compression</div></div>
+          <div class="formula-card">y = a·f(b(x−h)) + k (combined)<div class="formula-note">General form combining all transformations</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Identifying transformations from graphs. Sketching transformed functions. Writing equations of transformed functions given graph.</div>
+          <div class="exam-tip">Paper 2: Applying transformations to solve problems. Finding transformed function given original and transformation description.</div>
+          <div class="exam-tip">Paper 3: Analyzing composed transformations. Proving relationships between original and transformed function properties.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TOPIC 3: GEOMETRY AND TRIGONOMETRY ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('t3')">
+    <div class="section-number math">03</div>
+    <div class="section-title">Geometry and Trigonometry</div>
+    <span class="section-arrow open" id="arrow-t3">▸</span>
+  </div>
+  <div class="topic-list" id="body-t3">
+
+    <div class="topic" id="topic-t3-1">
+      <div class="topic-header" onclick="toggleTopic('t3-1')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Trigonometric Functions and Identities</div>
+          <div class="topic-detail">Unit circle. Exact values. Graphs. Pythagorean, double angle, compound angle identities [HL].</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Unit circle:</strong> Circle of radius 1 centered at origin. Point (cosθ, sinθ) on unit circle. Sine and cosine defined for all real angles. Tangent = sinθ/cosθ, undefined when cosθ = 0.</div>
+          <div class="concept-item"><strong>Exact values:</strong> Key angles 0°, 30°, 45°, 60°, 90°. sin30° = 1/2, cos30° = √3/2, sin45° = √2/2, cos45° = √2/2, sin60° = √3/2, cos60° = 1/2, sin90° = 1, cos90° = 0.</div>
+          <div class="concept-item"><strong>Trigonometric graphs:</strong> Sine and cosine have period 2π, amplitude 1, continuous. Tangent has period π, vertical asymptotes at ±π/2 + nπ.</div>
+          <div class="concept-item"><strong>Pythagorean identity:</strong> sin²θ + cos²θ = 1. Fundamental identity relating sine and cosine. Variants: 1 + tan²θ = sec²θ, 1 + cot²θ = csc²θ.</div>
+          <div class="concept-item"><strong>HL: Double angle formulas:</strong> sin(2θ) = 2sinθcosθ, cos(2θ) = cos²θ − sin²θ = 2cos²θ − 1 = 1 − 2sin²θ, tan(2θ) = 2tanθ/(1−tan²θ).</div>
+          <div class="concept-item"><strong>HL: Compound angle formulas:</strong> sin(A±B) = sinAcosB ± cosAsinB, cos(A±B) = cosAcosB ∓ sinAsinB, tan(A±B) = (tanA ± tanB)/(1 ∓ tanAtanB).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Unit circle:</span> Circle with radius 1, centered at origin. Standard position for defining trig functions.</div>
+            <div class="term-item"><span class="term-word">Radian:</span> Unit of angle measure. 2π radians = 360°. More natural for calculus.</div>
+            <div class="term-item"><span class="term-word">Period:</span> Smallest positive value T such that f(θ+T) = f(θ). Period of sin and cos is 2π; period of tan is π.</div>
+            <div class="term-item"><span class="term-word">Amplitude:</span> Distance from middle of graph to maximum/minimum. For y = asinθ, amplitude is |a|.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">sin²θ + cos²θ = 1<div class="formula-note">Pythagorean identity</div></div>
+          <div class="formula-card">sin(2θ) = 2sinθcosθ; cos(2θ) = cos²θ − sin²θ<div class="formula-note">Double angle formulas [HL]</div></div>
+          <div class="formula-card">sin(A±B) = sinAcosB ± cosAsinB<div class="formula-note">Compound angle formula for sine [HL]</div></div>
+          <div class="formula-card">cos(A±B) = cosAcosB ∓ sinAsinB<div class="formula-note">Compound angle formula for cosine [HL]</div></div>
+          <div class="formula-card">tan(A±B) = (tanA ± tanB)/(1 ∓ tanAtanB)<div class="formula-note">Compound angle formula for tangent [HL]</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Evaluating trig functions at standard angles. Simplifying expressions using identities. Solving simple trig equations.</div>
+          <div class="exam-tip">Paper 2: Proving trigonometric identities [HL]. Solving application problems (heights, distances). Using double/compound angle formulas.</div>
+          <div class="exam-tip">Paper 3: Calculus with trigonometric functions. Complex applications of identities. Proving trigonometric statements.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t3-2">
+      <div class="topic-header" onclick="toggleTopic('t3-2')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Trigonometric Equations</div>
+          <div class="topic-detail">Solving trigonometric equations. General solutions. Inverse trigonometric functions. Degrees and radians.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Basic trigonometric equations:</strong> Equations like sinx = a, cosx = b, tanx = c. Solutions found using inverse trig functions, then using periodicity to find all solutions.</div>
+          <div class="concept-item"><strong>General solutions:</strong> If sinθ = k, then θ = arcsin(k) + 2πn or θ = π − arcsin(k) + 2πn (two families). If cosθ = k, then θ = ±arccos(k) + 2πn. If tanθ = k, then θ = arctan(k) + πn.</div>
+          <div class="concept-item"><strong>Inverse trigonometric functions:</strong> sin⁻¹, cos⁻¹, tan⁻¹ (or arcsin, arccos, arctan). Restricted domains to make inverses single-valued. sin⁻¹: [−π/2, π/2], cos⁻¹: [0, π], tan⁻¹: (−π/2, π/2).</div>
+          <div class="concept-item"><strong>Degrees vs. radians:</strong> 180° = π radians. Most calculus uses radians. Conversions: θ_radians = θ_degrees · π/180.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Inverse trigonometric function:</span> Function that reverses a trig function. sin⁻¹(x) gives angle whose sine is x.</div>
+            <div class="term-item"><span class="term-word">General solution:</span> Formula giving all solutions to a trigonometric equation, accounting for periodicity.</div>
+            <div class="term-item"><span class="term-word">Principal value:</span> The value of inverse trig function within its restricted range.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">If sinθ = k: θ = arcsin(k) + 2πn or θ = π − arcsin(k) + 2πn<div class="formula-note">General solution for sine</div></div>
+          <div class="formula-card">If cosθ = k: θ = ±arccos(k) + 2πn<div class="formula-note">General solution for cosine</div></div>
+          <div class="formula-card">If tanθ = k: θ = arctan(k) + πn<div class="formula-note">General solution for tangent</div></div>
+          <div class="formula-card">θ_radians = θ_degrees · π/180<div class="formula-note">Conversion: degrees to radians</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Solving trig equations in a given interval. Using inverse trig functions. Converting between degrees/radians.</div>
+          <div class="exam-tip">Paper 2: Solving complex trig equations involving identities. Graphical interpretation.</div>
+          <div class="exam-tip">Paper 3: Proving general solution formulas. Analyzing equation behavior. Applications involving trig equations.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t3-3">
+      <div class="topic-header" onclick="toggleTopic('t3-3')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Vectors <span class="hl-tag">HL</span></div>
+          <div class="topic-detail">Vector notation and operations. Magnitude and direction. Dot product. Cross product [HL]. Applications.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Vector definition:</strong> Quantity with magnitude and direction. Notation: v, **v**, or v with arrow. Components: v = (v₁, v₂) in 2D, v = (v₁, v₂, v₃) in 3D. Position vector: r = (x, y, z).</div>
+          <div class="concept-item"><strong>Vector operations:</strong> Addition: u + v = (u₁+v₁, u₂+v₂). Scalar multiplication: ku = (ku₁, ku₂). Subtraction: u − v = u + (−v).</div>
+          <div class="concept-item"><strong>Magnitude (norm):</strong> |v| = √(v₁² + v₂² + v₃²). Distance between points A and B is |AB| = |B − A|.</div>
+          <div class="concept-item"><strong>Dot product (scalar product):</strong> u·v = u₁v₁ + u₂v₂ + u₃v₃. Also u·v = |u||v|cosθ where θ is angle between vectors. If u·v = 0, vectors are perpendicular.</div>
+          <div class="concept-item"><strong>HL: Cross product:</strong> u × v is a vector perpendicular to both u and v (3D only). |u × v| = |u||v|sinθ. Right-hand rule determines direction. u × v = (u₂v₃ − u₃v₂, u₃v₁ − u₁v₃, u₁v₂ − u₂v₁).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Unit vector:</span> Vector with magnitude 1. Denote direction. Basis vectors: **i** = (1,0,0), **j** = (0,1,0), **k** = (0,0,1).</div>
+            <div class="term-item"><span class="term-word">Parallel vectors:</span> Vectors in same direction (or opposite). v = k·u for scalar k.</div>
+            <div class="term-item"><span class="term-word">Perpendicular vectors:</span> Dot product is zero. u·v = 0.</div>
+            <div class="term-item"><span class="term-word">Dot product:</span> Scalar quantity from u·v = |u||v|cosθ.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">|v| = √(v₁² + v₂² + v₃²)<div class="formula-note">Magnitude of vector</div></div>
+          <div class="formula-card">u·v = u₁v₁ + u₂v₂ + u₃v₃ = |u||v|cosθ<div class="formula-note">Dot product</div></div>
+          <div class="formula-card">u × v = (u₂v₃ − u₃v₂, u₃v₁ − u₁v₃, u₁v₂ − u₂v₁)<div class="formula-note">Cross product [HL]</div></div>
+          <div class="formula-card">cosθ = (u·v)/(|u||v|)<div class="formula-note">Angle between vectors</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Vector arithmetic. Finding magnitudes, dot products. Determining perpendicularity. Angle calculations.</div>
+          <div class="exam-tip">Paper 2: Applications of vectors to geometry. Finding positions, distances. HL: Cross product and perpendicular vectors.</div>
+          <div class="exam-tip">Paper 3 [HL]: Vector proofs. Complex applications. Scalar triple product. Geometric interpretations of cross product.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t3-4">
+      <div class="topic-header" onclick="toggleTopic('t3-4')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Vector Equations of Lines and Planes <span class="hl-tag">HL</span></div>
+          <div class="topic-detail">Parametric equations. Cartesian form. Intersections. Distances from points to lines/planes [HL].</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Vector equation of a line:</strong> r = r₀ + t**d** where r₀ is position vector of point on line, **d** is direction vector, t is parameter. As t varies, traces out the line.</div>
+          <div class="concept-item"><strong>Parametric equations:</strong> x = x₀ + t·d₁, y = y₀ + t·d₂, z = z₀ + t·d₃. Eliminate t to get Cartesian form.</div>
+          <div class="concept-item"><strong>Cartesian equation of line:</strong> (x − x₀)/d₁ = (y − y₀)/d₂ = (z − z₀)/d₃ (if d₁, d₂, d₃ ≠ 0). Intersection of two planes gives a line.</div>
+          <div class="concept-item"><strong>Vector equation of a plane:</strong> r = r₀ + s**u** + t**v** where r₀ is point on plane, **u** and **v** are two non-parallel direction vectors, s and t are parameters. Traces out the plane.</div>
+          <div class="concept-item"><strong>Cartesian equation of a plane:</strong> ax + by + cz = d. Normal vector is **n** = (a, b, c), perpendicular to plane. Point-normal form: **n**·(r − r₀) = 0.</div>
+          <div class="concept-item"><strong>Intersection and distance:</strong> Line-plane intersection found by substituting parametric line into plane equation. Distance from point to line: d = |(**p** − **r₀**) × **d**| / |**d**|. Distance from point to plane: d = |**n**·(**p** − **r₀**)| / |**n**|.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Direction vector:</span> Vector parallel to line, indicating its direction.</div>
+            <div class="term-item"><span class="term-word">Normal vector:</span> Vector perpendicular to a plane.</div>
+            <div class="term-item"><span class="term-word">Parametric form:</span> Equations expressing coordinates in terms of parameter(s).</div>
+            <div class="term-item"><span class="term-word">Cartesian form:</span> Equation relating x, y, z directly (no parameters).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">r = r₀ + t**d** (vector equation of line)<div class="formula-note">Line through r₀ in direction **d**</div></div>
+          <div class="formula-card">(x − x₀)/d₁ = (y − y₀)/d₂ = (z − z₀)/d₃ (Cartesian form)<div class="formula-note">Cartesian equation of line</div></div>
+          <div class="formula-card">r = r₀ + s**u** + t**v** (vector equation of plane)<div class="formula-note">Plane through r₀ with direction vectors **u**, **v**</div></div>
+          <div class="formula-card">ax + by + cz = d (Cartesian form)<div class="formula-note">Plane equation; normal vector **n** = (a,b,c)</div></div>
+          <div class="formula-card">d = |(**p** − **r₀**) × **d**| / |**d**|<div class="formula-note">Distance from point **p** to line</div></div>
+          <div class="formula-card">d = |**n**·(**p** − **r₀**)| / |**n**|<div class="formula-note">Distance from point **p** to plane</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Converting between vector and Cartesian forms. Finding intersection of line and plane. Computing distances.</div>
+          <div class="exam-tip">Paper 2: Applications to 3D geometry. Finding angles between lines/planes.</div>
+          <div class="exam-tip">Paper 3 [HL]: Complex intersection problems. Proving geometric relationships. Optimization (closest points).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t3-5">
+      <div class="topic-header" onclick="toggleTopic('t3-5')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">3D Geometry and Applications <span class="hl-tag">HL</span></div>
+          <div class="topic-detail">Angles between lines, planes. Intersections. Closest distance problems. Real-world applications.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Angle between two lines:</strong> Use direction vectors. cosθ = |**d₁**·**d₂**| / (|**d₁**||**d₂**|). Angle is acute (0 to π/2).</div>
+          <div class="concept-item"><strong>Angle between line and plane:</strong> φ is angle between line and plane. sinφ = |**d**·**n**| / (|**d**||**n**|) where **d** is line direction, **n** is plane normal. Angle φ ∈ [0, π/2].</div>
+          <div class="concept-item"><strong>Angle between two planes:</strong> θ is angle between normals. cosθ = |**n₁**·**n₂**| / (|**n₁**||**n₂**|). Angle θ ∈ [0, π/2].</div>
+          <div class="concept-item"><strong>Skew lines:</strong> Lines that don't intersect and aren't parallel. Distance between skew lines: d = |(**p₂** − **p₁**)·(**d₁** × **d₂**)| / |**d₁** × **d₂**|.</div>
+          <div class="concept-item"><strong>Applications:</strong> Navigation (bearings, angles). Engineering (structural angles). Physics (force directions). Modeling 3D objects.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Angle between lines:</span> Acute angle. Use dot product of direction vectors.</div>
+            <div class="term-item"><span class="term-word">Skew lines:</span> Non-intersecting, non-parallel lines in 3D space.</div>
+            <div class="term-item"><span class="term-word">Normal vector:</span> Vector perpendicular to a plane. Determines plane orientation.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">cosθ = |**d₁**·**d₂**| / (|**d₁**||**d₂**|)<div class="formula-note">Angle between two lines</div></div>
+          <div class="formula-card">sinφ = |**d**·**n**| / (|**d**||**n**|)<div class="formula-note">Angle between line and plane</div></div>
+          <div class="formula-card">cosθ = |**n₁**·**n₂**| / (|**n₁**||**n₂**|)<div class="formula-note">Angle between two planes</div></div>
+          <div class="formula-card">d = |(**p₂** − **p₁**)·(**d₁** × **d₂**)| / |**d₁** × **d₂**|<div class="formula-note">Distance between skew lines</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Computing angles between lines/planes. Checking perpendicularity or parallelism.</div>
+          <div class="exam-tip">Paper 2: Applications involving angles. Geometric problem-solving in 3D. Finding closest points.</div>
+          <div class="exam-tip">Paper 3 [HL]: Proving angle/distance formulas. Complex 3D geometry. Optimization in 3D space.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TOPIC 4: STATISTICS AND PROBABILITY ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('t4')">
+    <div class="section-number math">04</div>
+    <div class="section-title">Statistics and Probability</div>
+    <span class="section-arrow open" id="arrow-t4">▸</span>
+  </div>
+  <div class="topic-list" id="body-t4">
+
+    <div class="topic" id="topic-t4-1">
+      <div class="topic-header" onclick="toggleTopic('t4-1')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Descriptive Statistics</div>
+          <div class="topic-detail">Measures of central tendency and spread. Quartiles, box plots, outliers. Presenting data.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Mean (average):</strong> μ = Σx/n. Sum of all values divided by count. Affected by outliers. May not be an actual data value.</div>
+          <div class="concept-item"><strong>Median:</strong> Middle value when data sorted. n odd: middle value. n even: average of two middle values. Not affected by outliers. Resistant measure.</div>
+          <div class="concept-item"><strong>Mode:</strong> Most frequently occurring value. May have multiple modes. Useful for categorical data.</div>
+          <div class="concept-item"><strong>Range:</strong> Max − Min. Simple spread measure, highly affected by outliers.</div>
+          <div class="concept-item"><strong>Variance and standard deviation:</strong> σ² = Σ(x−μ)²/n (population). s² = Σ(x−x̄)²/(n−1) (sample). σ = √(σ²) is standard deviation. Measures spread around mean.</div>
+          <div class="concept-item"><strong>Quartiles and IQR:</strong> Q₁ (25th percentile), Q₂ (median), Q₃ (75th percentile). IQR = Q₃ − Q₁. Outliers: values < Q₁ − 1.5·IQR or > Q₃ + 1.5·IQR.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Mean:</span> Arithmetic average of all data values.</div>
+            <div class="term-item"><span class="term-word">Median:</span> Middle value; 50th percentile.</div>
+            <div class="term-item"><span class="term-word">Standard deviation:</span> Measure of spread; typical distance from mean.</div>
+            <div class="term-item"><span class="term-word">Outlier:</span> Value unusually far from others, beyond typical range.</div>
+            <div class="term-item"><span class="term-word">Box plot:</span> Graphical display showing median, quartiles, range, outliers.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">μ = Σx/n<div class="formula-note">Population mean</div></div>
+          <div class="formula-card">x̄ = Σx/n<div class="formula-note">Sample mean</div></div>
+          <div class="formula-card">σ² = Σ(x−μ)²/n; s² = Σ(x−x̄)²/(n−1)<div class="formula-note">Population and sample variance</div></div>
+          <div class="formula-card">σ = √(variance)<div class="formula-note">Standard deviation</div></div>
+          <div class="formula-card">IQR = Q₃ − Q₁<div class="formula-note">Interquartile range</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Calculating mean, median, mode, standard deviation. Interpreting box plots. Identifying outliers.</div>
+          <div class="exam-tip">Paper 2: Comparing distributions. Analyzing effect of transformations on statistics. Real-world data interpretation.</div>
+          <div class="exam-tip">Paper 3: Proving properties of mean/variance. Analyzing biased/unbiased estimators.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t4-2">
+      <div class="topic-header" onclick="toggleTopic('t4-2')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Probability Fundamentals</div>
+          <div class="topic-detail">Probability rules. Conditional probability. Bayes' theorem [HL]. Independence. Permutations and combinations.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Probability:</strong> P(A) = (# favorable outcomes) / (# total outcomes), 0 ≤ P(A) ≤ 1. Certain events: P = 1. Impossible events: P = 0. Complement: P(A') = 1 − P(A).</div>
+          <div class="concept-item"><strong>Addition rule:</strong> P(A ∪ B) = P(A) + P(B) − P(A ∩ B). If mutually exclusive: P(A ∪ B) = P(A) + P(B).</div>
+          <div class="concept-item"><strong>Conditional probability:</strong> P(A|B) = P(A ∩ B) / P(B). Probability of A given B has occurred. Reduces sample space to B.</div>
+          <div class="concept-item"><strong>Independence:</strong> Events A and B independent if P(A|B) = P(A) or equivalently P(A ∩ B) = P(A)·P(B). For independent events, occurrence of one doesn't affect the other.</div>
+          <div class="concept-item"><strong>HL: Bayes' theorem:</strong> P(A|B) = P(B|A)·P(A) / P(B). Reverses conditional probability. Powerful for updating probabilities given new information.</div>
+          <div class="concept-item"><strong>Permutations and combinations:</strong> Permutations P(n,r) = n!/(n−r)! (order matters). Combinations C(n,r) = n!/(r!(n−r)!) (order doesn't matter).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Sample space:</span> Set of all possible outcomes.</div>
+            <div class="term-item"><span class="term-word">Event:</span> Subset of sample space.</div>
+            <div class="term-item"><span class="term-word">Conditional probability:</span> Probability of event given another event has occurred.</div>
+            <div class="term-item"><span class="term-word">Mutually exclusive:</span> Events cannot occur together. P(A ∩ B) = 0.</div>
+            <div class="term-item"><span class="term-word">Independent:</span> Occurrence of one event doesn't affect the other.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)<div class="formula-note">Addition rule</div></div>
+          <div class="formula-card">P(A|B) = P(A ∩ B) / P(B)<div class="formula-note">Conditional probability</div></div>
+          <div class="formula-card">If independent: P(A ∩ B) = P(A)·P(B)<div class="formula-note">Multiplication rule for independent events</div></div>
+          <div class="formula-card">P(A|B) = P(B|A)·P(A) / P(B) [Bayes' theorem, HL]<div class="formula-note">Reverses conditional probability</div></div>
+          <div class="formula-card">P(n,r) = n!/(n−r)!; C(n,r) = n!/(r!(n−r)!)<div class="formula-note">Permutations and combinations</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Calculating probabilities using addition/multiplication rules. Conditional probability problems. Counting (permutations/combinations).</div>
+          <div class="exam-tip">Paper 2: Complex multi-step probability problems. Tree diagrams. Two-way tables. Bayes' theorem applications [HL].</div>
+          <div class="exam-tip">Paper 3: Proving probability identities. Complex conditional probability chains. Optimization using probability.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t4-3">
+      <div class="topic-header" onclick="toggleTopic('t4-3')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Discrete Random Variables and Binomial Distribution</div>
+          <div class="topic-detail">Probability distributions. Expected value and variance. Binomial distribution. Mean and variance of binomial.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Discrete random variable:</strong> Variable taking specific values with probabilities. Probability distribution lists all values and P(X = x). Sum of all probabilities = 1.</div>
+          <div class="concept-item"><strong>Expected value (mean):</strong> E(X) = Σ x·P(X=x). Long-run average. Linear: E(aX+b) = aE(X) + b.</div>
+          <div class="concept-item"><strong>Variance:</strong> Var(X) = E(X²) − [E(X)]² = Σ(x−μ)²·P(X=x). Var(aX+b) = a²Var(X). Standard deviation σ(X) = √Var(X).</div>
+          <div class="concept-item"><strong>Binomial distribution:</strong> X ~ B(n, p) where n is number of trials, p is probability of success. X counts successes. P(X=k) = C(n,k)·pᵏ·(1−p)^(n−k).</div>
+          <div class="concept-item"><strong>Binomial mean and variance:</strong> E(X) = np, Var(X) = np(1−p). Used to verify binomial model applies.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Random variable:</span> Function assigning numerical value to each outcome.</div>
+            <div class="term-item"><span class="term-word">Probability distribution:</span> Function giving probability for each value.</div>
+            <div class="term-item"><span class="term-word">Expected value:</span> Long-run average or mean of random variable.</div>
+            <div class="term-item"><span class="term-word">Bernoulli trial:</span> Single experiment with two outcomes (success/failure).</div>
+            <div class="term-item"><span class="term-word">Binomial:</span> Number of successes in n independent Bernoulli trials.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">E(X) = Σ x·P(X=x)<div class="formula-note">Expected value</div></div>
+          <div class="formula-card">Var(X) = E(X²) − [E(X)]² = Σ(x−μ)²·P(X=x)<div class="formula-note">Variance</div></div>
+          <div class="formula-card">P(X=k) = C(n,k)·pᵏ·(1−p)^(n−k)<div class="formula-note">Binomial probability</div></div>
+          <div class="formula-card">E(X) = np; Var(X) = np(1−p)<div class="formula-note">Binomial mean and variance</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Calculating expected value and variance. Identifying binomial distributions. Computing binomial probabilities.</div>
+          <div class="exam-tip">Paper 2: Modeling real situations with binomial. Proving properties of expected value/variance. Combined random variables.</div>
+          <div class="exam-tip">Paper 3: Deriving probability distributions. Complex probability problems. Approximations and limiting behavior.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t4-4">
+      <div class="topic-header" onclick="toggleTopic('t4-4')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Normal Distribution</div>
+          <div class="topic-detail">Properties and standard normal. Z-scores. Finding probabilities. Inverse normal. Modeling with normal distribution.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Normal distribution:</strong> X ~ N(μ, σ²). Symmetric bell curve, centered at μ. Spread determined by σ. Approximately 68% within μ ± σ, 95% within μ ± 2σ, 99.7% within μ ± 3σ.</div>
+          <div class="concept-item"><strong>Standard normal:</strong> Z ~ N(0, 1). Mean 0, standard deviation 1. Z-scores: Z = (X − μ)/σ. Standardization allows use of standard normal tables.</div>
+          <div class="concept-item"><strong>Z-score:</strong> Measures how many standard deviations value is from mean. Positive Z: above mean. Negative Z: below mean. Z = ±1.96 contains 95% of data.</div>
+          <div class="concept-item"><strong>Finding probabilities:</strong> Use standard normal table or calculator. P(X ≤ x) = P(Z ≤ (x−μ)/σ). Table gives P(Z ≤ z) for z ≥ 0.</div>
+          <div class="concept-item"><strong>Inverse normal:</strong> Given probability, find corresponding value. Example: P(Z ≤ z) = 0.975 means z ≈ 1.96. Used for confidence intervals and critical values.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Normal distribution:</span> Continuous, symmetric distribution. Bell-shaped curve. Completely determined by mean and variance.</div>
+            <div class="term-item"><span class="term-word">Standard normal:</span> Normal distribution with mean 0 and standard deviation 1.</div>
+            <div class="term-item"><span class="term-word">Z-score:</span> Standardized value. Tells how many standard deviations away from mean.</div>
+            <div class="term-item"><span class="term-word">Percentile:</span> Percentage of data below a value.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">Z = (X − μ)/σ<div class="formula-note">Standardization; z-score formula</div></div>
+          <div class="formula-card">P(X ≤ x) = P(Z ≤ (x−μ)/σ) = Φ((x−μ)/σ)<div class="formula-note">Finding probability for normal distribution</div></div>
+          <div class="formula-card">X = μ + Z·σ<div class="formula-note">Inverse: finding x given probability</div></div>
+          <div class="formula-card">For 95% confidence: x̄ ± 1.96·σ/√n<div class="formula-note">95% confidence interval for mean</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Standardizing and finding normal probabilities. Using normal tables. Inverse normal problems.</div>
+          <div class="exam-tip">Paper 2: Modeling real data with normal distribution. Quality control applications. Confidence intervals for means.</div>
+          <div class="exam-tip">Paper 3: Proving properties of normal distribution. Hypothesis testing with normal. Analyzing robustness of normality assumption.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t4-5">
+      <div class="topic-header" onclick="toggleTopic('t4-5')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Probability Distributions [HL]</div>
+          <div class="topic-detail">Poisson distribution. Continuous distributions. PDF and CDF. Law of large numbers. Central limit theorem.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Poisson distribution:</strong> X ~ Po(λ) models rare events in fixed interval. P(X=k) = (e^(−λ)·λᵏ) / k!. Mean = variance = λ. Used for counts (arrivals, defects).</div>
+          <div class="concept-item"><strong>Continuous random variable:</strong> Takes infinite values in interval. Probability is area under curve. P(X = x) = 0 for any single x. P(a ≤ X ≤ b) = ∫ᵃᵇ f(x)dx.</div>
+          <div class="concept-item"><strong>Probability density function (PDF):</strong> f(x) ≥ 0, ∫₋∞^∞ f(x)dx = 1. Area under PDF = probability. PDF not probability itself.</div>
+          <div class="concept-item"><strong>Cumulative distribution function (CDF):</strong> F(x) = P(X ≤ x) = ∫₋∞ˣ f(t)dt. Non-decreasing, F(−∞) = 0, F(∞) = 1. F'(x) = f(x).</div>
+          <div class="concept-item"><strong>Law of large numbers:</strong> Sample mean approaches population mean as sample size increases.</div>
+          <div class="concept-item"><strong>Central limit theorem:</strong> For large n, sample means approximately normal regardless of underlying distribution. X̄ ~ N(μ, σ²/n) approximately.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Poisson process:</span> Sequence of events occurring randomly in time.</div>
+            <div class="term-item"><span class="term-word">PDF (probability density function):</span> Function describing probability distribution of continuous variable.</div>
+            <div class="term-item"><span class="term-word">CDF (cumulative distribution function):</span> Function giving P(X ≤ x).</div>
+            <div class="term-item"><span class="term-word">Central limit theorem:</span> Sample means follow approximately normal distribution for large samples.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">P(X=k) = (e^(−λ)·λᵏ) / k!<div class="formula-note">Poisson probability</div></div>
+          <div class="formula-card">E(X) = Var(X) = λ<div class="formula-note">Poisson mean and variance</div></div>
+          <div class="formula-card">∫₋∞^∞ f(x)dx = 1; P(a ≤ X ≤ b) = ∫ᵃᵇ f(x)dx<div class="formula-note">PDF properties</div></div>
+          <div class="formula-card">F(x) = P(X ≤ x) = ∫₋∞ˣ f(t)dt<div class="formula-note">CDF definition</div></div>
+          <div class="formula-card">X̄ ~ N(μ, σ²/n) approximately (for large n)<div class="formula-note">Central limit theorem</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Computing Poisson probabilities. Evaluating integrals with PDF. Using CDF tables.</div>
+          <div class="exam-tip">Paper 2: Modeling with Poisson and continuous distributions. Applications of central limit theorem.</div>
+          <div class="exam-tip">Paper 3: Deriving PDF/CDF properties. Proving limit theorems. Complex probability calculations.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TOPIC 5: CALCULUS ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle('t5')">
+    <div class="section-number math">05</div>
+    <div class="section-title">Calculus</div>
+    <span class="section-arrow open" id="arrow-t5">▸</span>
+  </div>
+  <div class="topic-list" id="body-t5">
+
+    <div class="topic" id="topic-t5-1">
+      <div class="topic-header" onclick="toggleTopic('t5-1')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Limits and Continuity [HL]</div>
+          <div class="topic-detail">Limit definition and evaluation. L'Hôpital's rule [HL]. Squeeze theorem. Continuity. Differentiability.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Limit definition:</strong> lim(x→a) f(x) = L means f(x) gets arbitrarily close to L as x approaches a (from either side). Written: For all ε > 0, there exists δ > 0 such that |x − a| < δ implies |f(x) − L| < ε.</div>
+          <div class="concept-item"><strong>Limit evaluation:</strong> Direct substitution if f continuous at a. Otherwise factor, rationalize, or use algebraic tricks. One-sided limits: x→a⁻ (from left), x→a⁺ (from right). Limit exists iff left and right limits equal.</div>
+          <div class="concept-item"><strong>HL: L'Hôpital's rule:</strong> If lim f(x)/g(x) is indeterminate (0/0 or ∞/∞), then lim f(x)/g(x) = lim f'(x)/g'(x) (if limit on right exists). Differentiate numerator and denominator separately.</div>
+          <div class="concept-item"><strong>HL: Squeeze theorem:</strong> If h(x) ≤ f(x) ≤ g(x) near a, and lim h(x) = lim g(x) = L, then lim f(x) = L. Useful for oscillating functions.</div>
+          <div class="concept-item"><strong>Continuity:</strong> f continuous at a if lim(x→a) f(x) = f(a). Function continuous on interval if continuous at every point. Polynomials, exponentials, logarithms continuous on their domains.</div>
+          <div class="concept-item"><strong>Differentiability:</strong> f differentiable at a if f'(a) = lim(h→0) [f(a+h) − f(a)]/h exists. If f differentiable at a, then f continuous at a (converse false).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Limit:</span> Value that function approaches as input approaches some value.</div>
+            <div class="term-item"><span class="term-word">One-sided limit:</span> Limit from left (x→a⁻) or right (x→a⁺).</div>
+            <div class="term-item"><span class="term-word">Indeterminate form:</span> Expression like 0/0, ∞/∞, 0·∞ where limit cannot be determined by direct substitution.</div>
+            <div class="term-item"><span class="term-word">Continuity:</span> Function has no breaks, jumps, or holes at a point.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">lim(x→a) f(x) = L iff lim(x→a⁻) f(x) = lim(x→a⁺) f(x) = L<div class="formula-note">Limit exists iff one-sided limits equal</div></div>
+          <div class="formula-card">lim(x→a) [f(x) + g(x)] = lim f(x) + lim g(x)<div class="formula-note">Sum rule for limits</div></div>
+          <div class="formula-card">lim f(x)/g(x) = lim f'(x)/g'(x) [L'Hôpital's rule, HL]<div class="formula-note">If indeterminate 0/0 or ∞/∞</div></div>
+          <div class="formula-card">f'(a) = lim(h→0) [f(a+h) − f(a)]/h<div class="formula-note">Derivative definition (first principles)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Evaluating limits by direct substitution and algebraic manipulation. One-sided limits. Determining continuity.</div>
+          <div class="exam-tip">Paper 2 [HL]: Using L'Hôpital's rule for indeterminate forms. Proving continuity/differentiability. Squeeze theorem applications.</div>
+          <div class="exam-tip">Paper 3 [HL]: Rigorous epsilon-delta proofs. Complex limit analysis. Proving function properties using limits.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t5-2">
+      <div class="topic-header" onclick="toggleTopic('t5-2')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Differentiation Rules and Techniques</div>
+          <div class="topic-detail">Power rule, chain rule, product rule, quotient rule. Derivatives of exponential, logarithmic, trig functions.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Power rule:</strong> d/dx(xⁿ) = n·x^(n−1). Most fundamental rule. Works for negative and fractional n (with restrictions).</div>
+          <div class="concept-item"><strong>Chain rule:</strong> d/dx[f(g(x))] = f'(g(x))·g'(x). Essential for composite functions. Let u = g(x), then dy/dx = (dy/du)·(du/dx).</div>
+          <div class="concept-item"><strong>Product rule:</strong> d/dx[f(x)g(x)] = f'(x)g(x) + f(x)g'(x). Derivative of product is not product of derivatives.</div>
+          <div class="concept-item"><strong>Quotient rule:</strong> d/dx[f(x)/g(x)] = [f'g − fg']/g². Or "low d-high minus high d-low, square the bottom and away we go."</div>
+          <div class="concept-item"><strong>Exponential and logarithmic derivatives:</strong> d/dx(eˣ) = eˣ, d/dx(ln(x)) = 1/x, d/dx(aˣ) = aˣ·ln(a), d/dx(logₐ(x)) = 1/(x·ln(a)).</div>
+          <div class="concept-item"><strong>Trigonometric derivatives:</strong> d/dx(sinx) = cosx, d/dx(cosx) = −sinx, d/dx(tanx) = sec²x, d/dx(cotx) = −csc²x.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Derivative:</span> Rate of change of function. f'(x) or df/dx. Slope of tangent line at a point.</div>
+            <div class="term-item"><span class="term-word">Composite function:</span> Function of a function. y = f(g(x)).</div>
+            <div class="term-item"><span class="term-word">Implicit differentiation:</span> Taking derivative when y not explicitly solved for x.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">d/dx(xⁿ) = n·x^(n−1) (power rule)<div class="formula-note">Power rule</div></div>
+          <div class="formula-card">d/dx[f(g(x))] = f'(g(x))·g'(x) (chain rule)<div class="formula-note">Chain rule for composite functions</div></div>
+          <div class="formula-card">d/dx[f·g] = f'g + fg' (product rule)<div class="formula-note">Product rule</div></div>
+          <div class="formula-card">d/dx[f/g] = (f'g − fg')/g² (quotient rule)<div class="formula-note">Quotient rule</div></div>
+          <div class="formula-card">d/dx(eˣ) = eˣ; d/dx(ln(x)) = 1/x<div class="formula-note">Exponential and logarithmic derivatives</div></div>
+          <div class="formula-card">d/dx(sinx) = cosx; d/dx(cosx) = −sinx; d/dx(tanx) = sec²x<div class="formula-note">Trigonometric derivatives</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Computing derivatives using rules. Simplifying derivative expressions. Finding derivatives at specific points.</div>
+          <div class="exam-tip">Paper 2: Combining multiple rules. Implicit differentiation. Parametric differentiation.</div>
+          <div class="exam-tip">Paper 3: Proving derivative formulas from first principles. Complex composite functions. Logarithmic differentiation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t5-3">
+      <div class="topic-header" onclick="toggleTopic('t5-3')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Applications of Differentiation</div>
+          <div class="topic-detail">Tangent and normal lines. Curve sketching. Optimization. Related rates. Kinematics.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Tangent line:</strong> Line touching curve at one point, slope = f'(a). Equation: y − f(a) = f'(a)(x − a). Instantaneous rate of change at x = a.</div>
+          <div class="concept-item"><strong>Normal line:</strong> Line perpendicular to tangent. Slope = −1/f'(a) (negative reciprocal of tangent slope). Equation: y − f(a) = [−1/f'(a)](x − a).</div>
+          <div class="concept-item"><strong>Curve sketching:</strong> Identify domain, intercepts, asymptotes. Find f'(x), set = 0 to find critical points. Second derivative f''(x) > 0 (concave up), f''(x) < 0 (concave down). Inflection points where f''(x) = 0 and changes sign.</div>
+          <div class="concept-item"><strong>Optimization (maxima/minima):</strong> Find critical points where f'(x) = 0 or undefined. Use first derivative test (sign change) or second derivative test (f''(a) > 0 minimum, f''(a) < 0 maximum). Global max/min on closed interval at critical points or endpoints.</div>
+          <div class="concept-item"><strong>Related rates:</strong> Two quantities change with time; find relationship between their rates. Differentiate constraint equation with respect to time using chain rule. Example: dV/dt = related to dr/dt for sphere.</div>
+          <div class="concept-item"><strong>Kinematics:</strong> Position s(t), velocity v(t) = ds/dt, acceleration a(t) = dv/dt = d²s/dt². Find when velocity = 0 (turning points), when speed increasing/decreasing.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Critical point:</span> Point where f'(x) = 0 or f' undefined. Candidates for local extrema.</div>
+            <div class="term-item"><span class="term-word">Inflection point:</span> Point where concavity changes. f''(x) = 0 and f'' changes sign.</div>
+            <div class="term-item"><span class="term-word">Optimization:</span> Finding maximum or minimum values of a function.</div>
+            <div class="term-item"><span class="term-word">Velocity:</span> Rate of change of position. Speed is magnitude of velocity.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">Tangent: y − f(a) = f'(a)(x − a)<div class="formula-note">Equation of tangent line at x=a</div></div>
+          <div class="formula-card">Normal: y − f(a) = [−1/f'(a)](x − a)<div class="formula-note">Equation of normal line at x=a</div></div>
+          <div class="formula-card">f' > 0: increasing; f' < 0: decreasing<div class="formula-note">Function behavior from first derivative</div></div>
+          <div class="formula-card">f'' > 0: concave up; f'' < 0: concave down<div class="formula-note">Concavity from second derivative</div></div>
+          <div class="formula-card">v(t) = ds/dt; a(t) = dv/dt<div class="formula-note">Velocity and acceleration</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding equations of tangent/normal lines. Identifying critical points and extrema. Sketching curves.</div>
+          <div class="exam-tip">Paper 2: Optimization problems (max area, min cost, etc.). Related rates problems. Kinematic applications.</div>
+          <div class="exam-tip">Paper 3: Proving optimization conditions. Complex related rates. Proving curve properties using derivatives.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t5-4">
+      <div class="topic-header" onclick="toggleTopic('t5-4')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Integration and Antiderivatives</div>
+          <div class="topic-detail">Indefinite integrals. Antiderivatives. Definite integrals. Fundamental theorem of calculus. Area under curves.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Antiderivative:</strong> Function F(x) where F'(x) = f(x). Indefinite integral: ∫f(x)dx = F(x) + C. Constant C represents family of antiderivatives.</div>
+          <div class="concept-item"><strong>Integration rules:</strong> ∫xⁿdx = x^(n+1)/(n+1) + C (n ≠ −1). ∫eˣdx = eˣ + C. ∫(1/x)dx = ln|x| + C. ∫sinxdx = −cosx + C. ∫cosxdx = sinx + C. Linear: ∫[af(x) + bg(x)]dx = a∫f(x)dx + b∫g(x)dx.</div>
+          <div class="concept-item"><strong>Definite integral:</strong> ∫ᵃᵇf(x)dx represents signed area between curve and x-axis from x=a to x=b. Gives number (not family of functions).</div>
+          <div class="concept-item"><strong>Fundamental theorem of calculus:</strong> ∫ᵃᵇf(x)dx = F(b) − F(a) where F is antiderivative of f. Links differentiation and integration (inverses).</div>
+          <div class="concept-item"><strong>Area under curve:</strong> For f(x) ≥ 0, ∫ᵃᵇf(x)dx = area. For f(x) < 0, integral is negative (below x-axis).</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Antiderivative:</span> Function whose derivative is given function.</div>
+            <div class="term-item"><span class="term-word">Indefinite integral:</span> Family of all antiderivatives of a function.</div>
+            <div class="term-item"><span class="term-word">Definite integral:</span> Numerical value representing area (with sign) under curve.</div>
+            <div class="term-item"><span class="term-word">Integrand:</span> The function being integrated.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">∫xⁿdx = x^(n+1)/(n+1) + C, n ≠ −1<div class="formula-note">Power rule for integration</div></div>
+          <div class="formula-card">∫eˣdx = eˣ + C; ∫aˣdx = aˣ/ln(a) + C<div class="formula-note">Exponential integration</div></div>
+          <div class="formula-card">∫(1/x)dx = ln|x| + C<div class="formula-note">Logarithmic integration</div></div>
+          <div class="formula-card">∫sinxdx = −cosx + C; ∫cosxdx = sinx + C<div class="formula-note">Trigonometric integration</div></div>
+          <div class="formula-card">∫ᵃᵇf(x)dx = F(b) − F(a)<div class="formula-note">Fundamental theorem of calculus</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Finding indefinite integrals using basic rules. Evaluating definite integrals. Finding areas.</div>
+          <div class="exam-tip">Paper 2: Area between curves. Modeling with integration. Applications to kinematics and growth/decay.</div>
+          <div class="exam-tip">Paper 3: Proving integration formulas. Complex area problems. Improper integrals.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t5-5">
+      <div class="topic-header" onclick="toggleTopic('t5-5')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Integration Techniques [HL]</div>
+          <div class="topic-detail">Substitution. Integration by parts. Partial fractions [HL]. Integration by recognition.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Substitution (u-substitution):</strong> Let u = g(x), so du = g'(x)dx. Transform integral: ∫f(g(x))g'(x)dx = ∫f(u)du. Reverse chain rule. Key: choose u so that du appears in integrand.</div>
+          <div class="concept-item"><strong>Integration by parts:</strong> ∫u·dv = uv − ∫v·du. Choose u and dv strategically. LIATE order: Logarithmic, Inverse trig, Algebraic, Trig, Exponential (for choosing u).</div>
+          <div class="concept-item"><strong>Partial fractions [HL]:</strong> Decompose rational function into simpler fractions. Example: (x+5)/(x²−1) = A/(x−1) + B/(x+1). Solve for A, B, then integrate term by term.</div>
+          <div class="concept-item"><strong>Integration by recognition:</strong> Recognize integrand as derivative of known function. Example: ∫eˣsinxdx requires clever manipulation or repeated integration by parts.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Substitution:</span> Change of variable to simplify integral.</div>
+            <div class="term-item"><span class="term-word">Integration by parts:</span> Technique for integrating products. Reverses product rule.</div>
+            <div class="term-item"><span class="term-word">Partial fractions:</span> Decomposing rational function into sum of simpler fractions.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">∫f(g(x))g'(x)dx = ∫f(u)du, u = g(x)<div class="formula-note">Substitution (u-substitution)</div></div>
+          <div class="formula-card">∫u·dv = uv − ∫v·du<div class="formula-note">Integration by parts</div></div>
+          <div class="formula-card">(px+q)/(x²+5x+6) = A/(x+2) + B/(x+3) [HL]<div class="formula-note">Partial fractions (linear factors)</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1 [HL]: Using substitution to evaluate integrals. Recognizing when substitution applies.</div>
+          <div class="exam-tip">Paper 2 [HL]: Integration by parts problems. Partial fractions and subsequent integration. Real-world applications requiring advanced integration.</div>
+          <div class="exam-tip">Paper 3 [HL]: Proving integration techniques. Complex substitutions. Multiple techniques in single problem.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t5-6">
+      <div class="topic-header" onclick="toggleTopic('t5-6')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Applications of Integration</div>
+          <div class="topic-detail">Area between curves. Volumes of revolution [HL]. Kinematics. Growth and decay models.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Area between curves:</strong> If f(x) ≥ g(x) on [a,b], area = ∫ᵃᵇ[f(x) − g(x)]dx. Find intersection points (bounds). If curves cross, split integral at intersections.</div>
+          <div class="concept-item"><strong>HL: Volume of revolution (disk/washer method):</strong> Rotate region about axis (usually x-axis or y-axis). Disk: V = π∫ᵃᵇ[R(x)]²dx. Washer: V = π∫ᵃᵇ{[R(x)]² − [r(x)]²}dx. R = outer radius, r = inner radius.</div>
+          <div class="concept-item"><strong>HL: Volume of revolution (shell method):</strong> V = 2π∫ᵃᵇ(radius)(height)dx. Height is vertical distance of function. Useful when slicing perpendicular to axis of rotation is difficult.</div>
+          <div class="concept-item"><strong>Kinematics via integration:</strong> s(t) = ∫v(t)dt. v(t) = ∫a(t)dt. Distance traveled: ∫|v(t)|dt (account for direction changes).</div>
+          <div class="concept-item"><strong>Growth/decay modeling:</strong> dM/dt = kM leads to M(t) = M₀eᵏᵗ. Integration of rate equations yields population, temperature, radioactive decay models.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Area between curves:</span> Region bounded by two or more curves.</div>
+            <div class="term-item"><span class="term-word">Volume of revolution:</span> 3D solid formed by rotating 2D region about an axis.</div>
+            <div class="term-item"><span class="term-word">Disk method:</span> Computing volume using circular cross-sections perpendicular to axis.</div>
+            <div class="term-item"><span class="term-word">Shell method:</span> Computing volume using cylindrical shells parallel to axis.</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">Area = ∫ᵃᵇ[f(x) − g(x)]dx<div class="formula-note">Area between two curves</div></div>
+          <div class="formula-card">V = π∫ᵃᵇ[R(x)]²dx (disk method, about x-axis)<div class="formula-note">Volume of revolution: disk method</div></div>
+          <div class="formula-card">V = π∫ᵃᵇ{[R(x)]² − [r(x)]²}dx (washer method)<div class="formula-note">Volume with hole (washer method)</div></div>
+          <div class="formula-card">V = 2π∫ᵃᵇ(radius)(height)dx (shell method)<div class="formula-note">Volume of revolution: shell method [HL]</div></div>
+          <div class="formula-card">s(t) = ∫v(t)dt; distance = ∫|v(t)|dt<div class="formula-note">Position and distance from velocity</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Computing area between curves. Simple disk/washer volumes [HL].</div>
+          <div class="exam-tip">Paper 2: Area problems with complex boundaries. Volume of revolution [HL]. Kinematics applications. Growth/decay modeling.</div>
+          <div class="exam-tip">Paper 3 [HL]: Shell method optimization. Proving volume formulas. Complex kinematics. Modeling with differential equations.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="topic-t5-7">
+      <div class="topic-header" onclick="toggleTopic('t5-7')">
+        <div class="topic-dot math"></div>
+        <div class="topic-content">
+          <div class="topic-name">Differential Equations [HL]</div>
+          <div class="topic-detail">Separable ODEs. Homogeneous equations. Slope fields. Euler's method. Modeling with differential equations.</div>
+        </div>
+        <span class="topic-expand-icon">▸</span>
+      </div>
+      <div class="topic-body">
+        <div class="info-block">
+          <div class="info-block-title concepts">Key Concepts</div>
+          <div class="concept-item"><strong>Differential equation:</strong> Equation involving derivatives. ODE (ordinary differential equation) has one independent variable. General solution contains constants. Particular solution satisfies initial condition.</div>
+          <div class="concept-item"><strong>Separable ODEs:</strong> Rewrite as f(y)dy = g(x)dx. Integrate both sides: ∫f(y)dy = ∫g(x)dx + C. Example: dy/dx = y/x separates to (1/y)dy = (1/x)dx.</div>
+          <div class="concept-item"><strong>First-order linear ODEs:</strong> Form dy/dx + P(x)y = Q(x). Solution method: integrating factor μ(x) = e^∫P(x)dx. Multiply both sides by μ(x), integrate.</div>
+          <div class="concept-item"><strong>Homogeneous equations:</strong> Form dy/dx = F(y/x). Substitute v = y/x, so y = vx, dy/dx = v + x(dv/dx). Converts to separable equation in v and x.</div>
+          <div class="concept-item"><strong>Slope fields (direction fields):</strong> Graphical representation of ODE. At each point (x,y), draw small line segment with slope = f(x,y) [from dy/dx = f(x,y)]. Solution curves follow these directions.</div>
+          <div class="concept-item"><strong>Euler's method:</strong> Numerical approximation. Start at (x₀, y₀). Iterate: xₙ₊₁ = xₙ + h, yₙ₊₁ = yₙ + h·f(xₙ, yₙ). Step size h determines accuracy.</div>
+          <div class="concept-item"><strong>Modeling with ODEs:</strong> Write equation describing rate of change. Example: dP/dt = kP − m (logistic with harvesting). Solve to find population behavior.</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title terms">Key Terms & Definitions</div>
+          <div class="term-grid">
+            <div class="term-item"><span class="term-word">Differential equation:</span> Equation with derivatives as unknowns.</div>
+            <div class="term-item"><span class="term-word">ODE (Ordinary differential equation):</span> Single independent variable.</div>
+            <div class="term-item"><span class="term-word">Initial condition:</span> Value y(x₀) = y₀ specifying particular solution.</div>
+            <div class="term-item"><span class="term-word">Separable:</span> Variables can be separated to opposite sides of equation.</div>
+            <div class="term-item"><span class="term-word">Slope field:</span> Graphical display of directions at each point (x,y).</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title formulas">Key Formulas</div>
+          <div class="formula-card">dy/dx = f(x,y) (general first-order ODE)<div class="formula-note">First-order differential equation</div></div>
+          <div class="formula-card">∫f(y)dy = ∫g(x)dx (separable form)<div class="formula-note">Separable ODE solution method</div></div>
+          <div class="formula-card">dy/dx + P(x)y = Q(x) (linear form)<div class="formula-note">First-order linear ODE</div></div>
+          <div class="formula-card">μ(x) = e^∫P(x)dx (integrating factor)<div class="formula-note">Integrating factor for linear ODE</div></div>
+          <div class="formula-card">yₙ₊₁ = yₙ + h·f(xₙ, yₙ) (Euler's method)<div class="formula-note">Euler's method iteration</div></div>
+          <div class="formula-card">dP/dt = kP → P(t) = P₀eᵏᵗ (exponential model)<div class="formula-note">Exponential growth/decay ODE solution</div></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title exam">Exam Focus</div>
+          <div class="exam-tip">Paper 1: Solving separable ODEs. Finding particular solutions with initial conditions. Interpreting slope fields.</div>
+          <div class="exam-tip">Paper 2: Modeling real situations with differential equations. Linear ODEs. Applying Euler's method.</div>
+          <div class="exam-tip">Paper 3: Proving solution techniques. Complex ODEs. Analyzing long-term behavior. Proving uniqueness of solutions.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<div class="footer-note">
+  IB Diploma Programme — Mathematics: Analysis and Approaches HL<br>
+  Sources: IBO Mathematics: Analysis and Approaches Guide (First Assessment 2021, ongoing)
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
