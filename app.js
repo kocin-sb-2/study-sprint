@@ -705,9 +705,10 @@ function initMindMap() {
   }
 
   function renderMap() {
-    /* Load Mermaid on first use, then render */
+    /* Show spinner, hide stale diagram */
     loadingDiv.style.display = 'flex';
-    mermaidDiv.style.display = 'none';
+    mermaidDiv.style.display  = 'none';
+    mermaidDiv.innerHTML      = '';
 
     loadMermaid(function (err) {
       if (err || !window.mermaid) {
@@ -719,47 +720,33 @@ function initMindMap() {
   }
 
   function _doRender() {
-
-    /* Apply theme-aware config */
+    /* WHY mermaid.render() instead of mermaid.run():
+       mermaid.run() tries to measure the target element to calculate
+       the SVG viewBox. If that element is display:none (as it must be
+       while the spinner is shown) it gets zero dimensions and produces
+       empty output. mermaid.render() works off the diagram text alone
+       and returns the SVG string — we inject it ourselves, so the
+       visibility state of the container is irrelevant. */
     var config = getMermaidTheme();
-    config.startOnLoad = false;
+    config.startOnLoad  = false;
     config.securityLevel = 'loose';
     window.mermaid.initialize(config);
 
-    /* Give it a unique id (Mermaid v10 requires it) and the .mermaid class */
-    var uid = 'ss-mermaid-' + Date.now();
-    mermaidDiv.id = uid;
-    mermaidDiv.className = 'mermaid';
-    mermaidDiv.removeAttribute('data-processed');
-    mermaidDiv.innerHTML = '';
-    mermaidDiv.textContent = mapData.diagram;
+    var uid = 'ss-map-' + Date.now();
 
-    try {
-      var result = window.mermaid.run({ nodes: [mermaidDiv] });
-
-      /* mermaid.run() may or may not return a Promise depending on version */
-      if (result && typeof result.then === 'function') {
-        result.then(function() {
-          loadingDiv.style.display = 'none';
-          mermaidDiv.style.display = 'flex';
-          mapRendered = true;
-        }).catch(function(err) {
-          console.error('Mermaid render error:', err);
-          loadingDiv.innerHTML = '<span style="color:#ef5350">Mind map failed to render. Try refreshing.</span>';
-        });
-      } else {
-        /* Sync path — give Mermaid a moment to inject SVG */
-        setTimeout(function() {
-          loadingDiv.style.display = 'none';
-          mermaidDiv.style.display = 'flex';
-          mapRendered = true;
-        }, 600);
-      }
-    } catch (e) {
-      console.error('Mermaid sync error:', e);
-      loadingDiv.innerHTML = '<span style="color:#ef5350">Mind map failed to render. Try refreshing.</span>';
-    }
-  } /* end _doRender */
+    window.mermaid.render(uid, mapData.diagram).then(function (result) {
+      mermaidDiv.innerHTML = result.svg;
+      if (result.bindFunctions) result.bindFunctions(mermaidDiv);
+      loadingDiv.style.display = 'none';
+      mermaidDiv.style.display = 'flex';
+      mapRendered = true;
+    }).catch(function (err) {
+      console.error('[StudySprint] Mermaid render error:', err);
+      loadingDiv.innerHTML =
+        '<span style="color:#ef5350">Mind map failed to render — ' +
+        'open browser console for details.</span>';
+    });
+  }
 
   function showMap() {
     container.style.display = 'block';
