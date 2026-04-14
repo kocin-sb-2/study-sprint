@@ -37,20 +37,32 @@ function toggleTopic(id) {
 }
 
 /* ----------------------------------------------------------
-   2. BOOT
+   2. BOOT — single unified DOMContentLoaded listener.
+   WHY ONE LISTENER: Having two DOMContentLoaded handlers is
+   legal but fragile — execution order between them is
+   undefined and it makes reading the init sequence harder.
+   One consolidated boot block makes it explicit and safe.
 ---------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function () {
   var hasTopics  = !!document.querySelector('.topic-list');
   var isHomepage = !!document.querySelector('.systems');
 
+  /* Every page gets dark mode */
+  initDarkModeToggle();
+
+  /* Subject pages */
   if (hasTopics && !isHomepage) {
-    initProgress();
-    initSubjectSearch();
-    initPrintButton();
+    initProgress();          /* progress bar + done buttons  */
+    initSubjectSearch();     /* in-page topic search         */
+    initPrintButton();       /* floating print/PDF button    */
+    initMindMap();           /* concept map (lazy Mermaid)   */
   }
+
+  /* Homepage */
   if (isHomepage) {
-    initHomeSearch();
-    injectSyllabusLink();
+    initHomeSearch();        /* subject filter input         */
+    injectSyllabusLink();    /* link to syllabus guide       */
+    initMasteryDashboard();  /* cross-subject progress panel */
   }
 });
 
@@ -75,6 +87,12 @@ function initProgress() {
 
   var pageKey = location.pathname;
   var total   = topics.length;
+
+  /* Store total so the homepage dashboard can read it without loading this page.
+     WHY: localStorage only contains done topics (keys are removed when undone),
+     so the dashboard cannot infer the total from localStorage alone. Saving it
+     here gives the dashboard a stable denominator. */
+  localStorage.setItem(pageKey + ':__total__', total);
 
   /* Inject progress bar between .hero and .content */
   var hero = document.querySelector('.hero');
@@ -313,3 +331,542 @@ function initPrintButton() {
 
   document.body.appendChild(btn);
 }
+
+/* ----------------------------------------------------------
+   8. DARK MODE TOGGLE
+   WHY: Students study at all hours. A dark/light toggle
+   respects circadian preferences and reduces eye strain
+   during night sessions. Persisted in localStorage.
+---------------------------------------------------------- */
+function initDarkModeToggle() {
+  var btn = document.createElement('button');
+  btn.className = 'ss-darkmode-btn';
+  btn.title     = 'Toggle light/dark mode';
+
+  var isDark = localStorage.getItem('ss-theme') !== 'light';
+  applyTheme(isDark);
+  btn.textContent = isDark ? '☀️' : '🌙';
+
+  btn.addEventListener('click', function () {
+    isDark = !isDark;
+    applyTheme(isDark);
+    btn.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('ss-theme', isDark ? 'dark' : 'light');
+  });
+
+  document.body.appendChild(btn);
+}
+
+function applyTheme(isDark) {
+  if (isDark) {
+    document.documentElement.classList.remove('ss-light');
+  } else {
+    document.documentElement.classList.add('ss-light');
+  }
+}
+
+/* ----------------------------------------------------------
+   9. INTERACTIVE MIND MAPS (Mermaid.js)
+   WHY: Experts see connections between concepts; novices
+   see isolated facts. Mind maps activate spatial memory
+   and reduce cognitive load (dual-coding theory, Paivio 1986).
+
+   FIX NOTES (v2):
+   - Mermaid auto-renders on load if it finds .mermaid elements.
+     We now use a placeholder class and only add .mermaid when
+     the user clicks, AFTER calling initialize({ startOnLoad:false }).
+   - Removed special unicode chars from edge labels that broke
+     Mermaid's parser (ω, ², θ, Σ etc.).
+   - Added error handling + loading state.
+   - Theme adapts to dark/light mode.
+   - Fullscreen toggle + zoom/pan via CSS transform.
+---------------------------------------------------------- */
+var MIND_MAPS = {
+  'fysik2.html': {
+    title: 'Fysik 2 — Concept Map',
+    diagram: 'flowchart TD\n' +
+      '  F2["Fysik 2"] --> S01["Rorelse och Krafter"]\n' +
+      '  F2 --> S02["Oscillationer och Vagor"]\n' +
+      '  F2 --> S03["Elektricitet och Magnetism"]\n' +
+      '  F2 --> S04["Atomfysik"]\n' +
+      '  F2 --> S05["Karnfysik"]\n' +
+      '  F2 --> S06["Astrofysik"]\n' +
+      '  S01 --> S01a["Cirkular rorelse"]\n' +
+      '  S01 --> S01b["Gravitation"]\n' +
+      '  S01 --> S01c["Rorelsemangd"]\n' +
+      '  S02 --> S02a["SHM"]\n' +
+      '  S02 --> S02b["Vagor"]\n' +
+      '  S02 --> S02c["Ljud och Ljus"]\n' +
+      '  S03 --> S03a["E-falt"]\n' +
+      '  S03 --> S03b["B-falt"]\n' +
+      '  S03 --> S03c["Induktion"]\n' +
+      '  S03 --> S03d["Vaxelstrom"]\n' +
+      '  S04 --> S04a["Energinivaer"]\n' +
+      '  S04 --> S04b["Fotoelektriska"]\n' +
+      '  S05 --> S05a["Bindningsenergi"]\n' +
+      '  S05 --> S05b["Sonderfall"]\n' +
+      '  S05 --> S05c["Karnreaktioner"]\n' +
+      '  S06 --> S06a["Stjarnor och HR"]\n' +
+      '  S06 --> S06b["Kosmologi"]\n' +
+      '  S01a -.-> S01b\n' +
+      '  S02a -.-> S01a\n' +
+      '  S03c -.-> S03b\n' +
+      '  S04a -.-> S04b\n' +
+      '  S05a -.-> S05c'
+  },
+  'kemi2.html': {
+    title: 'Kemi 2 — Concept Map',
+    diagram: 'flowchart TD\n' +
+      '  K2["Kemi 2"] --> S01["Organisk Kemi"]\n' +
+      '  K2 --> S02["Biokemi"]\n' +
+      '  K2 --> S03["Jamvikt och Kinetik"]\n' +
+      '  K2 --> S04["Analytisk Kemi"]\n' +
+      '  K2 --> S05["Laborationer"]\n' +
+      '  S01 --> S01a["Kolkemi"]\n' +
+      '  S01 --> S01b["IUPAC-nomenklatur"]\n' +
+      '  S01 --> S01c["Reaktionstyper"]\n' +
+      '  S01 --> S01d["Funktionella grupper"]\n' +
+      '  S01 --> S01e["Isomeri"]\n' +
+      '  S02 --> S02a["Proteiner"]\n' +
+      '  S02 --> S02b["Kolhydrater"]\n' +
+      '  S02 --> S02c["Lipider"]\n' +
+      '  S02 --> S02d["Enzymer"]\n' +
+      '  S03 --> S03a["Kemisk jamvikt"]\n' +
+      '  S03 --> S03b["Reaktionshastighet"]\n' +
+      '  S03 --> S03c["Syra-bas"]\n' +
+      '  S03 --> S03d["Redox"]\n' +
+      '  S04 --> S04a["Spektroskopi"]\n' +
+      '  S04 --> S04b["Kromatografi"]\n' +
+      '  S04 --> S04c["Titrering"]\n' +
+      '  S01c -.-> S03b\n' +
+      '  S03a -.-> S03c\n' +
+      '  S03d -.-> S04c\n' +
+      '  S01a -.-> S01e'
+  },
+  'matematik5.html': {
+    title: 'Matematik 5 — Concept Map',
+    diagram: 'flowchart TD\n' +
+      '  M5["Matematik 5"] --> S01["Differentialekvationer"]\n' +
+      '  M5 --> S02["Komplexa Tal"]\n' +
+      '  M5 --> S03["Diskret Matematik"]\n' +
+      '  M5 --> S04["Bevisforing"]\n' +
+      '  S01 --> S01a["1a ordningen ODE"]\n' +
+      '  S01 --> S01b["Linjara ODE"]\n' +
+      '  S01 --> S01c["2a ordningen ODE"]\n' +
+      '  S01 --> S01d["Tillampningar"]\n' +
+      '  S02 --> S02a["a + bi"]\n' +
+      '  S02 --> S02b["Operationer"]\n' +
+      '  S02 --> S02c["Polar form"]\n' +
+      '  S02 --> S02d["Komplexa rotter"]\n' +
+      '  S03 --> S03a["Kombinatorik"]\n' +
+      '  S03 --> S03b["Talteori"]\n' +
+      '  S03 --> S03c["Grafteori"]\n' +
+      '  S03 --> S03d["Induktion"]\n' +
+      '  S04 --> S04a["Bevismetoder"]\n' +
+      '  S04 --> S04b["Logik"]\n' +
+      '  S04 --> S04c["Strategier"]\n' +
+      '  S01c -.-> S02d\n' +
+      '  S02c -.-> S02d\n' +
+      '  S03d -.-> S04a'
+  },
+  'ib-physics-hl.html': {
+    title: 'IB Physics HL — Concept Map',
+    diagram: 'flowchart TD\n' +
+      '  PH["IB Physics HL"] --> A["A: Space Time Motion"]\n' +
+      '  PH --> B["B: Particulate Matter"]\n' +
+      '  PH --> C["C: Wave Behaviour"]\n' +
+      '  PH --> D["D: Fields"]\n' +
+      '  PH --> E["E: Nuclear and Quantum"]\n' +
+      '  A --> A1["Kinematics"]\n' +
+      '  A --> A2["Forces and Momentum"]\n' +
+      '  A --> A3["Energy and Power"]\n' +
+      '  A --> A4["HL: Rigid Body"]\n' +
+      '  A --> A5["HL: Relativity"]\n' +
+      '  B --> B1["Thermal Energy"]\n' +
+      '  B --> B2["Greenhouse"]\n' +
+      '  B --> B3["Gas Laws"]\n' +
+      '  B --> B4["HL: Thermodynamics"]\n' +
+      '  B --> B5["Circuits"]\n' +
+      '  C --> C1["SHM"]\n' +
+      '  C --> C2["Wave Model"]\n' +
+      '  C --> C3["Wave Phenomena"]\n' +
+      '  C --> C4["Standing Waves"]\n' +
+      '  C --> C5["HL: Doppler"]\n' +
+      '  D --> D1["Gravitational"]\n' +
+      '  D --> D2["Electric and Magnetic"]\n' +
+      '  D --> D3["Motion in Fields"]\n' +
+      '  D --> D4["HL: Induction"]\n' +
+      '  E --> E1["Atomic Structure"]\n' +
+      '  E --> E2["HL: Quantum"]\n' +
+      '  E --> E3["Radioactivity"]\n' +
+      '  E --> E4["Fission and Fusion"]\n' +
+      '  E --> E5["Particle Physics"]\n' +
+      '  A1 -.-> A2\n' +
+      '  A2 -.-> A3\n' +
+      '  B3 -.-> B1\n' +
+      '  D1 -.-> D2\n' +
+      '  E1 -.-> E2\n' +
+      '  D4 -.-> B5'
+  },
+  'ib-chemistry-hl.html': {
+    title: 'IB Chemistry HL — Concept Map',
+    diagram: 'flowchart TD\n' +
+      '  CH["IB Chemistry HL"] --> S1["S1: Particulate Matter"]\n' +
+      '  CH --> S2["S2: Bonding"]\n' +
+      '  CH --> S3["S3: Classification"]\n' +
+      '  CH --> R1["R1: Energy"]\n' +
+      '  CH --> R2["R2: Rates and Equilibrium"]\n' +
+      '  CH --> R3["R3: Mechanisms"]\n' +
+      '  S1 --> S1a["Atoms and Isotopes"]\n' +
+      '  S1 --> S1b["Electron Config"]\n' +
+      '  S1 --> S1c["The Mole"]\n' +
+      '  S1 --> S1d["Ideal Gases"]\n' +
+      '  S2 --> S2a["Ionic Model"]\n' +
+      '  S2 --> S2b["Covalent and VSEPR"]\n' +
+      '  S2 --> S2c["Metallic"]\n' +
+      '  S2 --> S2d["Intermolecular Forces"]\n' +
+      '  S3 --> S3a["Periodic Table"]\n' +
+      '  S3 --> S3b["Organic Nomenclature"]\n' +
+      '  R1 --> R1a["Enthalpy and Hess"]\n' +
+      '  R1 --> R1b["HL: Gibbs Free Energy"]\n' +
+      '  R2 --> R2a["Stoichiometry"]\n' +
+      '  R2 --> R2b["HL: Rate Laws"]\n' +
+      '  R2 --> R2c["Kc Kp Le Chatelier"]\n' +
+      '  R3 --> R3a["Acids Bases and pH"]\n' +
+      '  R3 --> R3b["Redox and Electrochem"]\n' +
+      '  R3 --> R3c["HL: SN1 vs SN2"]\n' +
+      '  R3 --> R3d["Polymerization"]\n' +
+      '  S1b -.-> S2b\n' +
+      '  S2a -.-> R1a\n' +
+      '  R1a -.-> R1b\n' +
+      '  R2b -.-> R2c\n' +
+      '  R3a -.-> R3b'
+  },
+  'ib-math-aa-hl.html': {
+    title: 'IB Math AA HL — Concept Map',
+    diagram: 'flowchart TD\n' +
+      '  MA["IB Math AA HL"] --> T1["1: Number and Algebra"]\n' +
+      '  MA --> T2["2: Functions"]\n' +
+      '  MA --> T3["3: Geometry and Trig"]\n' +
+      '  MA --> T4["4: Stats and Probability"]\n' +
+      '  MA --> T5["5: Calculus"]\n' +
+      '  T1 --> T1a["Sequences and Series"]\n' +
+      '  T1 --> T1b["Logs and Exponents"]\n' +
+      '  T1 --> T1c["Binomial Theorem"]\n' +
+      '  T1 --> T1d["HL: Proof and Induction"]\n' +
+      '  T1 --> T1e["HL: Complex Numbers"]\n' +
+      '  T2 --> T2a["Domain Range Inverse"]\n' +
+      '  T2 --> T2b["Polynomials"]\n' +
+      '  T2 --> T2c["Exp and Log Functions"]\n' +
+      '  T2 --> T2d["HL: Partial Fractions"]\n' +
+      '  T2 --> T2e["Transformations"]\n' +
+      '  T3 --> T3a["Trig Identities"]\n' +
+      '  T3 --> T3b["Trig Functions"]\n' +
+      '  T3 --> T3c["Vectors and Dot Product"]\n' +
+      '  T3 --> T3d["HL: 3D Lines and Planes"]\n' +
+      '  T4 --> T4a["Descriptive Stats"]\n' +
+      '  T4 --> T4b["Probability and Bayes"]\n' +
+      '  T4 --> T4c["Distributions"]\n' +
+      '  T4 --> T4d["HL: Hypothesis Testing"]\n' +
+      '  T5 --> T5a["Differentiation"]\n' +
+      '  T5 --> T5b["Optimization"]\n' +
+      '  T5 --> T5c["Integration"]\n' +
+      '  T5 --> T5d["HL: Integration Tech"]\n' +
+      '  T5 --> T5e["Applications"]\n' +
+      '  T5 --> T5f["HL: Diff Equations"]\n' +
+      '  T1a -.-> T5c\n' +
+      '  T1e -.-> T3a\n' +
+      '  T5a -.-> T5c\n' +
+      '  T2c -.-> T5a\n' +
+      '  T1d -.-> T4d'
+  }
+};
+
+/* Prevent Mermaid from auto-rendering on page load */
+/* Dynamically load Mermaid from CDN the first time it is needed.
+   WHY DYNAMIC: Adding a <script> tag to every HTML page would
+   require 6 edits and break every time Cowork regenerates a file.
+   Injecting it on demand means zero HTML changes and Mermaid is
+   only fetched when the user actually opens a mind map. */
+function loadMermaid(callback) {
+  if (window.mermaid) { callback(); return; }
+
+  var script    = document.createElement('script');
+  script.src    = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+  script.onload = function () {
+    window.mermaid.initialize({ startOnLoad: false });
+    callback();
+  };
+  script.onerror = function () {
+    callback(new Error('load-failed'));
+  };
+  document.head.appendChild(script);
+}
+
+function initMindMap() {
+  var hero = document.querySelector('.hero');
+  if (!hero || !document.querySelector('.topic-list')) return;
+
+  /* Find map for current page — match by filename, not full path */
+  var path = location.pathname;
+  var mapData = null;
+  Object.keys(MIND_MAPS).forEach(function (key) {
+    if (path.indexOf(key) !== -1) mapData = MIND_MAPS[key];
+  });
+  if (!mapData) return;
+
+  /* Create toggle button */
+  var btn = document.createElement('button');
+  btn.className = 'ss-mindmap-btn';
+  btn.innerHTML = '🧠 Mind Map';
+  btn.title     = 'View concept connections for this subject';
+
+  /* Create map container (NOT rendered yet — no .mermaid class) */
+  var container = document.createElement('div');
+  container.className = 'ss-mindmap-container';
+  container.id = 'ss-mindmap';
+  container.style.display = 'none';
+
+  var inner = document.createElement('div');
+  inner.className = 'ss-mindmap-inner';
+
+  var toolbar = document.createElement('div');
+  toolbar.className = 'ss-mindmap-toolbar';
+
+  var titleSpan = document.createElement('span');
+  titleSpan.className = 'ss-mindmap-title';
+  titleSpan.textContent = mapData.title;
+
+  var fullscreenBtn = document.createElement('button');
+  fullscreenBtn.className = 'ss-mindmap-fullscreen';
+  fullscreenBtn.innerHTML = '⛶ Expand';
+  fullscreenBtn.title = 'Toggle fullscreen';
+
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'ss-mindmap-close';
+  closeBtn.innerHTML = '✕ Close';
+
+  toolbar.appendChild(titleSpan);
+  toolbar.appendChild(fullscreenBtn);
+  toolbar.appendChild(closeBtn);
+
+  /* Diagram placeholder — class is 'ss-mermaid-pending', NOT 'mermaid' */
+  var mermaidDiv = document.createElement('div');
+  mermaidDiv.className = 'ss-mermaid-pending';
+  mermaidDiv.textContent = mapData.diagram;
+
+  var loadingDiv = document.createElement('div');
+  loadingDiv.className = 'ss-mindmap-loading';
+  loadingDiv.innerHTML = '<div class="ss-mindmap-spinner"></div><span>Generating mind map…</span>';
+
+  inner.appendChild(toolbar);
+  inner.appendChild(loadingDiv);
+  inner.appendChild(mermaidDiv);
+  container.appendChild(inner);
+
+  /* Insert after progress bar or hero */
+  var progressWrap = document.getElementById('ss-progress-wrap');
+  var insertAfter  = progressWrap || hero;
+  insertAfter.insertAdjacentElement('afterend', container);
+
+  /* Button in hero */
+  var badgeRow = hero.querySelector('.badge-row');
+  if (badgeRow) {
+    badgeRow.appendChild(btn);
+  } else {
+    hero.appendChild(btn);
+  }
+
+  var mapRendered = false;
+
+  function getMermaidTheme() {
+    var isLight = document.documentElement.classList.contains('ss-light');
+    return {
+      theme: isLight ? 'default' : 'dark',
+      themeVariables: isLight ? {
+        primaryColor: '#e3f2fd',
+        primaryTextColor: '#1a1a2e',
+        primaryBorderColor: '#0288d1',
+        lineColor: '#90a4ae',
+        secondaryColor: '#fff3e0',
+        tertiaryColor: '#f3e5f5',
+        fontSize: '14px'
+      } : {
+        primaryColor: '#1e2a42',
+        primaryTextColor: '#e8ecf4',
+        primaryBorderColor: '#4fc3f7',
+        lineColor: '#3a4f6f',
+        secondaryColor: '#2a1f1f',
+        tertiaryColor: '#1a1230',
+        fontSize: '14px'
+      },
+      flowchart: { curve: 'basis', padding: 20, htmlLabels: true }
+    };
+  }
+
+  function renderMap() {
+    /* Load Mermaid on first use, then render */
+    loadingDiv.style.display = 'flex';
+    mermaidDiv.style.display = 'none';
+
+    loadMermaid(function (err) {
+      if (err || !window.mermaid) {
+        loadingDiv.innerHTML = '<span style="color:#ef5350">Mind map unavailable — check internet connection and refresh.</span>';
+        return;
+      }
+      _doRender();
+    });
+  }
+
+  function _doRender() {
+
+    /* Apply theme-aware config */
+    var config = getMermaidTheme();
+    config.startOnLoad = false;
+    config.securityLevel = 'loose';
+    window.mermaid.initialize(config);
+
+    /* Give it a unique id (Mermaid v10 requires it) and the .mermaid class */
+    var uid = 'ss-mermaid-' + Date.now();
+    mermaidDiv.id = uid;
+    mermaidDiv.className = 'mermaid';
+    mermaidDiv.removeAttribute('data-processed');
+    mermaidDiv.innerHTML = '';
+    mermaidDiv.textContent = mapData.diagram;
+
+    try {
+      var result = window.mermaid.run({ nodes: [mermaidDiv] });
+
+      /* mermaid.run() may or may not return a Promise depending on version */
+      if (result && typeof result.then === 'function') {
+        result.then(function() {
+          loadingDiv.style.display = 'none';
+          mermaidDiv.style.display = 'flex';
+          mapRendered = true;
+        }).catch(function(err) {
+          console.error('Mermaid render error:', err);
+          loadingDiv.innerHTML = '<span style="color:#ef5350">Mind map failed to render. Try refreshing.</span>';
+        });
+      } else {
+        /* Sync path — give Mermaid a moment to inject SVG */
+        setTimeout(function() {
+          loadingDiv.style.display = 'none';
+          mermaidDiv.style.display = 'flex';
+          mapRendered = true;
+        }, 600);
+      }
+    } catch (e) {
+      console.error('Mermaid sync error:', e);
+      loadingDiv.innerHTML = '<span style="color:#ef5350">Mind map failed to render. Try refreshing.</span>';
+    }
+  } /* end _doRender */
+
+  function showMap() {
+    container.style.display = 'block';
+    if (!mapRendered) {
+      renderMap();
+    }
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideMap() {
+    container.style.display = 'none';
+    inner.classList.remove('ss-mindmap-fullscreen-active');
+    fullscreenBtn.innerHTML = '⛶ Expand';
+  }
+
+  btn.addEventListener('click', function () {
+    if (container.style.display === 'none') {
+      showMap();
+    } else {
+      hideMap();
+    }
+  });
+
+  closeBtn.addEventListener('click', hideMap);
+
+  fullscreenBtn.addEventListener('click', function () {
+    inner.classList.toggle('ss-mindmap-fullscreen-active');
+    if (inner.classList.contains('ss-mindmap-fullscreen-active')) {
+      fullscreenBtn.innerHTML = '⛶ Shrink';
+    } else {
+      fullscreenBtn.innerHTML = '⛶ Expand';
+    }
+  });
+
+  /* Close fullscreen on Escape */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && inner.classList.contains('ss-mindmap-fullscreen-active')) {
+      inner.classList.remove('ss-mindmap-fullscreen-active');
+      fullscreenBtn.innerHTML = '⛶ Expand';
+    }
+  });
+}
+
+/* ----------------------------------------------------------
+   10. CROSS-SUBJECT MASTERY DASHBOARD (homepage)
+   WHY: Self-Determination Theory says autonomy + competence
+   = intrinsic motivation. Showing mastery across all subjects
+   gives students a powerful sense of overall progress and
+   control over their learning journey.
+---------------------------------------------------------- */
+function initMasteryDashboard() {
+  if (!document.querySelector('.systems')) return;
+
+  var subjects = [
+    { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7' },
+    { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65' },
+    { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff' },
+    { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7' },
+    { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65' },
+    { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff' }
+  ];
+
+  var totalDone  = 0;
+  var totalCount = 0;
+
+  /* Count progress from localStorage for each subject.
+     WHY TWO SEPARATE PASSES:
+     initProgress() removes the localStorage key when a topic is undone,
+     so the only keys present are DONE topics. That means counting keys
+     gives count === done always → always 100%. The fix: initProgress()
+     also stores the total as pageKey+':__total__'. We read that here for
+     the denominator, and count only '1'-valued topic keys for the numerator. */
+  var bars = subjects.map(function (s) {
+    var total = parseInt(localStorage.getItem(s.path + ':__total__') || '0', 10);
+    var done  = 0;
+    Object.keys(localStorage).forEach(function (key) {
+      if (key.indexOf(s.path + ':topic-') !== -1 && localStorage.getItem(key) === '1') {
+        done++;
+      }
+    });
+    totalDone  += done;
+    totalCount += total;
+    var pct = total ? Math.round((done / total) * 100) : 0;
+    return '<div class="ss-dash-row">' +
+      '<span class="ss-dash-label">' + s.label + '</span>' +
+      '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
+      '<span class="ss-dash-pct">' + (total ? pct + '%' : '—') + '</span>' +
+    '</div>';
+  });
+
+  if (totalCount === 0) return; /* User hasn't visited any subject page yet */
+
+  var overallPct = Math.round((totalDone / totalCount) * 100);
+  var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
+
+  var dash = document.createElement('div');
+  dash.className = 'ss-dashboard';
+  dash.innerHTML =
+    '<div class="ss-dash-header">' +
+      '<span class="ss-dash-title">📊 Your Study Progress</span>' +
+      '<span class="ss-dash-level">' + level + ' — ' + overallPct + '% overall</span>' +
+    '</div>' +
+    '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
+    bars.join('');
+
+  var systems = document.querySelector('.systems');
+  systems.insertBefore(dash, systems.firstChild);
+}
+
+/* (boot sequence consolidated in section 2 above) */
