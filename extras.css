@@ -383,7 +383,10 @@ html.ss-light .footer-note {
 }
 
 /* ----------------------------------------------------------
-   10. MIND MAP — Button, Container, Toolbar, Loading, Fullscreen
+   10. MIND MAP — vis.js Network
+   Button, Container, Toolbar, Canvas, Legend, Fullscreen.
+   vis.js injects its own canvas into .ss-mindmap-canvas;
+   we only control the wrapper and chrome around it.
 ---------------------------------------------------------- */
 .ss-mindmap-btn {
   background: rgba(79, 195, 247, 0.1);
@@ -462,20 +465,26 @@ html.ss-light .footer-note {
   background: rgba(79, 195, 247, 0.08);
 }
 
-/* Mermaid diagram area */
-.ss-mindmap-inner .mermaid,
-.ss-mindmap-inner .ss-mermaid-pending {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  padding: 24px;
-  overflow-x: auto;
+/* vis.js canvas wrapper — vis injects a <canvas> here */
+.ss-mindmap-canvas {
+  width: 100%;
+  height: 520px;
+  background: var(--ss-bg);
+  border-radius: 0 0 0 0; /* inner handles rounding */
+  overflow: hidden;
+  outline: none;
+  cursor: default;
 }
 
-.ss-mindmap-inner .mermaid svg {
-  max-width: 100%;
-  height: auto;
+/* vis.js tooltip overrides — match site theme */
+.vis-tooltip {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+  border-radius: 8px !important;
+  font-family: 'Source Sans 3', sans-serif !important;
+  max-width: 260px !important;
 }
 
 /* Loading spinner */
@@ -503,6 +512,48 @@ html.ss-light .footer-note {
   to { transform: rotate(360deg); }
 }
 
+/* Legend bar */
+.ss-mindmap-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--ss-border);
+  font-size: 0.75rem;
+  color: var(--ss-muted);
+  background: rgba(0,0,0,0.12);
+}
+
+.ss-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ss-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ss-legend-diamond {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #b388ff;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.ss-legend-hint {
+  margin-left: auto;
+  opacity: 0.65;
+  font-size: 0.72rem;
+}
+
 /* Fullscreen mode */
 .ss-mindmap-fullscreen-active {
   position: fixed;
@@ -517,10 +568,9 @@ html.ss-light .footer-note {
   flex-direction: column;
 }
 
-.ss-mindmap-fullscreen-active .mermaid {
+.ss-mindmap-fullscreen-active .ss-mindmap-canvas {
   flex: 1;
-  min-height: unset;
-  overflow: auto;
+  height: auto !important;
 }
 
 .ss-mindmap-fullscreen-active .ss-mindmap-toolbar {
@@ -529,6 +579,14 @@ html.ss-light .footer-note {
 
 /* Light mode adaptations */
 html.ss-light .ss-mindmap-toolbar {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+html.ss-light .ss-mindmap-canvas {
+  background: #f5f7fa;
+}
+
+html.ss-light .ss-mindmap-legend {
   background: rgba(0, 0, 0, 0.03);
 }
 

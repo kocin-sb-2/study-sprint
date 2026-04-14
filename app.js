@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initProgress();          /* progress bar + done buttons  */
     initSubjectSearch();     /* in-page topic search         */
     initPrintButton();       /* floating print/PDF button    */
-    initMindMap();           /* concept map (lazy Mermaid)   */
+    initMindMap();           /* interactive vis.js concept map */
   }
 
   /* Homepage */
@@ -85,7 +85,10 @@ function initProgress() {
   );
   if (!topics.length) return;
 
-  var pageKey = location.pathname;
+  /* Normalise to just /filename.html so the key is identical whether
+     the site is served from the root, a sub-folder (GitHub Pages adds
+     a repo-name prefix like /study-sprint/fysik2.html), or file://. */
+  var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
   var total   = topics.length;
 
   /* Store total so the homepage dashboard can read it without loading this page.
@@ -363,396 +366,327 @@ function applyTheme(isDark) {
   } else {
     document.documentElement.classList.add('ss-light');
   }
+  /* Notify mind map so it can re-render with correct colours */
+  window.dispatchEvent(new CustomEvent('ss-theme-change'));
 }
 
 /* ----------------------------------------------------------
-   9. INTERACTIVE MIND MAPS (Mermaid.js)
-   WHY: Experts see connections between concepts; novices
-   see isolated facts. Mind maps activate spatial memory
-   and reduce cognitive load (dual-coding theory, Paivio 1986).
+   9. INTERACTIVE MIND MAPS (vis.js Network)
+   WHY: Experts see connections between concepts; novices see
+   isolated facts. Interactive graphs activate spatial memory
+   and support dual-coding (Paivio 1986). Unlike static diagrams,
+   a live-rendered graph reads directly from the page DOM — so it
+   always reflects Cowork's latest content with zero maintenance.
+   vis.js Network adds physics, zoom/pan, hover tooltips, and
+   click-to-jump — things a hand-drawn diagram can never do.
 
-   FIX NOTES (v2):
-   - Mermaid auto-renders on load if it finds .mermaid elements.
-     We now use a placeholder class and only add .mermaid when
-     the user clicks, AFTER calling initialize({ startOnLoad:false }).
-   - Removed special unicode chars from edge labels that broke
-     Mermaid's parser (ω, ², θ, Σ etc.).
-   - Added error handling + loading state.
-   - Theme adapts to dark/light mode.
-   - Fullscreen toggle + zoom/pan via CSS transform.
+   The graph is built by reading .section / .topic elements
+   directly from the DOM, so it never needs manual updates.
+   Clicking a topic node scrolls to and expands that topic.
 ---------------------------------------------------------- */
-var MIND_MAPS = {
-  'fysik2.html': {
-    title: 'Fysik 2 — Concept Map',
-    diagram: 'flowchart TD\n' +
-      '  F2["Fysik 2"] --> S01["Rorelse och Krafter"]\n' +
-      '  F2 --> S02["Oscillationer och Vagor"]\n' +
-      '  F2 --> S03["Elektricitet och Magnetism"]\n' +
-      '  F2 --> S04["Atomfysik"]\n' +
-      '  F2 --> S05["Karnfysik"]\n' +
-      '  F2 --> S06["Astrofysik"]\n' +
-      '  S01 --> S01a["Cirkular rorelse"]\n' +
-      '  S01 --> S01b["Gravitation"]\n' +
-      '  S01 --> S01c["Rorelsemangd"]\n' +
-      '  S02 --> S02a["SHM"]\n' +
-      '  S02 --> S02b["Vagor"]\n' +
-      '  S02 --> S02c["Ljud och Ljus"]\n' +
-      '  S03 --> S03a["E-falt"]\n' +
-      '  S03 --> S03b["B-falt"]\n' +
-      '  S03 --> S03c["Induktion"]\n' +
-      '  S03 --> S03d["Vaxelstrom"]\n' +
-      '  S04 --> S04a["Energinivaer"]\n' +
-      '  S04 --> S04b["Fotoelektriska"]\n' +
-      '  S05 --> S05a["Bindningsenergi"]\n' +
-      '  S05 --> S05b["Sonderfall"]\n' +
-      '  S05 --> S05c["Karnreaktioner"]\n' +
-      '  S06 --> S06a["Stjarnor och HR"]\n' +
-      '  S06 --> S06b["Kosmologi"]\n' +
-      '  S01a -.-> S01b\n' +
-      '  S02a -.-> S01a\n' +
-      '  S03c -.-> S03b\n' +
-      '  S04a -.-> S04b\n' +
-      '  S05a -.-> S05c'
-  },
-  'kemi2.html': {
-    title: 'Kemi 2 — Concept Map',
-    diagram: 'flowchart TD\n' +
-      '  K2["Kemi 2"] --> S01["Organisk Kemi"]\n' +
-      '  K2 --> S02["Biokemi"]\n' +
-      '  K2 --> S03["Jamvikt och Kinetik"]\n' +
-      '  K2 --> S04["Analytisk Kemi"]\n' +
-      '  K2 --> S05["Laborationer"]\n' +
-      '  S01 --> S01a["Kolkemi"]\n' +
-      '  S01 --> S01b["IUPAC-nomenklatur"]\n' +
-      '  S01 --> S01c["Reaktionstyper"]\n' +
-      '  S01 --> S01d["Funktionella grupper"]\n' +
-      '  S01 --> S01e["Isomeri"]\n' +
-      '  S02 --> S02a["Proteiner"]\n' +
-      '  S02 --> S02b["Kolhydrater"]\n' +
-      '  S02 --> S02c["Lipider"]\n' +
-      '  S02 --> S02d["Enzymer"]\n' +
-      '  S03 --> S03a["Kemisk jamvikt"]\n' +
-      '  S03 --> S03b["Reaktionshastighet"]\n' +
-      '  S03 --> S03c["Syra-bas"]\n' +
-      '  S03 --> S03d["Redox"]\n' +
-      '  S04 --> S04a["Spektroskopi"]\n' +
-      '  S04 --> S04b["Kromatografi"]\n' +
-      '  S04 --> S04c["Titrering"]\n' +
-      '  S01c -.-> S03b\n' +
-      '  S03a -.-> S03c\n' +
-      '  S03d -.-> S04c\n' +
-      '  S01a -.-> S01e'
-  },
-  'matematik5.html': {
-    title: 'Matematik 5 — Concept Map',
-    diagram: 'flowchart TD\n' +
-      '  M5["Matematik 5"] --> S01["Differentialekvationer"]\n' +
-      '  M5 --> S02["Komplexa Tal"]\n' +
-      '  M5 --> S03["Diskret Matematik"]\n' +
-      '  M5 --> S04["Bevisforing"]\n' +
-      '  S01 --> S01a["1a ordningen ODE"]\n' +
-      '  S01 --> S01b["Linjara ODE"]\n' +
-      '  S01 --> S01c["2a ordningen ODE"]\n' +
-      '  S01 --> S01d["Tillampningar"]\n' +
-      '  S02 --> S02a["a + bi"]\n' +
-      '  S02 --> S02b["Operationer"]\n' +
-      '  S02 --> S02c["Polar form"]\n' +
-      '  S02 --> S02d["Komplexa rotter"]\n' +
-      '  S03 --> S03a["Kombinatorik"]\n' +
-      '  S03 --> S03b["Talteori"]\n' +
-      '  S03 --> S03c["Grafteori"]\n' +
-      '  S03 --> S03d["Induktion"]\n' +
-      '  S04 --> S04a["Bevismetoder"]\n' +
-      '  S04 --> S04b["Logik"]\n' +
-      '  S04 --> S04c["Strategier"]\n' +
-      '  S01c -.-> S02d\n' +
-      '  S02c -.-> S02d\n' +
-      '  S03d -.-> S04a'
-  },
-  'ib-physics-hl.html': {
-    title: 'IB Physics HL — Concept Map',
-    diagram: 'flowchart TD\n' +
-      '  PH["IB Physics HL"] --> A["A: Space Time Motion"]\n' +
-      '  PH --> B["B: Particulate Matter"]\n' +
-      '  PH --> C["C: Wave Behaviour"]\n' +
-      '  PH --> D["D: Fields"]\n' +
-      '  PH --> E["E: Nuclear and Quantum"]\n' +
-      '  A --> A1["Kinematics"]\n' +
-      '  A --> A2["Forces and Momentum"]\n' +
-      '  A --> A3["Energy and Power"]\n' +
-      '  A --> A4["HL: Rigid Body"]\n' +
-      '  A --> A5["HL: Relativity"]\n' +
-      '  B --> B1["Thermal Energy"]\n' +
-      '  B --> B2["Greenhouse"]\n' +
-      '  B --> B3["Gas Laws"]\n' +
-      '  B --> B4["HL: Thermodynamics"]\n' +
-      '  B --> B5["Circuits"]\n' +
-      '  C --> C1["SHM"]\n' +
-      '  C --> C2["Wave Model"]\n' +
-      '  C --> C3["Wave Phenomena"]\n' +
-      '  C --> C4["Standing Waves"]\n' +
-      '  C --> C5["HL: Doppler"]\n' +
-      '  D --> D1["Gravitational"]\n' +
-      '  D --> D2["Electric and Magnetic"]\n' +
-      '  D --> D3["Motion in Fields"]\n' +
-      '  D --> D4["HL: Induction"]\n' +
-      '  E --> E1["Atomic Structure"]\n' +
-      '  E --> E2["HL: Quantum"]\n' +
-      '  E --> E3["Radioactivity"]\n' +
-      '  E --> E4["Fission and Fusion"]\n' +
-      '  E --> E5["Particle Physics"]\n' +
-      '  A1 -.-> A2\n' +
-      '  A2 -.-> A3\n' +
-      '  B3 -.-> B1\n' +
-      '  D1 -.-> D2\n' +
-      '  E1 -.-> E2\n' +
-      '  D4 -.-> B5'
-  },
-  'ib-chemistry-hl.html': {
-    title: 'IB Chemistry HL — Concept Map',
-    diagram: 'flowchart TD\n' +
-      '  CH["IB Chemistry HL"] --> S1["S1: Particulate Matter"]\n' +
-      '  CH --> S2["S2: Bonding"]\n' +
-      '  CH --> S3["S3: Classification"]\n' +
-      '  CH --> R1["R1: Energy"]\n' +
-      '  CH --> R2["R2: Rates and Equilibrium"]\n' +
-      '  CH --> R3["R3: Mechanisms"]\n' +
-      '  S1 --> S1a["Atoms and Isotopes"]\n' +
-      '  S1 --> S1b["Electron Config"]\n' +
-      '  S1 --> S1c["The Mole"]\n' +
-      '  S1 --> S1d["Ideal Gases"]\n' +
-      '  S2 --> S2a["Ionic Model"]\n' +
-      '  S2 --> S2b["Covalent and VSEPR"]\n' +
-      '  S2 --> S2c["Metallic"]\n' +
-      '  S2 --> S2d["Intermolecular Forces"]\n' +
-      '  S3 --> S3a["Periodic Table"]\n' +
-      '  S3 --> S3b["Organic Nomenclature"]\n' +
-      '  R1 --> R1a["Enthalpy and Hess"]\n' +
-      '  R1 --> R1b["HL: Gibbs Free Energy"]\n' +
-      '  R2 --> R2a["Stoichiometry"]\n' +
-      '  R2 --> R2b["HL: Rate Laws"]\n' +
-      '  R2 --> R2c["Kc Kp Le Chatelier"]\n' +
-      '  R3 --> R3a["Acids Bases and pH"]\n' +
-      '  R3 --> R3b["Redox and Electrochem"]\n' +
-      '  R3 --> R3c["HL: SN1 vs SN2"]\n' +
-      '  R3 --> R3d["Polymerization"]\n' +
-      '  S1b -.-> S2b\n' +
-      '  S2a -.-> R1a\n' +
-      '  R1a -.-> R1b\n' +
-      '  R2b -.-> R2c\n' +
-      '  R3a -.-> R3b'
-  },
-  'ib-math-aa-hl.html': {
-    title: 'IB Math AA HL — Concept Map',
-    diagram: 'flowchart TD\n' +
-      '  MA["IB Math AA HL"] --> T1["1: Number and Algebra"]\n' +
-      '  MA --> T2["2: Functions"]\n' +
-      '  MA --> T3["3: Geometry and Trig"]\n' +
-      '  MA --> T4["4: Stats and Probability"]\n' +
-      '  MA --> T5["5: Calculus"]\n' +
-      '  T1 --> T1a["Sequences and Series"]\n' +
-      '  T1 --> T1b["Logs and Exponents"]\n' +
-      '  T1 --> T1c["Binomial Theorem"]\n' +
-      '  T1 --> T1d["HL: Proof and Induction"]\n' +
-      '  T1 --> T1e["HL: Complex Numbers"]\n' +
-      '  T2 --> T2a["Domain Range Inverse"]\n' +
-      '  T2 --> T2b["Polynomials"]\n' +
-      '  T2 --> T2c["Exp and Log Functions"]\n' +
-      '  T2 --> T2d["HL: Partial Fractions"]\n' +
-      '  T2 --> T2e["Transformations"]\n' +
-      '  T3 --> T3a["Trig Identities"]\n' +
-      '  T3 --> T3b["Trig Functions"]\n' +
-      '  T3 --> T3c["Vectors and Dot Product"]\n' +
-      '  T3 --> T3d["HL: 3D Lines and Planes"]\n' +
-      '  T4 --> T4a["Descriptive Stats"]\n' +
-      '  T4 --> T4b["Probability and Bayes"]\n' +
-      '  T4 --> T4c["Distributions"]\n' +
-      '  T4 --> T4d["HL: Hypothesis Testing"]\n' +
-      '  T5 --> T5a["Differentiation"]\n' +
-      '  T5 --> T5b["Optimization"]\n' +
-      '  T5 --> T5c["Integration"]\n' +
-      '  T5 --> T5d["HL: Integration Tech"]\n' +
-      '  T5 --> T5e["Applications"]\n' +
-      '  T5 --> T5f["HL: Diff Equations"]\n' +
-      '  T1a -.-> T5c\n' +
-      '  T1e -.-> T3a\n' +
-      '  T5a -.-> T5c\n' +
-      '  T2c -.-> T5a\n' +
-      '  T1d -.-> T4d'
-  }
-};
 
-/* Prevent Mermaid from auto-rendering on page load */
-/* Dynamically load Mermaid from CDN the first time it is needed.
-   WHY DYNAMIC: Adding a <script> tag to every HTML page would
-   require 6 edits and break every time Cowork regenerates a file.
-   Injecting it on demand means zero HTML changes and Mermaid is
-   only fetched when the user actually opens a mind map. */
-function loadMermaid(callback) {
-  if (window.mermaid) { callback(); return; }
+/* --- 9a. Load vis.js Network from CDN on first use --- */
+var _visLoaded = false;
+function loadVisNetwork(callback) {
+  if (window.vis && window.vis.Network) { callback(); return; }
+  if (_visLoaded) {
+    /* Script tag injected but not resolved yet — poll briefly */
+    var poll = setInterval(function () {
+      if (window.vis && window.vis.Network) {
+        clearInterval(poll);
+        callback();
+      }
+    }, 80);
+    return;
+  }
+  _visLoaded = true;
+
+  /* vis-network CSS (tooltips, cursors) */
+  var link = document.createElement('link');
+  link.rel  = 'stylesheet';
+  link.href = 'https://cdn.jsdelivr.net/npm/vis-network@9/dist/vis-network.min.css';
+  document.head.appendChild(link);
 
   var script    = document.createElement('script');
-  script.src    = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
-  script.onload = function () {
-    window.mermaid.initialize({ startOnLoad: false });
-    callback();
-  };
-  script.onerror = function () {
-    callback(new Error('load-failed'));
-  };
+  script.src    = 'https://cdn.jsdelivr.net/npm/vis-network@9/dist/vis-network.min.js';
+  script.onload = function () { callback(); };
+  script.onerror = function () { callback(new Error('load-failed')); };
   document.head.appendChild(script);
 }
 
+/* --- 9b. Build graph data live from the page DOM --- */
+function buildMapData() {
+  var isDark   = !document.documentElement.classList.contains('ss-light');
+  var textDark = '#0a0e17';
+  var textLight = isDark ? '#e8ecf4' : '#1a1a2e';
+
+  var nodes = [], edges = [], nid = 1;
+
+  /* Root node */
+  var h1    = document.querySelector('.hero h1');
+  var root  = h1 ? h1.textContent.replace(/\s+/g, ' ').trim() : 'Subject';
+  var rootId = nid++;
+  var accent = getComputedStyle(document.documentElement)
+    .getPropertyValue('--accent').trim() ||
+    getComputedStyle(document.documentElement)
+    .getPropertyValue('--accent-physics').trim() || '#4fc3f7';
+
+  nodes.push({
+    id: rootId, label: root,
+    shape: 'ellipse',
+    widthConstraint: { maximum: 160 },
+    color: { background: accent, border: accent,
+             highlight: { background: accent, border: '#ffffff' } },
+    font:  { color: textDark, size: 14, face: 'Source Sans 3, sans-serif', bold: true },
+    shadow: { enabled: true, size: 12, x: 0, y: 4, color: 'rgba(0,0,0,0.4)' },
+    level: 0
+  });
+
+  /* Section palette — distinct enough to survive both themes */
+  var palette = ['#4fc3f7','#ff8a65','#b388ff','#66bb6a','#ffd54f','#4db6ac','#f48fb1','#ffb74d'];
+  var si = 0;
+
+  document.querySelectorAll('.section').forEach(function (sec) {
+    var numEl   = sec.querySelector('.section-number');
+    var titleEl = sec.querySelector('.section-title');
+    if (!titleEl) return;
+
+    var col    = palette[si++ % palette.length];
+    var sLabel = (numEl ? numEl.textContent.trim() + '  ' : '') + titleEl.textContent.trim();
+    var sid    = nid++;
+
+    nodes.push({
+      id: sid, label: sLabel,
+      shape: 'box', margin: { top: 8, bottom: 8, left: 10, right: 10 },
+      widthConstraint: { maximum: 170 },
+      color: { background: col, border: col,
+               highlight: { background: col, border: '#ffffff' } },
+      font:  { color: textDark, size: 12, face: 'Source Sans 3, sans-serif', bold: true },
+      shadow: { enabled: true, size: 8, x: 0, y: 3, color: 'rgba(0,0,0,0.3)' },
+      level: 1
+    });
+    edges.push({
+      from: rootId, to: sid,
+      color: { color: col, opacity: 0.9 },
+      width: 2.5,
+      smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.5 }
+    });
+
+    sec.querySelectorAll('.topic[id]').forEach(function (topic) {
+      var nameEl   = topic.querySelector('.topic-name');
+      var detailEl = topic.querySelector('.topic-detail');
+      if (!nameEl) return;
+
+      var isHL   = !!topic.querySelector('.hl-tag');
+      var name   = nameEl.textContent.trim().replace(/\s+/g, ' ');
+      var detail = detailEl ? detailEl.textContent.trim() : '';
+      var label  = name.length > 28 ? name.slice(0, 26) + '…' : name;
+
+      /* Rich HTML tooltip shown on hover */
+      var tip = '<div style="max-width:240px;padding:10px 12px;font-family:sans-serif;' +
+        'background:' + (isDark ? '#1a2236' : '#fff') + ';' +
+        'border:1px solid ' + col + ';border-radius:8px;line-height:1.6">' +
+        '<strong style="color:' + col + ';font-size:12px">' + name + '</strong>';
+      if (isHL) tip += ' <span style="color:#b388ff;font-size:10px;font-weight:700">HL</span>';
+      if (detail) tip += '<br><span style="color:' + (isDark ? '#8b95aa' : '#5a6578') + ';font-size:11px">' + detail + '</span>';
+      tip += '<br><span style="color:' + (isDark ? '#4fc3f7' : '#0288d1') +
+        ';font-size:10px;margin-top:6px;display:block">↩ Click to open topic on page</span></div>';
+
+      var tid = nid++;
+      nodes.push({
+        id: tid, label: label, title: tip,
+        topicElId: topic.id,
+        shape: isHL ? 'diamond' : 'dot',
+        size:  isHL ? 14 : 10,
+        color: {
+          background: isHL ? '#b388ff' : col,
+          border:     isHL ? '#9c6fe0' : col,
+          highlight:  { background: '#ffffff', border: col }
+        },
+        font:  { color: textLight, size: 10, face: 'Source Sans 3, sans-serif' },
+        level: 2
+      });
+      edges.push({
+        from: sid, to: tid,
+        color: { color: col, opacity: 0.4 },
+        width: 1.2,
+        smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.4 }
+      });
+    });
+  });
+
+  return { nodes: nodes, edges: edges };
+}
+
+/* --- 9c. Mind map feature init --- */
 function initMindMap() {
   var hero = document.querySelector('.hero');
-  if (!hero || !document.querySelector('.topic-list')) return;
+  if (!hero || !document.querySelector('.section')) return;
 
-  /* Find map for current page — match by filename, not full path */
-  var path = location.pathname;
-  var mapData = null;
-  Object.keys(MIND_MAPS).forEach(function (key) {
-    if (path.indexOf(key) !== -1) mapData = MIND_MAPS[key];
-  });
-  if (!mapData) return;
-
-  /* Create toggle button */
+  /* Trigger button — placed in the badge row if it exists */
   var btn = document.createElement('button');
   btn.className = 'ss-mindmap-btn';
-  btn.innerHTML = '🧠 Mind Map';
-  btn.title     = 'View concept connections for this subject';
+  btn.innerHTML = '🧠 Interactive Mind Map';
+  var badgeRow = hero.querySelector('.badge-row');
+  (badgeRow || hero).appendChild(btn);
 
-  /* Create map container (NOT rendered yet — no .mermaid class) */
+  /* Container */
   var container = document.createElement('div');
   container.className = 'ss-mindmap-container';
-  container.id = 'ss-mindmap';
+  container.id        = 'ss-mindmap';
   container.style.display = 'none';
 
   var inner = document.createElement('div');
   inner.className = 'ss-mindmap-inner';
 
+  /* Toolbar */
   var toolbar = document.createElement('div');
   toolbar.className = 'ss-mindmap-toolbar';
 
   var titleSpan = document.createElement('span');
   titleSpan.className = 'ss-mindmap-title';
-  titleSpan.textContent = mapData.title;
+  titleSpan.textContent = (document.querySelector('.hero h1') || {}).textContent || 'Concept Map';
+
+  var fitBtn = document.createElement('button');
+  fitBtn.className = 'ss-mindmap-fullscreen';
+  fitBtn.innerHTML  = '⊞ Fit all';
+  fitBtn.title      = 'Reset zoom to fit all nodes';
 
   var fullscreenBtn = document.createElement('button');
   fullscreenBtn.className = 'ss-mindmap-fullscreen';
   fullscreenBtn.innerHTML = '⛶ Expand';
-  fullscreenBtn.title = 'Toggle fullscreen';
+  fullscreenBtn.title     = 'Toggle fullscreen';
 
   var closeBtn = document.createElement('button');
   closeBtn.className = 'ss-mindmap-close';
   closeBtn.innerHTML = '✕ Close';
 
   toolbar.appendChild(titleSpan);
+  toolbar.appendChild(fitBtn);
   toolbar.appendChild(fullscreenBtn);
   toolbar.appendChild(closeBtn);
 
-  /* Diagram placeholder — class is 'ss-mermaid-pending', NOT 'mermaid' */
-  var mermaidDiv = document.createElement('div');
-  mermaidDiv.className = 'ss-mermaid-pending';
-  mermaidDiv.textContent = mapData.diagram;
+  /* Graph canvas */
+  var canvas = document.createElement('div');
+  canvas.className    = 'ss-mindmap-canvas';
+  canvas.style.height = '520px';
 
+  /* Loading state */
   var loadingDiv = document.createElement('div');
   loadingDiv.className = 'ss-mindmap-loading';
-  loadingDiv.innerHTML = '<div class="ss-mindmap-spinner"></div><span>Generating mind map…</span>';
+  loadingDiv.innerHTML =
+    '<div class="ss-mindmap-spinner"></div>' +
+    '<span>Building interactive concept map…</span>';
+  loadingDiv.style.display = 'none';
+
+  /* Legend */
+  var legend = document.createElement('div');
+  legend.className = 'ss-mindmap-legend';
+  legend.innerHTML =
+    '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#4fc3f7"></span>Topic</span>' +
+    '<span class="ss-legend-item"><span class="ss-legend-diamond"></span>HL only</span>' +
+    '<span class="ss-legend-hint">Scroll to zoom &nbsp;·&nbsp; Drag to pan &nbsp;·&nbsp; Click topic to jump</span>';
 
   inner.appendChild(toolbar);
   inner.appendChild(loadingDiv);
-  inner.appendChild(mermaidDiv);
+  inner.appendChild(canvas);
+  inner.appendChild(legend);
   container.appendChild(inner);
 
-  /* Insert after progress bar or hero */
   var progressWrap = document.getElementById('ss-progress-wrap');
-  var insertAfter  = progressWrap || hero;
-  insertAfter.insertAdjacentElement('afterend', container);
+  (progressWrap || hero).insertAdjacentElement('afterend', container);
 
-  /* Button in hero */
-  var badgeRow = hero.querySelector('.badge-row');
-  if (badgeRow) {
-    badgeRow.appendChild(btn);
-  } else {
-    hero.appendChild(btn);
-  }
+  var network  = null;
+  var rendered = false;
 
-  var mapRendered = false;
-
-  function getMermaidTheme() {
-    var isLight = document.documentElement.classList.contains('ss-light');
-    return {
-      theme: isLight ? 'default' : 'dark',
-      themeVariables: isLight ? {
-        primaryColor: '#e3f2fd',
-        primaryTextColor: '#1a1a2e',
-        primaryBorderColor: '#0288d1',
-        lineColor: '#90a4ae',
-        secondaryColor: '#fff3e0',
-        tertiaryColor: '#f3e5f5',
-        fontSize: '14px'
-      } : {
-        primaryColor: '#1e2a42',
-        primaryTextColor: '#e8ecf4',
-        primaryBorderColor: '#4fc3f7',
-        lineColor: '#3a4f6f',
-        secondaryColor: '#2a1f1f',
-        tertiaryColor: '#1a1230',
-        fontSize: '14px'
-      },
-      flowchart: { curve: 'basis', padding: 20, htmlLabels: true }
-    };
-  }
-
-  function renderMap() {
-    /* Show spinner, hide stale diagram */
+  function renderNetwork() {
     loadingDiv.style.display = 'flex';
-    mermaidDiv.style.display  = 'none';
-    mermaidDiv.innerHTML      = '';
+    canvas.style.display     = 'none';
 
-    loadMermaid(function (err) {
-      if (err || !window.mermaid) {
-        loadingDiv.innerHTML = '<span style="color:#ef5350">Mind map unavailable — check internet connection and refresh.</span>';
+    loadVisNetwork(function (err) {
+      if (err || !window.vis) {
+        loadingDiv.innerHTML =
+          '<span style="color:#ef5350">Could not load vis.js — check internet and refresh.</span>';
         return;
       }
-      _doRender();
-    });
-  }
 
-  function _doRender() {
-    /* WHY mermaid.render() instead of mermaid.run():
-       mermaid.run() tries to measure the target element to calculate
-       the SVG viewBox. If that element is display:none (as it must be
-       while the spinner is shown) it gets zero dimensions and produces
-       empty output. mermaid.render() works off the diagram text alone
-       and returns the SVG string — we inject it ourselves, so the
-       visibility state of the container is irrelevant. */
-    var config = getMermaidTheme();
-    config.startOnLoad  = false;
-    config.securityLevel = 'loose';
-    window.mermaid.initialize(config);
+      var data = buildMapData();
 
-    var uid = 'ss-map-' + Date.now();
+      network = new vis.Network(canvas, {
+        nodes: new vis.DataSet(data.nodes),
+        edges: new vis.DataSet(data.edges)
+      }, {
+        layout: {
+          hierarchical: {
+            enabled: true,
+            direction: 'LR',
+            sortMethod: 'directed',
+            levelSeparation: 210,
+            nodeSpacing:     80,
+            treeSpacing:     120,
+            parentCentralization: true
+          }
+        },
+        physics: { enabled: false },
+        interaction: {
+          hover:         true,
+          tooltipDelay:  120,
+          zoomView:      true,
+          dragView:      true,
+          dragNodes:     true,
+          multiselect:   false,
+          navigationButtons: false,
+          keyboard: false
+        },
+        nodes: { borderWidth: 1.5 },
+        edges: {
+          arrows: { to: { enabled: true, scaleFactor: 0.45 } }
+        }
+      });
 
-    window.mermaid.render(uid, mapData.diagram).then(function (result) {
-      mermaidDiv.innerHTML = result.svg;
-      if (result.bindFunctions) result.bindFunctions(mermaidDiv);
-      loadingDiv.style.display = 'none';
-      mermaidDiv.style.display = 'flex';
-      mapRendered = true;
-    }).catch(function (err) {
-      console.error('[StudySprint] Mermaid render error:', err);
-      loadingDiv.innerHTML =
-        '<span style="color:#ef5350">Mind map failed to render — ' +
-        'open browser console for details.</span>';
+      /* Show canvas once layout is calculated */
+      network.once('stabilized', function () {
+        loadingDiv.style.display = 'none';
+        canvas.style.display     = '';
+        network.fit({ animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
+        rendered = true;
+      });
+
+      /* Fallback in case stabilized never fires */
+      setTimeout(function () {
+        if (!rendered) {
+          loadingDiv.style.display = 'none';
+          canvas.style.display     = '';
+          network.fit();
+          rendered = true;
+        }
+      }, 3500);
+
+      /* Click topic node → scroll to + expand topic on page */
+      network.on('click', function (params) {
+        if (!params.nodes.length) return;
+        var nodeId = params.nodes[0];
+        var match  = data.nodes.filter(function (n) { return n.id === nodeId; })[0];
+        if (!match || !match.topicElId) return;
+        var el = document.getElementById(match.topicElId);
+        if (!el) return;
+        el.classList.add('expanded');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.style.outline = '2px solid var(--ss-accent)';
+        setTimeout(function () { el.style.outline = ''; }, 2200);
+      });
+
+      network.on('hoverNode',  function () { canvas.style.cursor = 'pointer'; });
+      network.on('blurNode',   function () { canvas.style.cursor = '';        });
+      network.on('dragging',   function () { canvas.style.cursor = 'grabbing'; });
+      network.on('dragEnd',    function () { canvas.style.cursor = '';        });
     });
   }
 
   function showMap() {
     container.style.display = 'block';
-    if (!mapRendered) {
-      renderMap();
-    }
+    if (!rendered) { renderNetwork(); }
+    else { network.fit({ animation: { duration: 300 } }); }
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -760,35 +694,50 @@ function initMindMap() {
     container.style.display = 'none';
     inner.classList.remove('ss-mindmap-fullscreen-active');
     fullscreenBtn.innerHTML = '⛶ Expand';
+    canvas.style.height     = '520px';
   }
 
   btn.addEventListener('click', function () {
-    if (container.style.display === 'none') {
-      showMap();
-    } else {
-      hideMap();
-    }
+    container.style.display === 'none' ? showMap() : hideMap();
   });
-
   closeBtn.addEventListener('click', hideMap);
+
+  fitBtn.addEventListener('click', function () {
+    if (network) network.fit({ animation: { duration: 400 } });
+  });
 
   fullscreenBtn.addEventListener('click', function () {
     inner.classList.toggle('ss-mindmap-fullscreen-active');
     if (inner.classList.contains('ss-mindmap-fullscreen-active')) {
       fullscreenBtn.innerHTML = '⛶ Shrink';
+      canvas.style.height     = (window.innerHeight - 130) + 'px';
     } else {
       fullscreenBtn.innerHTML = '⛶ Expand';
+      canvas.style.height     = '520px';
     }
+    if (network) setTimeout(function () { network.fit(); }, 120);
   });
 
-  /* Close fullscreen on Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && inner.classList.contains('ss-mindmap-fullscreen-active')) {
       inner.classList.remove('ss-mindmap-fullscreen-active');
       fullscreenBtn.innerHTML = '⛶ Expand';
+      canvas.style.height     = '520px';
+      if (network) network.fit();
+    }
+  });
+
+  /* Re-render on theme toggle so colours update */
+  window.addEventListener('ss-theme-change', function () {
+    if (rendered && container.style.display !== 'none') {
+      rendered = false;
+      if (network) { network.destroy(); network = null; }
+      renderNetwork();
     }
   });
 }
+
+/* (MIND_MAPS data removed — graph is now built live from the DOM) */
 
 /* ----------------------------------------------------------
    10. CROSS-SUBJECT MASTERY DASHBOARD (homepage)
