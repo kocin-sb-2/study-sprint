@@ -728,9 +728,13 @@ html.ss-light .ss-map-detail { background: var(--surface); border-left-color: va
 }
 
 @media (max-width: 600px) {
-  .ss-mindmap-container { padding: 0 12px; }
-  .ss-mindmap-toolbar { padding: 10px 14px; flex-wrap: wrap; }
-  .ss-mindmap-title { font-size: 0.9rem; }
+  .ss-mindmap-container { padding: 0 8px; }
+  .ss-mindmap-toolbar { padding: 10px 14px; flex-wrap: wrap; gap: 6px; }
+  .ss-mindmap-title { font-size: 0.85rem; width: 100%; }
+  .ss-mindmap-canvas { height: 400px !important; }
+  .ss-mindmap-legend { padding: 8px 14px; gap: 10px; }
+  .ss-legend-hint { display: none; }
+  .ss-map-mode-btn { font-size: 0.72rem; padding: 4px 10px; }
 }
 
 /* ----------------------------------------------------------

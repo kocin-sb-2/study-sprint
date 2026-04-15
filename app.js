@@ -308,17 +308,8 @@ function initHomeSearch() {
    isn't already present, so the page is reachable without
    editing the HTML.
 ---------------------------------------------------------- */
-function injectSyllabusLink() {
-  var footer = document.querySelector('.footer-note');
-  if (!footer) return;
-  if (footer.querySelector('a[href="study-sprint-syllabus-guide.html"]')) return;
-
-  var div = document.createElement('div');
-  div.className = 'ss-syllabus-link';
-  div.innerHTML =
-    '<a href="study-sprint-syllabus-guide.html">&#128214; View Full Syllabus Master Guide &rarr;</a>';
-  footer.appendChild(div);
-}
+/* --- 6. (Removed — syllabus link no longer injected) --- */
+function injectSyllabusLink() { /* no-op */ }
 
 /* ----------------------------------------------------------
    7. PRINT / SAVE AS PDF BUTTON

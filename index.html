@@ -288,6 +288,72 @@ body {
 .skip-link:focus {
   top: 0;
 }
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 24px 36px;
+  max-width: 1000px;
+  margin: 40px auto 0;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 32px;
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--accent-physics), var(--accent-chem), var(--accent-math));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer-brand p {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-heading {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.footer-col a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--accent-physics); }
+
+.footer-note-text {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+}
 </style>
 </head>
 <body>
@@ -400,10 +466,25 @@ body {
 
 </div>
 
-<div class="footer-note">
-  Study Sprint — Built for structured, exam-focused preparation<br>
-  Sources: Skolverket centralt innehåll · IBO Subject Guides (First Assessment 2025)
-</div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">Study Sprint</span>
+      <p>Structured, exam-focused preparation for IB HL and Swedish Gymnasium students. Every concept, term, and formula — organized so you can focus on learning, not figuring out what to learn.</p>
+    </div>
+    <div class="footer-col">
+      <span class="footer-heading">Sources</span>
+      <a href="https://www.skolverket.se" target="_blank" rel="noopener">Skolverket</a>
+      <a href="https://www.ibo.org" target="_blank" rel="noopener">IB Organization</a>
+      <span class="footer-note-text">Content aligned with Skolverket centralt innehåll and IBO Subject Guides (First Assessment 2025)</span>
+    </div>
+    <div class="footer-col">
+      <span class="footer-heading">About</span>
+      <span class="footer-note-text">Built with care in Stockholm. Inspired by the belief that every student deserves clear, accessible study material — regardless of background.</span>
+      <span class="footer-note-text" style="margin-top:8px;opacity:0.6">© 2026 Study Sprint</span>
+    </div>
+  </div>
+</footer>
 
 <script src="app.js"></script>
 </body>
