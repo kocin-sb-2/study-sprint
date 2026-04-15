@@ -431,126 +431,204 @@ function loadVisNetwork(callback) {
   document.head.appendChild(script);
 }
 
-/* --- 9b. Build graph data live from the page DOM --- */
-function buildMapData() {
-  var isDark   = !document.documentElement.classList.contains('ss-light');
+/* --- 9b. Extract structured data from the page DOM --- */
+function extractPageData() {
+  var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
+  var palette = ['#4fc3f7','#ff8a65','#b388ff','#66bb6a','#ffd54f','#4db6ac','#f48fb1','#ffb74d'];
+  var sections = [];
+  var si = 0;
+
+  document.querySelectorAll('.section').forEach(function (sec) {
+    var numEl = sec.querySelector('.section-number');
+    var titleEl = sec.querySelector('.section-title');
+    if (!titleEl) return;
+    var col = palette[si++ % palette.length];
+    var sLabel = (numEl ? numEl.textContent.trim() + '  ' : '') + titleEl.textContent.trim();
+    var topics = [];
+
+    sec.querySelectorAll('.topic[id]').forEach(function (topic) {
+      var nameEl = topic.querySelector('.topic-name');
+      if (!nameEl) return;
+      var name = nameEl.textContent.trim().replace(/\s+/g, ' ');
+      var detailEl = topic.querySelector('.topic-detail');
+      var detail = detailEl ? detailEl.textContent.trim() : '';
+      var isHL = !!topic.querySelector('.hl-tag');
+      var isDone = _ls.get(pageKey + ':' + topic.id) === '1';
+
+      /* Extract key concepts as keywords for cross-linking */
+      var keywords = [];
+      topic.querySelectorAll('.concept-item strong, .term-word, .formula-card').forEach(function (el) {
+        var t = el.textContent.replace(/[:\(\)]/g, '').trim().toLowerCase();
+        if (t.length > 2 && t.length < 60) keywords.push(t);
+      });
+
+      var conceptCount = topic.querySelectorAll('.concept-item').length;
+      var formulaCount = topic.querySelectorAll('.formula-card').length;
+      var termCount = topic.querySelectorAll('.term-item').length;
+
+      topics.push({
+        id: topic.id, name: name, detail: detail, isHL: isHL,
+        isDone: isDone, keywords: keywords,
+        conceptCount: conceptCount, formulaCount: formulaCount, termCount: termCount
+      });
+    });
+
+    sections.push({ label: sLabel, color: col, topics: topics });
+  });
+  return sections;
+}
+
+/* --- 9b2. Find cross-topic connections via shared keywords --- */
+function findConnections(sections) {
+  var connections = [];
+  var allTopics = [];
+  sections.forEach(function (s, si) {
+    s.topics.forEach(function (t) { allTopics.push({ topic: t, sectionIdx: si }); });
+  });
+
+  for (var i = 0; i < allTopics.length; i++) {
+    for (var j = i + 1; j < allTopics.length; j++) {
+      if (allTopics[i].sectionIdx === allTopics[j].sectionIdx) continue;
+      var a = allTopics[i].topic, b = allTopics[j].topic;
+      var shared = [];
+      a.keywords.forEach(function (kw) {
+        b.keywords.forEach(function (kw2) {
+          if (kw === kw2 || (kw.length > 5 && kw2.indexOf(kw) !== -1) || (kw2.length > 5 && kw.indexOf(kw2) !== -1)) {
+            if (shared.indexOf(kw) === -1) shared.push(kw);
+          }
+        });
+      });
+      if (shared.length >= 1) {
+        connections.push({ from: a.id, to: b.id, shared: shared });
+      }
+    }
+  }
+  return connections;
+}
+
+/* --- 9b3. Build vis.js graph from structured data --- */
+function buildMapData(sections, connections, filter) {
+  var isDark = !document.documentElement.classList.contains('ss-light');
   var textDark = '#0a0e17';
   var textLight = isDark ? '#e8ecf4' : '#1a1a2e';
+  var dimColor = isDark ? '#2a3654' : '#c0c8d8';
+
+  var h1 = document.querySelector('.hero h1');
+  var rootLabel = h1 ? h1.textContent.replace(/\s+/g, ' ').trim() : 'Subject';
+  var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() ||
+    getComputedStyle(document.documentElement).getPropertyValue('--accent-physics').trim() || '#4fc3f7';
 
   var nodes = [], edges = [], nid = 1;
+  var topicIdMap = {}; /* topic.id → vis node id */
 
-  /* Root node */
-  var h1    = document.querySelector('.hero h1');
-  var root  = h1 ? h1.textContent.replace(/\s+/g, ' ').trim() : 'Subject';
   var rootId = nid++;
-  var accent = getComputedStyle(document.documentElement)
-    .getPropertyValue('--accent').trim() ||
-    getComputedStyle(document.documentElement)
-    .getPropertyValue('--accent-physics').trim() || '#4fc3f7';
-
   nodes.push({
-    id: rootId, label: root,
-    shape: 'ellipse',
+    id: rootId, label: rootLabel, shape: 'ellipse',
     widthConstraint: { maximum: 160 },
-    color: { background: accent, border: accent,
-             highlight: { background: accent, border: '#ffffff' } },
-    font:  { color: textDark, size: 14, face: 'Source Sans 3, sans-serif', bold: true },
+    color: { background: accent, border: accent, highlight: { background: accent, border: '#fff' } },
+    font: { color: textDark, size: 14, face: 'Source Sans 3, sans-serif', bold: true },
     shadow: { enabled: true, size: 12, x: 0, y: 4, color: 'rgba(0,0,0,0.4)' },
     level: 0
   });
 
-  /* Section palette — distinct enough to survive both themes */
-  var palette = ['#4fc3f7','#ff8a65','#b388ff','#66bb6a','#ffd54f','#4db6ac','#f48fb1','#ffb74d'];
-  var si = 0;
-
-  document.querySelectorAll('.section').forEach(function (sec) {
-    var numEl   = sec.querySelector('.section-number');
-    var titleEl = sec.querySelector('.section-title');
-    if (!titleEl) return;
-
-    var col    = palette[si++ % palette.length];
-    var sLabel = (numEl ? numEl.textContent.trim() + '  ' : '') + titleEl.textContent.trim();
-    var sid    = nid++;
-
+  sections.forEach(function (sec, si) {
+    var sid = nid++;
     nodes.push({
-      id: sid, label: sLabel,
-      shape: 'box', margin: { top: 8, bottom: 8, left: 10, right: 10 },
+      id: sid, label: sec.label, shape: 'box',
+      margin: { top: 8, bottom: 8, left: 10, right: 10 },
       widthConstraint: { maximum: 170 },
-      color: { background: col, border: col,
-               highlight: { background: col, border: '#ffffff' } },
-      font:  { color: textDark, size: 12, face: 'Source Sans 3, sans-serif', bold: true },
+      color: { background: sec.color, border: sec.color, highlight: { background: sec.color, border: '#fff' } },
+      font: { color: textDark, size: 12, face: 'Source Sans 3, sans-serif', bold: true },
       shadow: { enabled: true, size: 8, x: 0, y: 3, color: 'rgba(0,0,0,0.3)' },
-      level: 1
+      level: 1, sectionIdx: si
     });
     edges.push({
-      from: rootId, to: sid,
-      color: { color: col, opacity: 0.9 },
-      width: 2.5,
+      from: rootId, to: sid, color: { color: sec.color, opacity: 0.9 }, width: 2.5,
       smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.5 }
     });
 
-    sec.querySelectorAll('.topic[id]').forEach(function (topic) {
-      var nameEl   = topic.querySelector('.topic-name');
-      var detailEl = topic.querySelector('.topic-detail');
-      if (!nameEl) return;
-
-      var isHL   = !!topic.querySelector('.hl-tag');
-      var name   = nameEl.textContent.trim().replace(/\s+/g, ' ');
-      var detail = detailEl ? detailEl.textContent.trim() : '';
-      var label  = name.length > 28 ? name.slice(0, 26) + '…' : name;
-
-      /* Rich HTML tooltip shown on hover */
-      var tip = '<div style="max-width:240px;padding:10px 12px;font-family:sans-serif;' +
-        'background:' + (isDark ? '#1a2236' : '#fff') + ';' +
-        'border:1px solid ' + col + ';border-radius:8px;line-height:1.6">' +
-        '<strong style="color:' + col + ';font-size:12px">' + name + '</strong>';
-      if (isHL) tip += ' <span style="color:#b388ff;font-size:10px;font-weight:700">HL</span>';
-      if (detail) tip += '<br><span style="color:' + (isDark ? '#8b95aa' : '#5a6578') + ';font-size:11px">' + detail + '</span>';
-      tip += '<br><span style="color:' + (isDark ? '#4fc3f7' : '#0288d1') +
-        ';font-size:10px;margin-top:6px;display:block">↩ Click to open topic on page</span></div>';
+    sec.topics.forEach(function (t) {
+      /* Apply filters */
+      if (filter.hl && !t.isHL) return;
+      if (filter.mastery === 'done' && !t.isDone) return;
+      if (filter.mastery === 'todo' && t.isDone) return;
+      if (filter.section !== -1 && filter.section !== si) return;
 
       var tid = nid++;
+      topicIdMap[t.id] = tid;
+      var label = t.name.length > 28 ? t.name.slice(0, 26) + '…' : t.name;
+
+      /* Size by content richness */
+      var richness = t.conceptCount + t.formulaCount + t.termCount;
+      var nodeSize = Math.min(8 + richness * 1.5, 24);
+
+      /* Color by mastery state */
+      var bg, border;
+      if (t.isDone) {
+        bg = isDark ? '#1b5e20' : '#a5d6a7'; border = '#66bb6a';
+      } else if (t.isHL) {
+        bg = '#b388ff'; border = '#9c6fe0';
+      } else {
+        bg = sec.color; border = sec.color;
+      }
+
+      /* Badge showing content counts */
+      var badge = '';
+      if (t.conceptCount) badge += '💡' + t.conceptCount + ' ';
+      if (t.formulaCount) badge += '📐' + t.formulaCount + ' ';
+      if (t.termCount) badge += '📖' + t.termCount;
+
       nodes.push({
-        id: tid, label: label, title: tip,
-        topicElId: topic.id,
-        shape: isHL ? 'diamond' : 'dot',
-        size:  isHL ? 14 : 10,
-        color: {
-          background: isHL ? '#b388ff' : col,
-          border:     isHL ? '#9c6fe0' : col,
-          highlight:  { background: '#ffffff', border: col }
-        },
-        font:  { color: textLight, size: 10, face: 'Source Sans 3, sans-serif' },
-        level: 2
+        id: tid, label: label, shape: t.isHL ? 'diamond' : 'dot',
+        size: nodeSize, topicElId: t.id, topicData: t, sectionIdx: si,
+        color: { background: bg, border: border, highlight: { background: '#fff', border: sec.color } },
+        font: { color: textLight, size: 10, face: 'Source Sans 3, sans-serif' },
+        level: 2, badge: badge
       });
       edges.push({
-        from: sid, to: tid,
-        color: { color: col, opacity: 0.4 },
-        width: 1.2,
+        from: sid, to: tid, color: { color: sec.color, opacity: 0.4 }, width: 1.2,
         smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.4 }
       });
     });
   });
 
-  return { nodes: nodes, edges: edges };
+  /* Cross-topic connections (dashed lines) */
+  connections.forEach(function (c) {
+    var fromId = topicIdMap[c.from], toId = topicIdMap[c.to];
+    if (!fromId || !toId) return;
+    edges.push({
+      from: fromId, to: toId,
+      dashes: [6, 4], width: 1.5,
+      color: { color: isDark ? 'rgba(255,213,79,0.5)' : 'rgba(180,140,0,0.4)' },
+      smooth: { type: 'curvedCW', roundness: 0.2 },
+      arrows: { to: { enabled: false } },
+      title: 'Shared: ' + c.shared.slice(0, 3).join(', ')
+    });
+  });
+
+  return { nodes: nodes, edges: edges, topicIdMap: topicIdMap };
 }
 
-/* --- 9c. Mind map feature init --- */
+/* --- 9c. Mind map feature init (upgraded) --- */
 function initMindMap() {
   var hero = document.querySelector('.hero');
   if (!hero || !document.querySelector('.section')) return;
 
-  /* Trigger button — placed in the badge row if it exists */
+  var sections = extractPageData();
+  var connections = findConnections(sections);
+  var filter = { section: -1, mastery: 'all', hl: false };
+
+  /* Trigger button */
   var btn = document.createElement('button');
   btn.className = 'ss-mindmap-btn';
-  btn.innerHTML = '🧠 Interactive Mind Map';
+  btn.innerHTML = '🧠 Concept Map';
   var badgeRow = hero.querySelector('.badge-row');
   (badgeRow || hero).appendChild(btn);
 
   /* Container */
   var container = document.createElement('div');
   container.className = 'ss-mindmap-container';
-  container.id        = 'ss-mindmap';
+  container.id = 'ss-mindmap';
   container.style.display = 'none';
 
   var inner = document.createElement('div');
@@ -566,13 +644,11 @@ function initMindMap() {
 
   var fitBtn = document.createElement('button');
   fitBtn.className = 'ss-mindmap-fullscreen';
-  fitBtn.innerHTML  = '⊞ Fit all';
-  fitBtn.title      = 'Reset zoom to fit all nodes';
+  fitBtn.innerHTML = '⊞ Fit';
 
   var fullscreenBtn = document.createElement('button');
   fullscreenBtn.className = 'ss-mindmap-fullscreen';
   fullscreenBtn.innerHTML = '⛶ Expand';
-  fullscreenBtn.title     = 'Toggle fullscreen';
 
   var closeBtn = document.createElement('button');
   closeBtn.className = 'ss-mindmap-close';
@@ -583,127 +659,212 @@ function initMindMap() {
   toolbar.appendChild(fullscreenBtn);
   toolbar.appendChild(closeBtn);
 
-  /* Graph canvas */
+  /* Filter bar */
+  var filterBar = document.createElement('div');
+  filterBar.className = 'ss-mindmap-filters';
+
+  var sectionOpts = '<option value="-1">All sections</option>';
+  sections.forEach(function (s, i) {
+    sectionOpts += '<option value="' + i + '">' + s.label.replace(/</g, '&lt;') + '</option>';
+  });
+
+  filterBar.innerHTML =
+    '<select class="ss-map-select" id="ss-map-section">' + sectionOpts + '</select>' +
+    '<select class="ss-map-select" id="ss-map-mastery">' +
+      '<option value="all">All progress</option>' +
+      '<option value="done">✓ Completed</option>' +
+      '<option value="todo">○ Not done</option>' +
+    '</select>' +
+    '<label class="ss-map-toggle"><input type="checkbox" id="ss-map-hl"> HL only</label>' +
+    '<span class="ss-map-stats" id="ss-map-stats"></span>';
+
+  /* Canvas */
   var canvas = document.createElement('div');
-  canvas.className    = 'ss-mindmap-canvas';
+  canvas.className = 'ss-mindmap-canvas';
   canvas.style.height = '520px';
 
-  /* Loading state */
+  /* Loading */
   var loadingDiv = document.createElement('div');
   loadingDiv.className = 'ss-mindmap-loading';
-  loadingDiv.innerHTML =
-    '<div class="ss-mindmap-spinner"></div>' +
-    '<span>Building interactive concept map…</span>';
+  loadingDiv.innerHTML = '<div class="ss-mindmap-spinner"></div><span>Building concept map…</span>';
   loadingDiv.style.display = 'none';
+
+  /* Detail panel (shown on node click) */
+  var detailPanel = document.createElement('div');
+  detailPanel.className = 'ss-map-detail';
+  detailPanel.id = 'ss-map-detail';
+  detailPanel.style.display = 'none';
 
   /* Legend */
   var legend = document.createElement('div');
   legend.className = 'ss-mindmap-legend';
   legend.innerHTML =
     '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#4fc3f7"></span>Topic</span>' +
-    '<span class="ss-legend-item"><span class="ss-legend-diamond"></span>HL only</span>' +
-    '<span class="ss-legend-hint">Scroll to zoom &nbsp;·&nbsp; Drag to pan &nbsp;·&nbsp; Click topic to jump</span>';
+    '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#1b5e20"></span>Mastered</span>' +
+    '<span class="ss-legend-item"><span class="ss-legend-diamond"></span>HL</span>' +
+    '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#ffd54f;width:16px;height:2px;border-radius:1px"></span>Cross-link</span>' +
+    '<span class="ss-legend-hint">Click node for details · Scroll to zoom · Drag to pan</span>';
 
   inner.appendChild(toolbar);
+  inner.appendChild(filterBar);
   inner.appendChild(loadingDiv);
-  inner.appendChild(canvas);
+  var mapBody = document.createElement('div');
+  mapBody.className = 'ss-map-body';
+  mapBody.appendChild(canvas);
+  mapBody.appendChild(detailPanel);
+  inner.appendChild(mapBody);
   inner.appendChild(legend);
   container.appendChild(inner);
 
   var progressWrap = document.getElementById('ss-progress-wrap');
   (progressWrap || hero).insertAdjacentElement('afterend', container);
 
-  var network  = null;
-  var rendered = false;
+  var network = null, currentData = null, rendered = false;
+
+  function updateStats(data) {
+    var el = document.getElementById('ss-map-stats');
+    if (!el) return;
+    var topicNodes = data.nodes.filter(function (n) { return n.topicElId; });
+    var done = topicNodes.filter(function (n) { return n.topicData && n.topicData.isDone; }).length;
+    var crossLinks = connections.length;
+    el.textContent = topicNodes.length + ' topics · ' + done + ' done · ' + crossLinks + ' cross-links';
+  }
+
+  function showDetail(nodeData) {
+    var t = nodeData.topicData;
+    if (!t) { detailPanel.style.display = 'none'; return; }
+    var isDark = !document.documentElement.classList.contains('ss-light');
+
+    var html = '<div class="ss-detail-header">' +
+      '<strong>' + t.name + '</strong>' +
+      (t.isHL ? ' <span class="ss-detail-hl">HL</span>' : '') +
+      (t.isDone ? ' <span class="ss-detail-done">✓ Done</span>' : '') +
+      '<button class="ss-detail-close" id="ss-detail-close">✕</button>' +
+    '</div>';
+    if (t.detail) html += '<p class="ss-detail-desc">' + t.detail + '</p>';
+    html += '<div class="ss-detail-counts">' +
+      (t.conceptCount ? '<span>💡 ' + t.conceptCount + ' concepts</span>' : '') +
+      (t.formulaCount ? '<span>📐 ' + t.formulaCount + ' formulas</span>' : '') +
+      (t.termCount ? '<span>📖 ' + t.termCount + ' terms</span>' : '') +
+    '</div>';
+
+    /* Show cross-connections */
+    var related = connections.filter(function (c) { return c.from === t.id || c.to === t.id; });
+    if (related.length) {
+      html += '<div class="ss-detail-links"><strong>Connected topics:</strong>';
+      related.forEach(function (r) {
+        var otherId = r.from === t.id ? r.to : r.from;
+        var otherEl = document.getElementById(otherId);
+        var otherName = otherEl ? (otherEl.querySelector('.topic-name') || {}).textContent || otherId : otherId;
+        html += '<div class="ss-detail-link-item">↔ ' + otherName +
+          '<span class="ss-detail-shared">' + r.shared.slice(0, 3).join(', ') + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<button class="ss-detail-goto" id="ss-detail-goto" data-topic="' + t.id + '">↩ Jump to topic on page</button>';
+
+    detailPanel.innerHTML = html;
+    detailPanel.style.display = 'block';
+
+    document.getElementById('ss-detail-close').addEventListener('click', function () {
+      detailPanel.style.display = 'none';
+    });
+    document.getElementById('ss-detail-goto').addEventListener('click', function () {
+      var el = document.getElementById(this.getAttribute('data-topic'));
+      if (!el) return;
+      el.classList.add('expanded');
+      var header = el.querySelector('.topic-header');
+      if (header) header.setAttribute('aria-expanded', 'true');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.style.outline = '2px solid var(--ss-accent)';
+      setTimeout(function () { el.style.outline = ''; }, 2200);
+    });
+  }
 
   function renderNetwork() {
     loadingDiv.style.display = 'flex';
-    canvas.style.display     = 'none';
+    canvas.style.display = 'none';
+    detailPanel.style.display = 'none';
 
     loadVisNetwork(function (err) {
       if (err || !window.vis) {
-        loadingDiv.innerHTML =
-          '<span style="color:#ef5350">Could not load vis.js — check internet and refresh.</span>';
+        loadingDiv.innerHTML = '<span style="color:#ef5350">Could not load vis.js — check internet and refresh.</span>';
         return;
       }
 
-      var data = buildMapData();
+      currentData = buildMapData(sections, connections, filter);
+      updateStats(currentData);
+
+      if (network) { network.destroy(); network = null; }
 
       network = new vis.Network(canvas, {
-        nodes: new vis.DataSet(data.nodes),
-        edges: new vis.DataSet(data.edges)
+        nodes: new vis.DataSet(currentData.nodes),
+        edges: new vis.DataSet(currentData.edges)
       }, {
         layout: {
           hierarchical: {
-            enabled: true,
-            direction: 'LR',
-            sortMethod: 'directed',
-            levelSeparation: 210,
-            nodeSpacing:     80,
-            treeSpacing:     120,
+            enabled: true, direction: 'LR', sortMethod: 'directed',
+            levelSeparation: 210, nodeSpacing: 80, treeSpacing: 120,
             parentCentralization: true
           }
         },
         physics: { enabled: false },
         interaction: {
-          hover:         true,
-          tooltipDelay:  120,
-          zoomView:      true,
-          dragView:      true,
-          dragNodes:     true,
-          multiselect:   false,
-          navigationButtons: false,
-          keyboard: false
+          hover: true, tooltipDelay: 120, zoomView: true,
+          dragView: true, dragNodes: true, multiselect: false,
+          navigationButtons: false, keyboard: false
         },
         nodes: { borderWidth: 1.5 },
-        edges: {
-          arrows: { to: { enabled: true, scaleFactor: 0.45 } }
-        }
+        edges: { arrows: { to: { enabled: true, scaleFactor: 0.45 } } }
       });
 
-      /* Show canvas once layout is calculated */
       network.once('stabilized', function () {
         loadingDiv.style.display = 'none';
-        canvas.style.display     = '';
+        canvas.style.display = '';
         network.fit({ animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
         rendered = true;
       });
 
-      /* Fallback in case stabilized never fires */
       setTimeout(function () {
         if (!rendered) {
           loadingDiv.style.display = 'none';
-          canvas.style.display     = '';
-          network.fit();
+          canvas.style.display = '';
+          if (network) network.fit();
           rendered = true;
         }
       }, 3500);
 
-      /* Click topic node → scroll to + expand topic on page */
       network.on('click', function (params) {
-        if (!params.nodes.length) return;
+        if (!params.nodes.length) { detailPanel.style.display = 'none'; return; }
         var nodeId = params.nodes[0];
-        var match  = data.nodes.filter(function (n) { return n.id === nodeId; })[0];
-        if (!match || !match.topicElId) return;
-        var el = document.getElementById(match.topicElId);
-        if (!el) return;
-        el.classList.add('expanded');
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.style.outline = '2px solid var(--ss-accent)';
-        setTimeout(function () { el.style.outline = ''; }, 2200);
+        var match = currentData.nodes.filter(function (n) { return n.id === nodeId; })[0];
+        if (match && match.topicData) showDetail(match);
       });
 
-      network.on('hoverNode',  function () { canvas.style.cursor = 'pointer'; });
-      network.on('blurNode',   function () { canvas.style.cursor = '';        });
-      network.on('dragging',   function () { canvas.style.cursor = 'grabbing'; });
-      network.on('dragEnd',    function () { canvas.style.cursor = '';        });
+      network.on('hoverNode', function () { canvas.style.cursor = 'pointer'; });
+      network.on('blurNode', function () { canvas.style.cursor = ''; });
+      network.on('dragging', function () { canvas.style.cursor = 'grabbing'; });
+      network.on('dragEnd', function () { canvas.style.cursor = ''; });
     });
+  }
+
+  /* Filter change handlers */
+  function onFilterChange() {
+    filter.section = parseInt(document.getElementById('ss-map-section').value, 10);
+    filter.mastery = document.getElementById('ss-map-mastery').value;
+    filter.hl = document.getElementById('ss-map-hl').checked;
+    rendered = false;
+    renderNetwork();
   }
 
   function showMap() {
     container.style.display = 'block';
-    if (!rendered) { renderNetwork(); }
-    else { network.fit({ animation: { duration: 300 } }); }
+    /* Re-extract progress state in case user toggled done buttons */
+    sections = extractPageData();
+    connections = findConnections(sections);
+    rendered = false;
+    renderNetwork();
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -711,26 +872,28 @@ function initMindMap() {
     container.style.display = 'none';
     inner.classList.remove('ss-mindmap-fullscreen-active');
     fullscreenBtn.innerHTML = '⛶ Expand';
-    canvas.style.height     = '520px';
+    canvas.style.height = '520px';
+    detailPanel.style.display = 'none';
   }
 
   btn.addEventListener('click', function () {
     container.style.display === 'none' ? showMap() : hideMap();
   });
   closeBtn.addEventListener('click', hideMap);
+  fitBtn.addEventListener('click', function () { if (network) network.fit({ animation: { duration: 400 } }); });
 
-  fitBtn.addEventListener('click', function () {
-    if (network) network.fit({ animation: { duration: 400 } });
-  });
+  document.getElementById('ss-map-section').addEventListener('change', onFilterChange);
+  document.getElementById('ss-map-mastery').addEventListener('change', onFilterChange);
+  document.getElementById('ss-map-hl').addEventListener('change', onFilterChange);
 
   fullscreenBtn.addEventListener('click', function () {
     inner.classList.toggle('ss-mindmap-fullscreen-active');
     if (inner.classList.contains('ss-mindmap-fullscreen-active')) {
       fullscreenBtn.innerHTML = '⛶ Shrink';
-      canvas.style.height     = (window.innerHeight - 130) + 'px';
+      canvas.style.height = (window.innerHeight - 180) + 'px';
     } else {
       fullscreenBtn.innerHTML = '⛶ Expand';
-      canvas.style.height     = '520px';
+      canvas.style.height = '520px';
     }
     if (network) setTimeout(function () { network.fit(); }, 120);
   });
@@ -739,16 +902,14 @@ function initMindMap() {
     if (e.key === 'Escape' && inner.classList.contains('ss-mindmap-fullscreen-active')) {
       inner.classList.remove('ss-mindmap-fullscreen-active');
       fullscreenBtn.innerHTML = '⛶ Expand';
-      canvas.style.height     = '520px';
+      canvas.style.height = '520px';
       if (network) network.fit();
     }
   });
 
-  /* Re-render on theme toggle so colours update */
   window.addEventListener('ss-theme-change', function () {
     if (rendered && container.style.display !== 'none') {
       rendered = false;
-      if (network) { network.destroy(); network = null; }
       renderNetwork();
     }
   });
