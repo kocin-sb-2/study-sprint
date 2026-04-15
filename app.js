@@ -1040,41 +1040,27 @@ function initMasteryDashboard() {
 ---------------------------------------------------------- */
 function initQuizMode() {
   var questions = document.querySelectorAll('.q-item');
-  if (!questions.length) return; /* no PQS content on this page yet */
+  if (!questions.length) return;
 
-  /* Find the mind map button to place quiz button nearby, or inject standalone */
-  var mindMapBtn = document.getElementById('ss-mindmap-btn');
-  var quizBtn    = document.createElement('button');
-  quizBtn.id        = 'ss-quiz-mode-btn';
+  var quizBtn = document.createElement('button');
+  quizBtn.id = 'ss-quiz-mode-btn';
   quizBtn.className = 'ss-quiz-mode-btn';
-  quizBtn.title     = 'Hide all solutions — test yourself';
+  quizBtn.title = 'Hide all solutions — test yourself';
   quizBtn.innerHTML = '🎯 Quiz Mode';
-
-  if (mindMapBtn && mindMapBtn.parentNode) {
-    mindMapBtn.parentNode.insertBefore(quizBtn, mindMapBtn.nextSibling);
-  } else {
-    /* Fallback: inject after progress wrap or after hero */
-    var anchor = document.getElementById('ss-progress-wrap') || document.querySelector('.hero');
-    if (anchor) anchor.insertAdjacentElement('afterend', quizBtn);
-  }
+  document.body.appendChild(quizBtn);
 
   var quizOn = false;
+  var total = questions.length;
 
   quizBtn.addEventListener('click', function () {
     quizOn = !quizOn;
     document.body.classList.toggle('ss-quiz-on', quizOn);
     quizBtn.classList.toggle('ss-quiz-active', quizOn);
-    quizBtn.innerHTML = quizOn ? '✓ Exit Quiz' : '🎯 Quiz Mode';
+    quizBtn.innerHTML = quizOn ? '✕ Exit Quiz' : '🎯 Quiz Mode';
 
     if (!quizOn) {
-      /* Reset all solution panels when leaving quiz mode */
-      document.querySelectorAll('.q-solution--open').forEach(function (sol) {
-        sol.classList.remove('q-solution--open');
-      });
-      document.querySelectorAll('.q-toggle-btn').forEach(function (b) {
-        b.textContent = '▸ Show Solution';
-        b.classList.remove('q-toggle-btn--open');
-      });
+      document.querySelectorAll('.q-solution--open').forEach(function (s) { s.classList.remove('q-solution--open'); });
+      document.querySelectorAll('.q-toggle-btn').forEach(function (b) { b.textContent = '▸ Show Solution'; b.classList.remove('q-toggle-btn--open'); });
     }
   });
 }

@@ -174,45 +174,46 @@ body { background:var(--bg); color:var(--text); font-family:'Source Sans 3',sans
           <div class="info-block"><div class="info-block-title questions">🎯 Practice Questions</div><div class="q-list">
             <div class="q-item" data-type="recall" data-marks="2">
               <div class="q-meta"><span class="q-badge q-badge--recall">Recall</span><span class="q-marks">[2 marks]</span><span class="q-diff q-diff--l1">L1</span></div>
-              <p class="q-stem">Define <em>instantaneous velocity</em> and explain how it differs from average velocity.</p>
+              <p class="q-stem">Define <em>acceleration</em> and state its SI unit. Distinguish between uniform and non-uniform acceleration.</p>
               <button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Show Solution</button>
               <div class="q-solution"><div class="q-steps">
-                <div class="q-step"><strong>Definition:</strong> Instantaneous velocity is the rate of change of displacement at a specific moment in time; it equals the gradient of the displacement-time graph at that point. [1 mark]</div>
-                <div class="q-step"><strong>Difference:</strong> Average velocity is total displacement divided by total time (Δs/Δt over an interval), while instantaneous velocity is the limit of this ratio as Δt → 0. [1 mark]</div>
-              </div><div class="q-examtip">Common error: Confusing velocity with speed — velocity is a vector (has direction), speed is a scalar.</div></div>
-            </div>
-            <div class="q-item" data-type="application" data-marks="3">
-              <div class="q-meta"><span class="q-badge q-badge--application">Application</span><span class="q-marks">[3 marks]</span><span class="q-diff q-diff--l2">L2</span></div>
-              <p class="q-stem">A ball is thrown vertically upward with an initial velocity of 20 m/s. Ignoring air resistance, describe the velocity and acceleration of the ball at the highest point of its trajectory.</p>
-              <button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Show Solution</button>
-              <div class="q-solution"><div class="q-steps">
-                <div class="q-step"><strong>Velocity at top:</strong> At the highest point, the vertical velocity is momentarily zero (v = 0 m/s) because the ball has decelerated to rest before reversing direction. [1 mark]</div>
-                <div class="q-step"><strong>Acceleration at top:</strong> The acceleration remains g = 9.81 m/s² downward throughout the entire flight, including at the top. Gravity does not switch off. [1 mark]</div>
-                <div class="q-step"><strong>Key distinction:</strong> Zero velocity does not mean zero acceleration — the ball is changing direction, which requires acceleration. [1 mark]</div>
-              </div><div class="q-examtip">Common error: Stating that acceleration is zero at the top because the ball is momentarily at rest. This is the most frequent mistake in kinematics questions.</div></div>
+                <div class="q-step"><strong>Definition:</strong> Acceleration is the rate of change of velocity: a = Δv/Δt. SI unit: m s⁻². It is a vector quantity. [1]</div>
+                <div class="q-step"><strong>Distinction:</strong> Uniform acceleration means a is constant (straight line on v-t graph). Non-uniform means a varies with time (curved v-t graph). [1]</div>
+              </div><div class="q-examtip">Common error: Writing "change in speed over time" — IB requires "change in velocity" since acceleration is a vector. This distinction costs marks every session.</div></div>
             </div>
             <div class="q-item" data-type="calculation" data-marks="4">
               <div class="q-meta"><span class="q-badge q-badge--calculation">Calculation</span><span class="q-marks">[4 marks]</span><span class="q-diff q-diff--l2">L2</span></div>
-              <p class="q-stem">A projectile is launched at 25 m/s at an angle of 40° above the horizontal from ground level. Calculate the maximum height reached. Take g = 9.81 m/s².</p>
+              <p class="q-stem">A stone is dropped from rest from the top of a cliff. It hits the sea 3.2 s later. Calculate (a) the height of the cliff and (b) the speed at which the stone hits the water. Assume g = 9.81 m s⁻² and air resistance is negligible.</p>
               <button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Show Solution</button>
               <div class="q-solution"><div class="q-steps">
-                <div class="q-step"><strong>Given:</strong> v₀ = 25 m/s, θ = 40°, g = 9.81 m/s². At max height, vᵧ = 0.</div>
-                <div class="q-step"><strong>Vertical component:</strong> v₀ᵧ = v₀ sin θ = 25 × sin 40° = 25 × 0.6428 = 16.07 m/s [1 mark]</div>
-                <div class="q-step"><strong>Formula:</strong> Using v² = u² + 2as with v = 0: 0 = (16.07)² + 2(−9.81)(H) [1 mark]</div>
-                <div class="q-step"><strong>Solve:</strong> H = (16.07)² / (2 × 9.81) = 258.2 / 19.62 = 13.2 m [1 mark]</div>
-                <div class="q-step"><strong>Answer:</strong> Maximum height = 13.2 m (3 s.f.) [1 mark]</div>
-              </div><div class="q-examtip">Common error: Using the full velocity (25 m/s) instead of the vertical component (v₀ sin θ). Only the vertical component determines height.</div></div>
+                <div class="q-step"><strong>Given:</strong> u = 0 (dropped from rest), t = 3.2 s, a = g = 9.81 m s⁻².</div>
+                <div class="q-step"><strong>(a) Height:</strong> s = ut + ½at² = 0 + ½(9.81)(3.2²) = ½(9.81)(10.24) = 50.2 m ≈ 50 m [2]</div>
+                <div class="q-step"><strong>(b) Speed:</strong> v = u + at = 0 + 9.81 × 3.2 = 31.4 m s⁻¹ ≈ 31 m s⁻¹ [1]</div>
+                <div class="q-step"><strong>Check:</strong> v² = u² + 2as = 0 + 2(9.81)(50.2) = 985.9 → v = 31.4 m s⁻¹ ✓ [1]</div>
+              </div><div class="q-examtip">Common error: Forgetting u = 0 for "dropped from rest" and using a non-zero initial velocity. Also: IB expects you to state the assumption "air resistance negligible" even when the question says it — write it in your answer for the communication mark.</div></div>
             </div>
-            <div class="q-item" data-type="analysis" data-marks="4">
-              <div class="q-meta"><span class="q-badge q-badge--analysis">Analysis</span><span class="q-marks">[4 marks]</span><span class="q-diff q-diff--l3">L3</span></div>
-              <p class="q-stem">A velocity-time graph shows an object moving with positive velocity that decreases linearly to zero, then becomes negative. Analyse the motion described and explain what the area under the graph represents in each phase.</p>
+            <div class="q-item" data-type="application" data-marks="4">
+              <div class="q-meta"><span class="q-badge q-badge--application">Application</span><span class="q-marks">[4 marks]</span><span class="q-diff q-diff--l2">L2</span></div>
+              <p class="q-stem">A ball is launched horizontally at 12 m s⁻¹ from a table 1.5 m above the floor. Determine (a) the time to reach the floor and (b) the horizontal distance from the edge of the table where the ball lands.</p>
               <button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Show Solution</button>
               <div class="q-solution"><div class="q-steps">
-                <div class="q-step"><strong>Phase 1 (positive v, decreasing):</strong> The object moves forward while decelerating uniformly. The area under this section is positive and represents forward displacement. [1 mark]</div>
-                <div class="q-step"><strong>At v = 0:</strong> The object momentarily stops — this is the point of maximum displacement from the start. [1 mark]</div>
-                <div class="q-step"><strong>Phase 2 (negative v):</strong> The object reverses direction and moves backward. The area is below the time axis and represents negative (backward) displacement. [1 mark]</div>
-                <div class="q-step"><strong>Total displacement:</strong> The net displacement is the algebraic sum of both areas. If the negative area exceeds the positive, the object ends behind its starting point. [1 mark]</div>
-              </div><div class="q-examtip">Common error: Treating all area as positive (giving distance, not displacement). Area below the t-axis must be subtracted for displacement.</div></div>
+                <div class="q-step"><strong>Key principle:</strong> Horizontal and vertical motions are independent. Horizontal: constant velocity (aₓ = 0). Vertical: free fall from rest (uᵧ = 0, a = 9.81 m s⁻²). [1]</div>
+                <div class="q-step"><strong>(a) Time:</strong> Vertical: s = ½gt² → 1.5 = ½(9.81)t² → t² = 0.3058 → t = 0.553 s ≈ 0.55 s [1]</div>
+                <div class="q-step"><strong>(b) Range:</strong> Horizontal: x = vₓt = 12 × 0.553 = 6.64 m ≈ 6.6 m [1]</div>
+                <div class="q-step"><strong>Note:</strong> The horizontal velocity does not affect the fall time — a ball dropped from the same height would hit the floor at the same time. [1]</div>
+              </div><div class="q-examtip">Common error: Using the horizontal velocity in the vertical equation. The two components must be solved separately and linked only through time t.</div></div>
+            </div>
+            <div class="q-item" data-type="analysis" data-marks="5">
+              <div class="q-meta"><span class="q-badge q-badge--analysis">Analysis</span><span class="q-marks">[5 marks]</span><span class="q-diff q-diff--l3">L3</span></div>
+              <p class="q-stem">The velocity-time graph below shows the motion of a skydiver from the moment they jump until they reach the ground.<br><br>Phase A: velocity increases rapidly (0–10 s)<br>Phase B: velocity increases slowly then becomes constant (10–40 s)<br>Phase C: velocity suddenly decreases (40–43 s)<br>Phase D: velocity is small and constant (43–120 s)<br><br>Explain the motion in each phase in terms of the forces acting on the skydiver.</p>
+              <button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Show Solution</button>
+              <div class="q-solution"><div class="q-steps">
+                <div class="q-step"><strong>Phase A:</strong> Weight >> drag (low speed = low drag). Net downward force is large, so acceleration is large. As speed increases, drag increases. [1]</div>
+                <div class="q-step"><strong>Phase B:</strong> Drag increases with speed until drag = weight. Net force = 0, acceleration = 0. The skydiver reaches terminal velocity (~55 m s⁻¹). [1]</div>
+                <div class="q-step"><strong>Phase C:</strong> Parachute opens — drag increases dramatically (larger surface area). Drag >> weight, so there is a large net upward force causing rapid deceleration. [1]</div>
+                <div class="q-step"><strong>Phase D:</strong> At the new (lower) terminal velocity (~5 m s⁻¹), drag again equals weight. Net force = 0, constant velocity until landing. [1]</div>
+                <div class="q-step"><strong>Key principle:</strong> Terminal velocity occurs whenever drag = weight, not at a single fixed speed. The terminal velocity depends on the cross-sectional area and shape of the falling object. [1]</div>
+              </div><div class="q-examtip">Common error: Saying "there is no gravity" or "no forces act" at terminal velocity. Both weight and drag still act — they are equal and opposite, giving zero NET force. IB mark schemes penalise this heavily.</div></div>
             </div>
           </div></div>
 

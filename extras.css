@@ -1166,27 +1166,42 @@ html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-co
 
 /* ---- Quiz mode toggle button (injected by JS into toolbar) ---- */
 .ss-quiz-mode-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 160px;
+  z-index: 900;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--surface-3, #222d44);
+  background: var(--ss-surface);
   border: 1px solid var(--ss-border);
   color: var(--ss-muted);
-  font-size: 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  padding: 7px 14px;
-  border-radius: 8px;
+  font-size: 0.82rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.3px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  transition: border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
 }
 
-.ss-quiz-mode-btn:hover,
-.ss-quiz-mode-btn.ss-quiz-active {
+.ss-quiz-mode-btn:hover {
   border-color: var(--accent-gold, #ffd54f);
   color: var(--accent-gold, #ffd54f);
-  background: rgba(255,213,79,0.08);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.45);
+}
+.ss-quiz-mode-btn.ss-quiz-active {
+  border-color: #ef5350;
+  color: #ef5350;
+  background: rgba(239,83,80,0.08);
+}
+
+html.ss-light .ss-quiz-mode-btn { background: var(--surface); border-color: var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+@media (max-width: 600px) {
+  .ss-quiz-mode-btn { right: auto; left: 80px; bottom: 28px; font-size: 0.75rem; padding: 7px 14px; }
 }
 
 /* ---- Quiz mode: hide all solutions + show placeholder ---- */
