@@ -9,6 +9,7 @@
 <meta property="og:description" content="Every concept, term, and formula for IB HL and Swedish Gymnasium — organized for exam success.">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="extras.css">
 <style>
 :root {
@@ -269,9 +270,28 @@ body {
   .card-grid { grid-template-columns: 1fr; }
   .hero { padding: 50px 20px 36px; }
 }
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--accent-physics);
+  color: #0a0e17;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: 9999;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
 <div class="hero">
   <h1>Study Sprint</h1>
@@ -279,7 +299,7 @@ body {
   <p class="tagline">Every concept, term, and formula you need — organized for exam success. Click any subject to explore.</p>
 </div>
 
-<div class="systems">
+<div class="systems" id="main-content">
 
   <!-- ====== SWEDISH SYSTEM ====== -->
   <div class="system-group">

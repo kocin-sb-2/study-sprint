@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://study-sprint.netlify.app/sitemap.xml

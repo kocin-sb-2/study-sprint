@@ -13,6 +13,17 @@
 ============================================================ */
 
 /* ----------------------------------------------------------
+   0. SAFE localStorage WRAPPER
+   Private browsing or full storage can throw. Wrap all access.
+---------------------------------------------------------- */
+var _ls = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del: function (k) { try { localStorage.removeItem(k); } catch (e) {} },
+  keys: function () { try { return Object.keys(localStorage); } catch (e) { return []; } }
+};
+
+/* ----------------------------------------------------------
    1. SECTION & TOPIC TOGGLES
    (previously inlined on every page — now centralised)
    These must stay on `window` because onclick="" attributes
@@ -21,19 +32,25 @@
 function toggle(id) {
   var body  = document.getElementById('body-'  + id);
   var arrow = document.getElementById('arrow-' + id);
+  var header = body ? body.previousElementSibling : null;
   if (!body) return;
   if (body.style.display === 'none') {
     body.style.display = 'flex';
     if (arrow) arrow.classList.add('open');
+    if (header) header.setAttribute('aria-expanded', 'true');
   } else {
     body.style.display = 'none';
     if (arrow) arrow.classList.remove('open');
+    if (header) header.setAttribute('aria-expanded', 'false');
   }
 }
 
 function toggleTopic(id) {
   var el = document.getElementById('topic-' + id);
-  if (el) el.classList.toggle('expanded');
+  if (!el) return;
+  el.classList.toggle('expanded');
+  var header = el.querySelector('.topic-header');
+  if (header) header.setAttribute('aria-expanded', el.classList.contains('expanded') ? 'true' : 'false');
 }
 
 /* ----------------------------------------------------------
@@ -95,7 +112,7 @@ function initProgress() {
      WHY: localStorage only contains done topics (keys are removed when undone),
      so the dashboard cannot infer the total from localStorage alone. Saving it
      here gives the dashboard a stable denominator. */
-  localStorage.setItem(pageKey + ':__total__', total);
+  _ls.set(pageKey + ':__total__', total);
 
   /* Inject progress bar between .hero and .content */
   var hero = document.querySelector('.hero');
@@ -115,7 +132,7 @@ function initProgress() {
 
     document.getElementById('ss-reset-btn').addEventListener('click', function () {
       topics.forEach(function (t) {
-        localStorage.removeItem(pageKey + ':' + t.id);
+        _ls.del(pageKey + ':' + t.id);
       });
       location.reload();
     });
@@ -126,7 +143,7 @@ function initProgress() {
     var header = topic.querySelector('.topic-header');
     if (!header) return;
 
-    var isDone = localStorage.getItem(pageKey + ':' + topic.id) === '1';
+    var isDone = _ls.get(pageKey + ':' + topic.id) === '1';
     if (isDone) topic.classList.add('ss-done');
 
     var btn = document.createElement('button');
@@ -136,15 +153,15 @@ function initProgress() {
 
     btn.addEventListener('click', function (e) {
       e.stopPropagation(); /* prevent toggling topic expansion */
-      var done = localStorage.getItem(pageKey + ':' + topic.id) === '1';
+      var done = _ls.get(pageKey + ':' + topic.id) === '1';
       if (done) {
-        localStorage.removeItem(pageKey + ':' + topic.id);
+        _ls.del(pageKey + ':' + topic.id);
         btn.className   = 'ss-done-btn';
         btn.textContent = '○';
         btn.setAttribute('aria-label', 'Mark as done');
         topic.classList.remove('ss-done');
       } else {
-        localStorage.setItem(pageKey + ':' + topic.id, '1');
+        _ls.set(pageKey + ':' + topic.id, '1');
         btn.className   = 'ss-done-btn active';
         btn.textContent = '✓';
         btn.setAttribute('aria-label', 'Mark as not done');
@@ -162,7 +179,7 @@ function initProgress() {
 function refreshProgressBar(pageKey, topics) {
   var done = 0;
   topics.forEach(function (t) {
-    if (localStorage.getItem(pageKey + ':' + t.id) === '1') done++;
+    if (_ls.get(pageKey + ':' + t.id) === '1') done++;
   });
   var fill  = document.getElementById('ss-progress-fill');
   var count = document.getElementById('ss-done-count');
@@ -189,7 +206,7 @@ function initSubjectSearch() {
     '<span class="ss-search-icon">&#128269;</span>' +
     '<input class="ss-search-input" id="ss-search" type="search"' +
     ' placeholder="Search topics, concepts, formulas…" autocomplete="off" spellcheck="false">' +
-    '<button class="ss-search-clear" id="ss-search-clear" title="Clear search" style="display:none">&#10005;</button>';
+    '<button class="ss-search-clear" id="ss-search-clear" title="Clear search" aria-label="Clear search" style="display:none">&#10005;</button>';
 
   content.insertBefore(wrap, content.firstChild);
 
@@ -346,7 +363,7 @@ function initDarkModeToggle() {
   btn.className = 'ss-darkmode-btn';
   btn.title     = 'Toggle light/dark mode';
 
-  var isDark = localStorage.getItem('ss-theme') !== 'light';
+  var isDark = _ls.get('ss-theme') !== 'light';
   applyTheme(isDark);
   btn.textContent = isDark ? '☀️' : '🌙';
 
@@ -354,7 +371,7 @@ function initDarkModeToggle() {
     isDark = !isDark;
     applyTheme(isDark);
     btn.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('ss-theme', isDark ? 'dark' : 'light');
+    _ls.set('ss-theme', isDark ? 'dark' : 'light');
   });
 
   document.body.appendChild(btn);
@@ -769,10 +786,10 @@ function initMasteryDashboard() {
      also stores the total as pageKey+':__total__'. We read that here for
      the denominator, and count only '1'-valued topic keys for the numerator. */
   var bars = subjects.map(function (s) {
-    var total = parseInt(localStorage.getItem(s.path + ':__total__') || '0', 10);
+    var total = parseInt(_ls.get(s.path + ':__total__') || '0', 10);
     var done  = 0;
-    Object.keys(localStorage).forEach(function (key) {
-      if (key.indexOf(s.path + ':topic-') !== -1 && localStorage.getItem(key) === '1') {
+    _ls.keys().forEach(function (key) {
+      if (key.indexOf(s.path + ':topic-') !== -1 && _ls.get(key) === '1') {
         done++;
       }
     });
@@ -786,7 +803,19 @@ function initMasteryDashboard() {
     '</div>';
   });
 
-  if (totalCount === 0) return; /* User hasn't visited any subject page yet */
+  if (totalCount === 0) {
+    /* Show empty state so first-time visitors know the feature exists */
+    var empty = document.createElement('div');
+    empty.className = 'ss-dashboard';
+    empty.innerHTML =
+      '<div class="ss-dash-header">' +
+        '<span class="ss-dash-title">📊 Your Study Progress</span>' +
+        '<span class="ss-dash-level" style="color:var(--ss-muted)">Visit any subject to start tracking</span>' +
+      '</div>';
+    var systems = document.querySelector('.systems');
+    systems.insertBefore(empty, systems.firstChild);
+    return;
+  }
 
   var overallPct = Math.round((totalDone / totalCount) * 100);
   var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
