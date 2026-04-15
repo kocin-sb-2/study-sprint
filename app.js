@@ -388,62 +388,44 @@ function applyTheme(isDark) {
 }
 
 /* ----------------------------------------------------------
-   9. INTERACTIVE MIND MAPS (vis.js Network)
-   WHY: Experts see connections between concepts; novices see
-   isolated facts. Interactive graphs activate spatial memory
-   and support dual-coding (Paivio 1986). Unlike static diagrams,
-   a live-rendered graph reads directly from the page DOM — so it
-   always reflects Cowork's latest content with zero maintenance.
-   vis.js Network adds physics, zoom/pan, hover tooltips, and
-   click-to-jump — things a hand-drawn diagram can never do.
-
-   The graph is built by reading .section / .topic elements
-   directly from the DOM, so it never needs manual updates.
-   Clicking a topic node scrolls to and expands that topic.
+   9. INTERACTIVE CONCEPT MAP (D3.js Force Graph)
+   Replaced vis.js with D3 force-directed layout for:
+   - Free-form 2D physics (nodes float, cluster, repel)
+   - Smooth SVG zoom/pan via d3-zoom
+   - Rich HTML labels and cross-section connection arcs
+   - Responsive canvas that fills available space
 ---------------------------------------------------------- */
 
-/* --- 9a. Load vis.js Network from CDN on first use --- */
-var _visLoaded = false;
-function loadVisNetwork(callback) {
-  if (window.vis && window.vis.Network) { callback(); return; }
-  if (_visLoaded) {
-    /* Script tag injected but not resolved yet — poll briefly */
+/* --- 9a. Load D3 from CDN on first use --- */
+var _d3Loaded = false;
+function loadD3(callback) {
+  if (window.d3) { callback(); return; }
+  if (_d3Loaded) {
     var poll = setInterval(function () {
-      if (window.vis && window.vis.Network) {
-        clearInterval(poll);
-        callback();
-      }
+      if (window.d3) { clearInterval(poll); callback(); }
     }, 80);
     return;
   }
-  _visLoaded = true;
-
-  /* vis-network CSS (tooltips, cursors) */
-  var link = document.createElement('link');
-  link.rel  = 'stylesheet';
-  link.href = 'https://cdn.jsdelivr.net/npm/vis-network@9/dist/vis-network.min.css';
-  document.head.appendChild(link);
-
-  var script    = document.createElement('script');
-  script.src    = 'https://cdn.jsdelivr.net/npm/vis-network@9/dist/vis-network.min.js';
-  script.onload = function () { callback(); };
-  script.onerror = function () { callback(new Error('load-failed')); };
-  document.head.appendChild(script);
+  _d3Loaded = true;
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+  s.onload = function () { callback(); };
+  s.onerror = function () { callback(new Error('d3-load-failed')); };
+  document.head.appendChild(s);
 }
 
 /* --- 9b. Extract structured data from the page DOM --- */
 function extractPageData() {
   var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
   var palette = ['#4fc3f7','#ff8a65','#b388ff','#66bb6a','#ffd54f','#4db6ac','#f48fb1','#ffb74d'];
-  var sections = [];
-  var si = 0;
+  var sections = [], si = 0;
 
   document.querySelectorAll('.section').forEach(function (sec) {
     var numEl = sec.querySelector('.section-number');
     var titleEl = sec.querySelector('.section-title');
     if (!titleEl) return;
     var col = palette[si++ % palette.length];
-    var sLabel = (numEl ? numEl.textContent.trim() + '  ' : '') + titleEl.textContent.trim();
+    var sLabel = (numEl ? numEl.textContent.trim() + ' ' : '') + titleEl.textContent.trim();
     var topics = [];
 
     sec.querySelectorAll('.topic[id]').forEach(function (topic) {
@@ -455,24 +437,20 @@ function extractPageData() {
       var isHL = !!topic.querySelector('.hl-tag');
       var isDone = _ls.get(pageKey + ':' + topic.id) === '1';
 
-      /* Extract key concepts as keywords for cross-linking */
       var keywords = [];
       topic.querySelectorAll('.concept-item strong, .term-word, .formula-card').forEach(function (el) {
         var t = el.textContent.replace(/[:\(\)]/g, '').trim().toLowerCase();
         if (t.length > 2 && t.length < 60) keywords.push(t);
       });
 
-      var conceptCount = topic.querySelectorAll('.concept-item').length;
-      var formulaCount = topic.querySelectorAll('.formula-card').length;
-      var termCount = topic.querySelectorAll('.term-item').length;
-
       topics.push({
-        id: topic.id, name: name, detail: detail, isHL: isHL,
-        isDone: isDone, keywords: keywords,
-        conceptCount: conceptCount, formulaCount: formulaCount, termCount: termCount
+        id: topic.id, name: name, detail: detail, isHL: isHL, isDone: isDone,
+        keywords: keywords,
+        conceptCount: topic.querySelectorAll('.concept-item').length,
+        formulaCount: topic.querySelectorAll('.formula-card').length,
+        termCount: topic.querySelectorAll('.term-item').length
       });
     });
-
     sections.push({ label: sLabel, color: col, topics: topics });
   });
   return sections;
@@ -480,17 +458,14 @@ function extractPageData() {
 
 /* --- 9b2. Find cross-topic connections via shared keywords --- */
 function findConnections(sections) {
-  var connections = [];
-  var allTopics = [];
+  var connections = [], allTopics = [];
   sections.forEach(function (s, si) {
-    s.topics.forEach(function (t) { allTopics.push({ topic: t, sectionIdx: si }); });
+    s.topics.forEach(function (t) { allTopics.push({ topic: t, si: si }); });
   });
-
   for (var i = 0; i < allTopics.length; i++) {
     for (var j = i + 1; j < allTopics.length; j++) {
-      if (allTopics[i].sectionIdx === allTopics[j].sectionIdx) continue;
-      var a = allTopics[i].topic, b = allTopics[j].topic;
-      var shared = [];
+      if (allTopics[i].si === allTopics[j].si) continue;
+      var a = allTopics[i].topic, b = allTopics[j].topic, shared = [];
       a.keywords.forEach(function (kw) {
         b.keywords.forEach(function (kw2) {
           if (kw === kw2 || (kw.length > 5 && kw2.indexOf(kw) !== -1) || (kw2.length > 5 && kw.indexOf(kw2) !== -1)) {
@@ -498,118 +473,60 @@ function findConnections(sections) {
           }
         });
       });
-      if (shared.length >= 1) {
-        connections.push({ from: a.id, to: b.id, shared: shared });
-      }
+      if (shared.length >= 1) connections.push({ source: a.id, target: b.id, shared: shared });
     }
   }
   return connections;
 }
 
-/* --- 9b3. Build vis.js graph from structured data --- */
-function buildMapData(sections, connections, filter) {
-  var isDark = !document.documentElement.classList.contains('ss-light');
-  var textDark = '#0a0e17';
-  var textLight = isDark ? '#e8ecf4' : '#1a1a2e';
-  var dimColor = isDark ? '#2a3654' : '#c0c8d8';
-
+/* --- 9b3. Build D3 graph data --- */
+function buildD3Data(sections, connections, filter) {
+  var nodes = [], links = [], nodeMap = {};
   var h1 = document.querySelector('.hero h1');
   var rootLabel = h1 ? h1.textContent.replace(/\s+/g, ' ').trim() : 'Subject';
   var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() ||
     getComputedStyle(document.documentElement).getPropertyValue('--accent-physics').trim() || '#4fc3f7';
 
-  var nodes = [], edges = [], nid = 1;
-  var topicIdMap = {}; /* topic.id → vis node id */
-
-  var rootId = nid++;
-  nodes.push({
-    id: rootId, label: rootLabel, shape: 'ellipse',
-    widthConstraint: { maximum: 160 },
-    color: { background: accent, border: accent, highlight: { background: accent, border: '#fff' } },
-    font: { color: textDark, size: 14, face: 'Source Sans 3, sans-serif', bold: true },
-    shadow: { enabled: true, size: 12, x: 0, y: 4, color: 'rgba(0,0,0,0.4)' },
-    level: 0
-  });
+  /* Root */
+  var root = { id: '__root__', label: rootLabel, type: 'root', color: accent, radius: 32 };
+  nodes.push(root); nodeMap[root.id] = root;
 
   sections.forEach(function (sec, si) {
-    var sid = nid++;
-    nodes.push({
-      id: sid, label: sec.label, shape: 'box',
-      margin: { top: 8, bottom: 8, left: 10, right: 10 },
-      widthConstraint: { maximum: 170 },
-      color: { background: sec.color, border: sec.color, highlight: { background: sec.color, border: '#fff' } },
-      font: { color: textDark, size: 12, face: 'Source Sans 3, sans-serif', bold: true },
-      shadow: { enabled: true, size: 8, x: 0, y: 3, color: 'rgba(0,0,0,0.3)' },
-      level: 1, sectionIdx: si
-    });
-    edges.push({
-      from: rootId, to: sid, color: { color: sec.color, opacity: 0.9 }, width: 2.5,
-      smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.5 }
-    });
+    var secNode = { id: '__sec_' + si, label: sec.label, type: 'section', color: sec.color, radius: 22, sectionIdx: si };
+    nodes.push(secNode); nodeMap[secNode.id] = secNode;
+    links.push({ source: '__root__', target: secNode.id, type: 'hierarchy', color: sec.color, width: 3 });
 
     sec.topics.forEach(function (t) {
-      /* Apply filters */
       if (filter.hl && !t.isHL) return;
       if (filter.mastery === 'done' && !t.isDone) return;
       if (filter.mastery === 'todo' && t.isDone) return;
       if (filter.section !== -1 && filter.section !== si) return;
 
-      var tid = nid++;
-      topicIdMap[t.id] = tid;
-      var label = t.name.length > 28 ? t.name.slice(0, 26) + '…' : t.name;
-
-      /* Size by content richness */
       var richness = t.conceptCount + t.formulaCount + t.termCount;
-      var nodeSize = Math.min(8 + richness * 1.5, 24);
+      var r = Math.min(10 + richness * 1.2, 26);
+      var col = t.isDone ? '#66bb6a' : (t.isHL ? '#b388ff' : sec.color);
 
-      /* Color by mastery state */
-      var bg, border;
-      if (t.isDone) {
-        bg = isDark ? '#1b5e20' : '#a5d6a7'; border = '#66bb6a';
-      } else if (t.isHL) {
-        bg = '#b388ff'; border = '#9c6fe0';
-      } else {
-        bg = sec.color; border = sec.color;
-      }
-
-      /* Badge showing content counts */
-      var badge = '';
-      if (t.conceptCount) badge += '💡' + t.conceptCount + ' ';
-      if (t.formulaCount) badge += '📐' + t.formulaCount + ' ';
-      if (t.termCount) badge += '📖' + t.termCount;
-
-      nodes.push({
-        id: tid, label: label, shape: t.isHL ? 'diamond' : 'dot',
-        size: nodeSize, topicElId: t.id, topicData: t, sectionIdx: si,
-        color: { background: bg, border: border, highlight: { background: '#fff', border: sec.color } },
-        font: { color: textLight, size: 10, face: 'Source Sans 3, sans-serif' },
-        level: 2, badge: badge
-      });
-      edges.push({
-        from: sid, to: tid, color: { color: sec.color, opacity: 0.4 }, width: 1.2,
-        smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.4 }
-      });
+      var node = {
+        id: t.id, label: t.name, type: 'topic', color: col, radius: r,
+        sectionIdx: si, sectionColor: sec.color, topicData: t
+      };
+      nodes.push(node); nodeMap[node.id] = node;
+      links.push({ source: secNode.id, target: t.id, type: 'hierarchy', color: sec.color, width: 1.2 });
     });
   });
 
-  /* Cross-topic connections (dashed lines) */
+  /* Cross-links */
   connections.forEach(function (c) {
-    var fromId = topicIdMap[c.from], toId = topicIdMap[c.to];
-    if (!fromId || !toId) return;
-    edges.push({
-      from: fromId, to: toId,
-      dashes: [6, 4], width: 1.5,
-      color: { color: isDark ? 'rgba(255,213,79,0.5)' : 'rgba(180,140,0,0.4)' },
-      smooth: { type: 'curvedCW', roundness: 0.2 },
-      arrows: { to: { enabled: false } },
-      title: 'Shared: ' + c.shared.slice(0, 3).join(', ')
-    });
+    if (nodeMap[c.source] && nodeMap[c.target]) {
+      links.push({ source: c.source, target: c.target, type: 'cross', shared: c.shared, width: 1.5 });
+    }
   });
 
-  return { nodes: nodes, edges: edges, topicIdMap: topicIdMap };
+  return { nodes: nodes, links: links };
 }
 
 /* --- 9c. Mind map feature init (upgraded) --- */
+/* --- 9c. D3 Force-Directed Concept Map --- */
 function initMindMap() {
   var hero = document.querySelector('.hero');
   if (!hero || !document.querySelector('.section')) return;
@@ -622,8 +539,7 @@ function initMindMap() {
   var btn = document.createElement('button');
   btn.className = 'ss-mindmap-btn';
   btn.innerHTML = '🧠 Concept Map';
-  var badgeRow = hero.querySelector('.badge-row');
-  (badgeRow || hero).appendChild(btn);
+  (hero.querySelector('.badge-row') || hero).appendChild(btn);
 
   /* Container */
   var container = document.createElement('div');
@@ -637,51 +553,30 @@ function initMindMap() {
   /* Toolbar */
   var toolbar = document.createElement('div');
   toolbar.className = 'ss-mindmap-toolbar';
-
-  var titleSpan = document.createElement('span');
-  titleSpan.className = 'ss-mindmap-title';
-  titleSpan.textContent = (document.querySelector('.hero h1') || {}).textContent || 'Concept Map';
-
-  var fitBtn = document.createElement('button');
-  fitBtn.className = 'ss-mindmap-fullscreen';
-  fitBtn.innerHTML = '⊞ Fit';
-
-  var fullscreenBtn = document.createElement('button');
-  fullscreenBtn.className = 'ss-mindmap-fullscreen';
-  fullscreenBtn.innerHTML = '⛶ Expand';
-
-  var closeBtn = document.createElement('button');
-  closeBtn.className = 'ss-mindmap-close';
-  closeBtn.innerHTML = '✕ Close';
-
-  toolbar.appendChild(titleSpan);
-  toolbar.appendChild(fitBtn);
-  toolbar.appendChild(fullscreenBtn);
-  toolbar.appendChild(closeBtn);
+  toolbar.innerHTML =
+    '<span class="ss-mindmap-title">' + ((document.querySelector('.hero h1') || {}).textContent || 'Concept Map') + '</span>' +
+    '<button class="ss-mindmap-fullscreen" id="ss-map-fit">⊞ Fit</button>' +
+    '<button class="ss-mindmap-fullscreen" id="ss-map-expand">⛶ Expand</button>' +
+    '<button class="ss-mindmap-close" id="ss-map-close">✕ Close</button>';
 
   /* Filter bar */
   var filterBar = document.createElement('div');
   filterBar.className = 'ss-mindmap-filters';
-
-  var sectionOpts = '<option value="-1">All sections</option>';
+  var sOpts = '<option value="-1">All sections</option>';
   sections.forEach(function (s, i) {
-    sectionOpts += '<option value="' + i + '">' + s.label.replace(/</g, '&lt;') + '</option>';
+    sOpts += '<option value="' + i + '">' + s.label.replace(/</g, '&lt;') + '</option>';
   });
-
   filterBar.innerHTML =
-    '<select class="ss-map-select" id="ss-map-section">' + sectionOpts + '</select>' +
-    '<select class="ss-map-select" id="ss-map-mastery">' +
-      '<option value="all">All progress</option>' +
-      '<option value="done">✓ Completed</option>' +
-      '<option value="todo">○ Not done</option>' +
-    '</select>' +
+    '<select class="ss-map-select" id="ss-map-section">' + sOpts + '</select>' +
+    '<select class="ss-map-select" id="ss-map-mastery"><option value="all">All progress</option><option value="done">✓ Completed</option><option value="todo">○ Not done</option></select>' +
     '<label class="ss-map-toggle"><input type="checkbox" id="ss-map-hl"> HL only</label>' +
     '<span class="ss-map-stats" id="ss-map-stats"></span>';
 
-  /* Canvas */
-  var canvas = document.createElement('div');
-  canvas.className = 'ss-mindmap-canvas';
-  canvas.style.height = '520px';
+  /* SVG canvas */
+  var canvasWrap = document.createElement('div');
+  canvasWrap.className = 'ss-mindmap-canvas';
+  canvasWrap.style.height = '600px';
+  canvasWrap.id = 'ss-d3-canvas';
 
   /* Loading */
   var loadingDiv = document.createElement('div');
@@ -689,10 +584,9 @@ function initMindMap() {
   loadingDiv.innerHTML = '<div class="ss-mindmap-spinner"></div><span>Building concept map…</span>';
   loadingDiv.style.display = 'none';
 
-  /* Detail panel (shown on node click) */
+  /* Detail panel */
   var detailPanel = document.createElement('div');
   detailPanel.className = 'ss-map-detail';
-  detailPanel.id = 'ss-map-detail';
   detailPanel.style.display = 'none';
 
   /* Legend */
@@ -700,17 +594,18 @@ function initMindMap() {
   legend.className = 'ss-mindmap-legend';
   legend.innerHTML =
     '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#4fc3f7"></span>Topic</span>' +
-    '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#1b5e20"></span>Mastered</span>' +
+    '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#66bb6a"></span>Mastered</span>' +
     '<span class="ss-legend-item"><span class="ss-legend-diamond"></span>HL</span>' +
-    '<span class="ss-legend-item"><span class="ss-legend-dot" style="background:#ffd54f;width:16px;height:2px;border-radius:1px"></span>Cross-link</span>' +
-    '<span class="ss-legend-hint">Click node for details · Scroll to zoom · Drag to pan</span>';
+    '<span class="ss-legend-item"><span style="display:inline-block;width:20px;height:2px;background:#ffd54f;border-radius:1px;vertical-align:middle"></span> Cross-link</span>' +
+    '<span class="ss-legend-hint">Drag nodes · Scroll to zoom · Click for details</span>';
 
+  /* Assemble */
   inner.appendChild(toolbar);
   inner.appendChild(filterBar);
   inner.appendChild(loadingDiv);
   var mapBody = document.createElement('div');
   mapBody.className = 'ss-map-body';
-  mapBody.appendChild(canvas);
+  mapBody.appendChild(canvasWrap);
   mapBody.appendChild(detailPanel);
   inner.appendChild(mapBody);
   inner.appendChild(legend);
@@ -719,204 +614,312 @@ function initMindMap() {
   var progressWrap = document.getElementById('ss-progress-wrap');
   (progressWrap || hero).insertAdjacentElement('afterend', container);
 
-  var network = null, currentData = null, rendered = false;
+  var simulation = null, svg = null, rendered = false;
 
   function updateStats(data) {
     var el = document.getElementById('ss-map-stats');
     if (!el) return;
-    var topicNodes = data.nodes.filter(function (n) { return n.topicElId; });
-    var done = topicNodes.filter(function (n) { return n.topicData && n.topicData.isDone; }).length;
-    var crossLinks = connections.length;
-    el.textContent = topicNodes.length + ' topics · ' + done + ' done · ' + crossLinks + ' cross-links';
+    var topics = data.nodes.filter(function (n) { return n.type === 'topic'; });
+    var done = topics.filter(function (n) { return n.topicData && n.topicData.isDone; }).length;
+    el.textContent = topics.length + ' topics · ' + done + ' mastered · ' + connections.length + ' cross-links';
   }
 
-  function showDetail(nodeData) {
-    var t = nodeData.topicData;
+  function showDetail(d) {
+    var t = d.topicData;
     if (!t) { detailPanel.style.display = 'none'; return; }
-    var isDark = !document.documentElement.classList.contains('ss-light');
-
-    var html = '<div class="ss-detail-header">' +
-      '<strong>' + t.name + '</strong>' +
+    var html = '<div class="ss-detail-header"><strong>' + t.name + '</strong>' +
       (t.isHL ? ' <span class="ss-detail-hl">HL</span>' : '') +
-      (t.isDone ? ' <span class="ss-detail-done">✓ Done</span>' : '') +
-      '<button class="ss-detail-close" id="ss-detail-close">✕</button>' +
-    '</div>';
+      (t.isDone ? ' <span class="ss-detail-done">✓</span>' : '') +
+      '<button class="ss-detail-close" onclick="this.closest(\'.ss-map-detail\').style.display=\'none\'">✕</button></div>';
     if (t.detail) html += '<p class="ss-detail-desc">' + t.detail + '</p>';
     html += '<div class="ss-detail-counts">' +
       (t.conceptCount ? '<span>💡 ' + t.conceptCount + ' concepts</span>' : '') +
       (t.formulaCount ? '<span>📐 ' + t.formulaCount + ' formulas</span>' : '') +
-      (t.termCount ? '<span>📖 ' + t.termCount + ' terms</span>' : '') +
-    '</div>';
+      (t.termCount ? '<span>📖 ' + t.termCount + ' terms</span>' : '') + '</div>';
 
-    /* Show cross-connections */
-    var related = connections.filter(function (c) { return c.from === t.id || c.to === t.id; });
+    var related = connections.filter(function (c) { return c.source === t.id || c.target === t.id; });
     if (related.length) {
       html += '<div class="ss-detail-links"><strong>Connected topics:</strong>';
       related.forEach(function (r) {
-        var otherId = r.from === t.id ? r.to : r.from;
-        var otherEl = document.getElementById(otherId);
-        var otherName = otherEl ? (otherEl.querySelector('.topic-name') || {}).textContent || otherId : otherId;
-        html += '<div class="ss-detail-link-item">↔ ' + otherName +
-          '<span class="ss-detail-shared">' + r.shared.slice(0, 3).join(', ') + '</span></div>';
+        var oid = r.source === t.id ? r.target : r.source;
+        var oel = document.getElementById(oid);
+        var oname = oel ? (oel.querySelector('.topic-name') || {}).textContent || oid : oid;
+        html += '<div class="ss-detail-link-item">↔ ' + oname + '<span class="ss-detail-shared">' + r.shared.slice(0, 3).join(', ') + '</span></div>';
       });
       html += '</div>';
     }
-
-    html += '<button class="ss-detail-goto" id="ss-detail-goto" data-topic="' + t.id + '">↩ Jump to topic on page</button>';
-
+    html += '<button class="ss-detail-goto" onclick="var e=document.getElementById(\'' + t.id + '\');if(e){e.classList.add(\'expanded\');e.scrollIntoView({behavior:\'smooth\',block:\'center\'});e.style.outline=\'2px solid var(--ss-accent)\';setTimeout(function(){e.style.outline=\'\'},2200)}">↩ Jump to topic on page</button>';
     detailPanel.innerHTML = html;
     detailPanel.style.display = 'block';
-
-    document.getElementById('ss-detail-close').addEventListener('click', function () {
-      detailPanel.style.display = 'none';
-    });
-    document.getElementById('ss-detail-goto').addEventListener('click', function () {
-      var el = document.getElementById(this.getAttribute('data-topic'));
-      if (!el) return;
-      el.classList.add('expanded');
-      var header = el.querySelector('.topic-header');
-      if (header) header.setAttribute('aria-expanded', 'true');
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.style.outline = '2px solid var(--ss-accent)';
-      setTimeout(function () { el.style.outline = ''; }, 2200);
-    });
   }
 
-  function renderNetwork() {
+  function renderGraph() {
     loadingDiv.style.display = 'flex';
-    canvas.style.display = 'none';
+    canvasWrap.style.display = 'none';
     detailPanel.style.display = 'none';
 
-    loadVisNetwork(function (err) {
-      if (err || !window.vis) {
-        loadingDiv.innerHTML = '<span style="color:#ef5350">Could not load vis.js — check internet and refresh.</span>';
+    loadD3(function (err) {
+      if (err || !window.d3) {
+        loadingDiv.innerHTML = '<span style="color:#ef5350">Could not load D3.js — check internet.</span>';
         return;
       }
 
-      currentData = buildMapData(sections, connections, filter);
-      updateStats(currentData);
+      var data = buildD3Data(sections, connections, filter);
+      updateStats(data);
 
-      if (network) { network.destroy(); network = null; }
+      /* Clear previous */
+      canvasWrap.innerHTML = '';
+      if (simulation) simulation.stop();
 
-      network = new vis.Network(canvas, {
-        nodes: new vis.DataSet(currentData.nodes),
-        edges: new vis.DataSet(currentData.edges)
-      }, {
-        layout: {
-          hierarchical: {
-            enabled: true, direction: 'LR', sortMethod: 'directed',
-            levelSeparation: 210, nodeSpacing: 80, treeSpacing: 120,
-            parentCentralization: true
+      var isDark = !document.documentElement.classList.contains('ss-light');
+      var w = canvasWrap.clientWidth || 900;
+      var h = canvasWrap.clientHeight || 600;
+
+      svg = d3.select(canvasWrap).append('svg')
+        .attr('width', '100%').attr('height', '100%')
+        .attr('viewBox', [0, 0, w, h].join(' '))
+        .style('background', isDark ? '#0d1117' : '#f5f7fa');
+
+      /* Defs for glow + arrow */
+      var defs = svg.append('defs');
+      var glow = defs.append('filter').attr('id', 'glow');
+      glow.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
+      glow.append('feMerge').selectAll('feMergeNode').data(['blur', 'SourceGraphic'])
+        .enter().append('feMergeNode').attr('in', function (d) { return d; });
+
+      var g = svg.append('g');
+
+      /* Zoom */
+      var zoom = d3.zoom().scaleExtent([0.2, 4]).on('zoom', function (event) {
+        g.attr('transform', event.transform);
+      });
+      svg.call(zoom);
+
+      /* Links */
+      var link = g.append('g').selectAll('line')
+        .data(data.links).enter().append('line')
+        .attr('stroke', function (d) {
+          if (d.type === 'cross') return isDark ? '#ffd54f' : '#b8860b';
+          return d.color || '#555';
+        })
+        .attr('stroke-opacity', function (d) { return d.type === 'cross' ? 0.5 : 0.35; })
+        .attr('stroke-width', function (d) { return d.width || 1; })
+        .attr('stroke-dasharray', function (d) { return d.type === 'cross' ? '6,4' : null; });
+
+      /* Nodes */
+      var node = g.append('g').selectAll('g')
+        .data(data.nodes).enter().append('g')
+        .style('cursor', 'pointer')
+        .call(d3.drag()
+          .on('start', function (event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x; d.fy = d.y;
+          })
+          .on('drag', function (event, d) { d.fx = event.x; d.fy = event.y; })
+          .on('end', function (event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null; d.fy = null;
+          })
+        );
+
+      /* Node shapes */
+      node.each(function (d) {
+        var el = d3.select(this);
+        if (d.type === 'root') {
+          el.append('circle').attr('r', d.radius)
+            .attr('fill', d.color).attr('stroke', '#fff').attr('stroke-width', 2)
+            .attr('filter', 'url(#glow)');
+        } else if (d.type === 'section') {
+          el.append('rect')
+            .attr('x', -d.radius * 2.5).attr('y', -d.radius * 0.8)
+            .attr('width', d.radius * 5).attr('height', d.radius * 1.6)
+            .attr('rx', 8).attr('fill', d.color).attr('stroke', '#fff').attr('stroke-width', 1.5)
+            .attr('filter', 'url(#glow)');
+        } else {
+          if (d.topicData && d.topicData.isHL) {
+            /* Diamond for HL */
+            el.append('rect')
+              .attr('x', -d.radius).attr('y', -d.radius)
+              .attr('width', d.radius * 2).attr('height', d.radius * 2)
+              .attr('rx', 3)
+              .attr('transform', 'rotate(45)')
+              .attr('fill', d.color).attr('stroke', '#fff').attr('stroke-width', 1);
+          } else {
+            el.append('circle').attr('r', d.radius)
+              .attr('fill', d.color).attr('stroke', isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)')
+              .attr('stroke-width', 1.5);
           }
-        },
-        physics: { enabled: false },
-        interaction: {
-          hover: true, tooltipDelay: 120, zoomView: true,
-          dragView: true, dragNodes: true, multiselect: false,
-          navigationButtons: false, keyboard: false
-        },
-        nodes: { borderWidth: 1.5 },
-        edges: { arrows: { to: { enabled: true, scaleFactor: 0.45 } } }
-      });
-
-      network.once('stabilized', function () {
-        loadingDiv.style.display = 'none';
-        canvas.style.display = '';
-        network.fit({ animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
-        rendered = true;
-      });
-
-      setTimeout(function () {
-        if (!rendered) {
-          loadingDiv.style.display = 'none';
-          canvas.style.display = '';
-          if (network) network.fit();
-          rendered = true;
+          /* Mastery ring */
+          if (d.topicData && d.topicData.isDone) {
+            el.append('circle').attr('r', d.radius + 4)
+              .attr('fill', 'none').attr('stroke', '#66bb6a').attr('stroke-width', 2)
+              .attr('stroke-dasharray', '4,2').attr('opacity', 0.8);
+          }
         }
-      }, 3500);
-
-      network.on('click', function (params) {
-        if (!params.nodes.length) { detailPanel.style.display = 'none'; return; }
-        var nodeId = params.nodes[0];
-        var match = currentData.nodes.filter(function (n) { return n.id === nodeId; })[0];
-        if (match && match.topicData) showDetail(match);
       });
 
-      network.on('hoverNode', function () { canvas.style.cursor = 'pointer'; });
-      network.on('blurNode', function () { canvas.style.cursor = ''; });
-      network.on('dragging', function () { canvas.style.cursor = 'grabbing'; });
-      network.on('dragEnd', function () { canvas.style.cursor = ''; });
+      /* Labels */
+      node.append('text')
+        .text(function (d) {
+          if (d.type === 'root') return d.label;
+          if (d.type === 'section') return d.label.length > 30 ? d.label.slice(0, 28) + '…' : d.label;
+          return d.label.length > 22 ? d.label.slice(0, 20) + '…' : d.label;
+        })
+        .attr('text-anchor', 'middle')
+        .attr('dy', function (d) { return d.type === 'topic' ? d.radius + 14 : 4; })
+        .attr('fill', isDark ? '#c8d0e0' : '#2a2a3e')
+        .attr('font-size', function (d) { return d.type === 'root' ? 13 : d.type === 'section' ? 11 : 9; })
+        .attr('font-weight', function (d) { return d.type === 'topic' ? 400 : 700; })
+        .attr('font-family', 'Source Sans 3, sans-serif')
+        .style('pointer-events', 'none');
+
+      /* Content count badges for topics */
+      node.filter(function (d) { return d.type === 'topic'; }).append('text')
+        .text(function (d) {
+          var t = d.topicData;
+          var parts = [];
+          if (t.conceptCount) parts.push('💡' + t.conceptCount);
+          if (t.formulaCount) parts.push('📐' + t.formulaCount);
+          return parts.join(' ');
+        })
+        .attr('text-anchor', 'middle')
+        .attr('dy', function (d) { return d.radius + 26; })
+        .attr('fill', isDark ? '#6b7a90' : '#8090a0')
+        .attr('font-size', 8)
+        .style('pointer-events', 'none');
+
+      /* Hover effects */
+      node.on('mouseover', function (event, d) {
+        d3.select(this).select('circle, rect').transition().duration(150)
+          .attr('stroke-width', 3).attr('stroke', '#fff');
+      }).on('mouseout', function (event, d) {
+        d3.select(this).select('circle, rect').transition().duration(150)
+          .attr('stroke-width', d.type === 'root' ? 2 : 1.5)
+          .attr('stroke', d.type === 'topic' ? (isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)') : '#fff');
+      });
+
+      /* Click */
+      node.on('click', function (event, d) {
+        event.stopPropagation();
+        if (d.type === 'topic') showDetail(d);
+      });
+      svg.on('click', function () { detailPanel.style.display = 'none'; });
+
+      /* Force simulation */
+      simulation = d3.forceSimulation(data.nodes)
+        .force('link', d3.forceLink(data.links).id(function (d) { return d.id; })
+          .distance(function (d) {
+            if (d.type === 'cross') return 250;
+            if (d.source.type === 'root') return 160;
+            return 90;
+          }).strength(function (d) { return d.type === 'cross' ? 0.05 : 0.4; }))
+        .force('charge', d3.forceManyBody().strength(function (d) {
+          return d.type === 'root' ? -600 : d.type === 'section' ? -300 : -120;
+        }))
+        .force('center', d3.forceCenter(w / 2, h / 2))
+        .force('collision', d3.forceCollide().radius(function (d) { return d.radius + 12; }))
+        .force('x', d3.forceX(w / 2).strength(0.04))
+        .force('y', d3.forceY(h / 2).strength(0.04));
+
+      simulation.on('tick', function () {
+        link.attr('x1', function (d) { return d.source.x; })
+            .attr('y1', function (d) { return d.source.y; })
+            .attr('x2', function (d) { return d.target.x; })
+            .attr('y2', function (d) { return d.target.y; });
+        node.attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')'; });
+      });
+
+      /* After simulation settles, fit view */
+      setTimeout(function () {
+        var bounds = g.node().getBBox();
+        var pad = 40;
+        var scale = Math.min(w / (bounds.width + pad * 2), h / (bounds.height + pad * 2), 1.5);
+        var tx = w / 2 - (bounds.x + bounds.width / 2) * scale;
+        var ty = h / 2 - (bounds.y + bounds.height / 2) * scale;
+        svg.transition().duration(800).call(
+          zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale)
+        );
+      }, 2500);
+
+      loadingDiv.style.display = 'none';
+      canvasWrap.style.display = '';
+      rendered = true;
     });
   }
 
-  /* Filter change handlers */
+  function fitView() {
+    if (!svg) return;
+    var g = svg.select('g');
+    var bounds = g.node().getBBox();
+    var w = canvasWrap.clientWidth || 900, h = canvasWrap.clientHeight || 600;
+    var pad = 40;
+    var scale = Math.min(w / (bounds.width + pad * 2), h / (bounds.height + pad * 2), 1.5);
+    var tx = w / 2 - (bounds.x + bounds.width / 2) * scale;
+    var ty = h / 2 - (bounds.y + bounds.height / 2) * scale;
+    svg.transition().duration(500).call(
+      d3.zoom().transform, d3.zoomIdentity.translate(tx, ty).scale(scale)
+    );
+  }
+
   function onFilterChange() {
     filter.section = parseInt(document.getElementById('ss-map-section').value, 10);
     filter.mastery = document.getElementById('ss-map-mastery').value;
     filter.hl = document.getElementById('ss-map-hl').checked;
     rendered = false;
-    renderNetwork();
+    renderGraph();
   }
 
   function showMap() {
     container.style.display = 'block';
-    /* Re-extract progress state in case user toggled done buttons */
     sections = extractPageData();
     connections = findConnections(sections);
     rendered = false;
-    renderNetwork();
+    renderGraph();
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function hideMap() {
     container.style.display = 'none';
     inner.classList.remove('ss-mindmap-fullscreen-active');
-    fullscreenBtn.innerHTML = '⛶ Expand';
-    canvas.style.height = '520px';
+    document.getElementById('ss-map-expand').innerHTML = '⛶ Expand';
+    canvasWrap.style.height = '600px';
     detailPanel.style.display = 'none';
   }
 
-  btn.addEventListener('click', function () {
-    container.style.display === 'none' ? showMap() : hideMap();
-  });
-  closeBtn.addEventListener('click', hideMap);
-  fitBtn.addEventListener('click', function () { if (network) network.fit({ animation: { duration: 400 } }); });
-
+  btn.addEventListener('click', function () { container.style.display === 'none' ? showMap() : hideMap(); });
+  document.getElementById('ss-map-close').addEventListener('click', hideMap);
+  document.getElementById('ss-map-fit').addEventListener('click', fitView);
   document.getElementById('ss-map-section').addEventListener('change', onFilterChange);
   document.getElementById('ss-map-mastery').addEventListener('change', onFilterChange);
   document.getElementById('ss-map-hl').addEventListener('change', onFilterChange);
 
-  fullscreenBtn.addEventListener('click', function () {
+  document.getElementById('ss-map-expand').addEventListener('click', function () {
     inner.classList.toggle('ss-mindmap-fullscreen-active');
     if (inner.classList.contains('ss-mindmap-fullscreen-active')) {
-      fullscreenBtn.innerHTML = '⛶ Shrink';
-      canvas.style.height = (window.innerHeight - 180) + 'px';
+      this.innerHTML = '⛶ Shrink';
+      canvasWrap.style.height = (window.innerHeight - 160) + 'px';
     } else {
-      fullscreenBtn.innerHTML = '⛶ Expand';
-      canvas.style.height = '520px';
+      this.innerHTML = '⛶ Expand';
+      canvasWrap.style.height = '600px';
     }
-    if (network) setTimeout(function () { network.fit(); }, 120);
+    setTimeout(fitView, 150);
   });
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && inner.classList.contains('ss-mindmap-fullscreen-active')) {
       inner.classList.remove('ss-mindmap-fullscreen-active');
-      fullscreenBtn.innerHTML = '⛶ Expand';
-      canvas.style.height = '520px';
-      if (network) network.fit();
+      document.getElementById('ss-map-expand').innerHTML = '⛶ Expand';
+      canvasWrap.style.height = '600px';
+      setTimeout(fitView, 150);
     }
   });
 
   window.addEventListener('ss-theme-change', function () {
-    if (rendered && container.style.display !== 'none') {
-      rendered = false;
-      renderNetwork();
-    }
+    if (rendered && container.style.display !== 'none') { rendered = false; renderGraph(); }
   });
 }
 
-/* (MIND_MAPS data removed — graph is now built live from the DOM) */
-
+/* (Graph is now built live from the DOM using D3.js) */
 /* ----------------------------------------------------------
    10. CROSS-SUBJECT MASTERY DASHBOARD (homepage)
    WHY: Self-Determination Theory says autonomy + competence

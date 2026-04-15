@@ -468,24 +468,15 @@ html.ss-light .footer-note {
 /* vis.js canvas wrapper — vis injects a <canvas> here */
 .ss-mindmap-canvas {
   width: 100%;
-  height: 520px;
+  height: 600px;
   background: var(--ss-bg);
-  border-radius: 0 0 0 0; /* inner handles rounding */
+  border-radius: 0;
   overflow: hidden;
   outline: none;
   cursor: default;
 }
 
-/* vis.js tooltip overrides — match site theme */
-.vis-tooltip {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
-  border-radius: 8px !important;
-  font-family: 'Source Sans 3', sans-serif !important;
-  max-width: 260px !important;
-}
+/* D3 SVG fills the canvas — no extra tooltip overrides needed */
 
 /* Loading spinner */
 .ss-mindmap-loading {
