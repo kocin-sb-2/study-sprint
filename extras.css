@@ -586,46 +586,8 @@ html.ss-light .ss-mindmap-fullscreen:hover {
   background: rgba(2, 136, 209, 0.08);
 }
 
-/* --- Filter bar --- */
-.ss-mindmap-filters {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--ss-border);
-  background: rgba(0, 0, 0, 0.08);
-  flex-wrap: wrap;
-}
-
-.ss-map-select {
-  background: var(--ss-bg);
-  border: 1px solid var(--ss-border);
-  border-radius: 6px;
-  color: var(--ss-text);
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.78rem;
-  padding: 5px 10px;
-  outline: none;
-  cursor: pointer;
-}
-.ss-map-select:focus { border-color: var(--ss-accent); }
-
-.ss-map-toggle {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.78rem;
-  color: var(--ss-muted);
-  cursor: pointer;
-}
-.ss-map-toggle input { cursor: pointer; }
-
-.ss-map-stats {
-  margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--ss-muted);
-}
+/* --- Filter bar (removed — radial map is clean without filters) --- */
+.ss-mindmap-filters { display: none; }
 
 /* --- Map body: canvas + detail side panel --- */
 .ss-map-body {
