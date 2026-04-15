@@ -54,6 +54,23 @@ function toggleTopic(id) {
 }
 
 /* ----------------------------------------------------------
+   1b. PRACTICE QUESTION SYSTEM — SOLUTION TOGGLE
+   Called via onclick="toggleSolution(this)" on each .q-toggle-btn.
+   WHY GLOBAL: Cowork generates the HTML and uses onclick="".
+   Like toggle() and toggleTopic(), this must live on window.
+   WHY SIBLING APPROACH: The solution div immediately follows
+   the button in DOM order, making this a zero-dependency lookup.
+---------------------------------------------------------- */
+function toggleSolution(btn) {
+  /* The .q-solution is the next sibling element after the button */
+  var sol = btn.nextElementSibling;
+  if (!sol || !sol.classList.contains('q-solution')) return;
+  var isOpen = sol.classList.toggle('q-solution--open');
+  btn.textContent = isOpen ? '▾ Hide Solution' : '▸ Show Solution';
+  btn.classList.toggle('q-toggle-btn--open', isOpen);
+}
+
+/* ----------------------------------------------------------
    2. BOOT — single unified DOMContentLoaded listener.
    WHY ONE LISTENER: Having two DOMContentLoaded handlers is
    legal but fragile — execution order between them is
@@ -73,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initSubjectSearch();     /* in-page topic search         */
     initPrintButton();       /* floating print/PDF button    */
     initMindMap();           /* interactive vis.js concept map */
+    initQuizMode();          /* quiz mode toggle for PQS     */
   }
 
   /* Homepage */
@@ -945,6 +963,59 @@ function initMasteryDashboard() {
 
   var systems = document.querySelector('.systems');
   systems.insertBefore(dash, systems.firstChild);
+}
+
+/* ----------------------------------------------------------
+   11. PRACTICE QUESTION SYSTEM — QUIZ MODE
+   WHY: "Testing effect" research (Roediger & Karpicke, 2006)
+   shows that attempting retrieval BEFORE seeing the answer
+   produces far stronger long-term memory than re-reading. Quiz
+   mode hides all solutions at once so students can attempt each
+   question cold, then reveal only the ones they need.
+
+   HOW: Adds a toggle button to the page toolbar. Toggling adds/
+   removes .ss-quiz-on on <body>. CSS handles hiding solutions.
+   State is not persisted (intentional — each session is fresh).
+---------------------------------------------------------- */
+function initQuizMode() {
+  var questions = document.querySelectorAll('.q-item');
+  if (!questions.length) return; /* no PQS content on this page yet */
+
+  /* Find the mind map button to place quiz button nearby, or inject standalone */
+  var mindMapBtn = document.getElementById('ss-mindmap-btn');
+  var quizBtn    = document.createElement('button');
+  quizBtn.id        = 'ss-quiz-mode-btn';
+  quizBtn.className = 'ss-quiz-mode-btn';
+  quizBtn.title     = 'Hide all solutions — test yourself';
+  quizBtn.innerHTML = '🎯 Quiz Mode';
+
+  if (mindMapBtn && mindMapBtn.parentNode) {
+    mindMapBtn.parentNode.insertBefore(quizBtn, mindMapBtn.nextSibling);
+  } else {
+    /* Fallback: inject after progress wrap or after hero */
+    var anchor = document.getElementById('ss-progress-wrap') || document.querySelector('.hero');
+    if (anchor) anchor.insertAdjacentElement('afterend', quizBtn);
+  }
+
+  var quizOn = false;
+
+  quizBtn.addEventListener('click', function () {
+    quizOn = !quizOn;
+    document.body.classList.toggle('ss-quiz-on', quizOn);
+    quizBtn.classList.toggle('ss-quiz-active', quizOn);
+    quizBtn.innerHTML = quizOn ? '✓ Exit Quiz' : '🎯 Quiz Mode';
+
+    if (!quizOn) {
+      /* Reset all solution panels when leaving quiz mode */
+      document.querySelectorAll('.q-solution--open').forEach(function (sol) {
+        sol.classList.remove('q-solution--open');
+      });
+      document.querySelectorAll('.q-toggle-btn').forEach(function (b) {
+        b.textContent = '▸ Show Solution';
+        b.classList.remove('q-toggle-btn--open');
+      });
+    }
+  });
 }
 
 /* (boot sequence consolidated in section 2 above) */

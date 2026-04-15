@@ -897,7 +897,284 @@ html.ss-light .ss-map-detail { background: var(--surface); border-left-color: va
 }
 
 /* ----------------------------------------------------------
-   13. SKIP-TO-CONTENT LINK (accessibility)
+   13. PRACTICE QUESTION SYSTEM (PQS)
+   WHY: Retrieval practice — actively recalling information rather
+   than re-reading — is the single most evidence-backed study
+   technique (Roediger & Karpicke, 2006). Interleaved question
+   types (recall → application → calculation) mirror real IB and
+   Swedish exam paper design, making the familiarity transfer
+   directly to performance under test conditions.
+
+   Architecture: questions live in HTML (Cowork-managed), styled
+   here. JS provides toggle + quiz mode. All classes use .q-
+   or .ss-quiz- namespace.
+---------------------------------------------------------- */
+
+/* ---- Block header ---- */
+.info-block-title.questions {
+  color: var(--accent-gold, #ffd54f);
+  border-left-color: var(--accent-gold, #ffd54f);
+}
+
+/* ---- Question list container ---- */
+.q-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---- Single question card ---- */
+.q-item {
+  background: var(--surface-2, #1a2236);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-radius);
+  padding: 14px 16px;
+  transition: border-color 0.2s;
+}
+
+.q-item:hover {
+  border-color: var(--accent-gold, #ffd54f);
+}
+
+/* ---- Meta row: badge + marks + difficulty ---- */
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---- Question type badge ---- */
+.q-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.q-badge--recall {
+  background: rgba(79,195,247,0.15);
+  color: #4fc3f7;
+  border: 1px solid rgba(79,195,247,0.3);
+}
+
+.q-badge--application {
+  background: rgba(255,138,101,0.15);
+  color: #ff8a65;
+  border: 1px solid rgba(255,138,101,0.3);
+}
+
+.q-badge--calculation {
+  background: rgba(102,187,106,0.15);
+  color: #66bb6a;
+  border: 1px solid rgba(102,187,106,0.3);
+}
+
+.q-badge--analysis {
+  background: rgba(179,136,255,0.15);
+  color: #b388ff;
+  border: 1px solid rgba(179,136,255,0.3);
+}
+
+/* ---- Marks indicator ---- */
+.q-marks {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--ss-muted);
+  font-weight: 500;
+}
+
+/* ---- Difficulty level pill ---- */
+.q-diff {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.q-diff--l1 { background: rgba(79,195,247,0.1);  color: #4fc3f7; }
+.q-diff--l2 { background: rgba(255,213,79,0.1);  color: #ffd54f; }
+.q-diff--l3 { background: rgba(255,138,101,0.1); color: #ff8a65; }
+
+/* ---- Question text ---- */
+.q-stem {
+  font-size: 0.9rem;
+  color: var(--ss-text);
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+}
+
+/* ---- Show/hide toggle button ---- */
+.q-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-3, #222d44);
+  border: 1px solid var(--ss-border);
+  color: var(--ss-muted);
+  font-size: 0.78rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.q-toggle-btn:hover {
+  border-color: var(--accent-gold, #ffd54f);
+  color: var(--accent-gold, #ffd54f);
+  background: rgba(255,213,79,0.06);
+}
+
+.q-toggle-btn--open {
+  border-color: rgba(102,187,106,0.4);
+  color: #66bb6a;
+  background: rgba(102,187,106,0.06);
+}
+
+/* ---- Solution panel (hidden by default) ---- */
+.q-solution {
+  display: none;
+  margin-top: 14px;
+  border-top: 1px solid var(--ss-border);
+  padding-top: 12px;
+}
+
+.q-solution--open {
+  display: block;
+}
+
+/* ---- Step-by-step solution ---- */
+.q-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.q-step {
+  font-size: 0.86rem;
+  color: var(--ss-text);
+  line-height: 1.6;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid rgba(102,187,106,0.5);
+  border-radius: 0 6px 6px 0;
+}
+
+.q-step strong {
+  color: #66bb6a;
+  font-weight: 600;
+}
+
+/* ---- Mark scheme line (IB-style) ---- */
+.q-mark {
+  font-size: 0.82rem;
+  color: var(--ss-muted);
+  padding-left: 8px;
+  font-style: italic;
+}
+
+/* ---- Common error / examiner tip ---- */
+.q-examtip {
+  font-size: 0.82rem;
+  color: var(--ss-muted);
+  background: rgba(255,138,101,0.06);
+  border: 1px solid rgba(255,138,101,0.15);
+  border-radius: 6px;
+  padding: 8px 12px;
+  line-height: 1.55;
+}
+
+.q-examtip::before {
+  content: '⚠ ';
+  color: #ff8a65;
+}
+
+/* ---- Quiz mode toggle button (injected by JS into toolbar) ---- */
+.ss-quiz-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-3, #222d44);
+  border: 1px solid var(--ss-border);
+  color: var(--ss-muted);
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.ss-quiz-mode-btn:hover,
+.ss-quiz-mode-btn.ss-quiz-active {
+  border-color: var(--accent-gold, #ffd54f);
+  color: var(--accent-gold, #ffd54f);
+  background: rgba(255,213,79,0.08);
+}
+
+/* ---- Quiz mode: hide all solutions + show placeholder ---- */
+.ss-quiz-on .q-solution { display: none !important; }
+.ss-quiz-on .q-toggle-btn {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.ss-quiz-on .q-item::after {
+  content: '[ quiz mode — solutions hidden ]';
+  display: block;
+  font-size: 0.72rem;
+  color: var(--ss-muted);
+  font-style: italic;
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ---- Light theme overrides ---- */
+html.ss-light .q-item {
+  background: #f8fafc;
+  border-color: #d1d9e6;
+}
+
+html.ss-light .q-step {
+  background: #f0fdf4;
+  border-left-color: #4caf50;
+}
+
+html.ss-light .q-step strong { color: #2e7d32; }
+html.ss-light .q-toggle-btn  { background: #f1f5f9; border-color: #d1d9e6; color: #64748b; }
+html.ss-light .q-examtip     { background: #fff8f6; border-color: #ffccbc; }
+
+/* ---- Print: expand all solutions ---- */
+@media print {
+  .q-solution        { display: block !important; }
+  .q-toggle-btn,
+  .ss-quiz-mode-btn  { display: none !important; }
+  .q-item            { break-inside: avoid; }
+  .info-block-title.questions { color: #b45309 !important; }
+  .q-badge--recall      { background: #e0f7fa !important; color: #00796b !important; }
+  .q-badge--application { background: #fff3e0 !important; color: #e65100 !important; }
+  .q-badge--calculation { background: #f1f8e9 !important; color: #33691e !important; }
+  .q-badge--analysis    { background: #f3e5f5 !important; color: #6a1b9a !important; }
+  .q-step { background: #f0fdf4 !important; border-left-color: #4caf50 !important; }
+  .q-examtip { background: #fff8f6 !important; }
+}
+
+/* ----------------------------------------------------------
+   14. SKIP-TO-CONTENT LINK (accessibility)
 ---------------------------------------------------------- */
 .skip-link {
   position: absolute;
