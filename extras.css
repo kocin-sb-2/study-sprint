@@ -796,6 +796,26 @@ html.ss-light .ss-map-detail { background: var(--surface); border-left-color: va
 }
 .ss-track-show-all:hover { color: var(--ss-text); }
 
+.ss-subject-picks {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.ss-subject-pick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--ss-text);
+  cursor: pointer;
+}
+.ss-subject-pick input { cursor: pointer; accent-color: var(--ss-accent); }
+.ss-subject-pick-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+
 html.ss-light .ss-track-btn { background: var(--surface); border-color: var(--border); }
 html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-color: #0288d1; }
 

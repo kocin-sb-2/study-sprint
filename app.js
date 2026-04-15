@@ -910,23 +910,40 @@ function initMasteryDashboard() {
     ]
   };
 
-  var track = _ls.get('ss-track') || ''; /* 'ib', 'swe', or '' */
+  var track = _ls.get('ss-track') || '';
+  var hiddenSubjects = JSON.parse(_ls.get('ss-hidden-subjects') || '[]');
   var systems = document.querySelector('.systems');
 
-  /* --- Track selector UI --- */
+  function isSubjectVisible(path) { return hiddenSubjects.indexOf(path) === -1; }
+
   function buildSelector() {
     var sel = document.createElement('div');
     sel.className = 'ss-track-selector';
     sel.id = 'ss-track-selector';
-    sel.innerHTML =
-      '<p class="ss-track-prompt">What are you studying?</p>' +
+
+    var html = '<p class="ss-track-prompt">What are you studying?</p>' +
       '<div class="ss-track-options">' +
         '<button class="ss-track-btn' + (track === 'ib' ? ' active' : '') + '" data-track="ib">' +
           '<span class="ss-track-icon">🌍</span>IB Diploma Programme</button>' +
         '<button class="ss-track-btn' + (track === 'swe' ? ' active' : '') + '" data-track="swe">' +
           '<span class="ss-track-icon">🇸🇪</span>Swedish Gymnasium</button>' +
-      '</div>' +
-      (track ? '<button class="ss-track-show-all" id="ss-track-show-all">Show all subjects</button>' : '');
+      '</div>';
+
+    /* Subject toggles — only show when a track is selected */
+    if (track && allSubjects[track]) {
+      html += '<div class="ss-subject-picks">';
+      allSubjects[track].forEach(function (s) {
+        var checked = isSubjectVisible(s.path) ? ' checked' : '';
+        html += '<label class="ss-subject-pick">' +
+          '<input type="checkbox" data-path="' + s.path + '"' + checked + '>' +
+          '<span class="ss-subject-pick-dot" style="background:' + s.color + '"></span>' +
+          s.label + '</label>';
+      });
+      html += '</div>';
+    }
+
+    if (track) html += '<button class="ss-track-show-all" id="ss-track-show-all">Show all subjects</button>';
+    sel.innerHTML = html;
     return sel;
   }
 
@@ -949,6 +966,7 @@ function initMasteryDashboard() {
 
   function buildDashboard(selectedTrack) {
     var subjects = selectedTrack ? allSubjects[selectedTrack] : allSubjects.ib.concat(allSubjects.swe);
+    subjects = subjects.filter(function (s) { return isSubjectVisible(s.path); });
     var totalDone = 0, totalCount = 0;
 
     var bars = subjects.map(function (s) {
@@ -1017,10 +1035,26 @@ function initMasteryDashboard() {
     if (showAll) {
       showAll.addEventListener('click', function () {
         track = '';
+        hiddenSubjects = [];
         _ls.del('ss-track');
+        _ls.del('ss-hidden-subjects');
         render();
       });
     }
+
+    /* Subject checkboxes */
+    sel.querySelectorAll('.ss-subject-pick input').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var path = this.getAttribute('data-path');
+        if (this.checked) {
+          hiddenSubjects = hiddenSubjects.filter(function (p) { return p !== path; });
+        } else {
+          if (hiddenSubjects.indexOf(path) === -1) hiddenSubjects.push(path);
+        }
+        _ls.set('ss-hidden-subjects', JSON.stringify(hiddenSubjects));
+        render();
+      });
+    });
   }
 
   render();
