@@ -741,6 +741,69 @@ html.ss-light .ss-map-detail { background: var(--surface); border-left-color: va
    11. MASTERY DASHBOARD (homepage)
    Card-style panel showing per-subject progress bars.
 ---------------------------------------------------------- */
+
+/* Track selector */
+.ss-track-selector {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.ss-track-prompt {
+  font-size: 0.9rem;
+  color: var(--ss-muted);
+  margin-bottom: 12px;
+}
+.ss-track-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.ss-track-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ss-surface);
+  border: 1.5px solid var(--ss-border);
+  border-radius: 12px;
+  color: var(--ss-text);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.ss-track-btn:hover {
+  border-color: var(--ss-accent);
+  transform: translateY(-2px);
+}
+.ss-track-btn.active {
+  border-color: var(--ss-accent);
+  background: rgba(79,195,247,0.1);
+  box-shadow: 0 0 0 3px rgba(79,195,247,0.12);
+}
+.ss-track-icon { font-size: 1.2rem; }
+.ss-track-show-all {
+  display: inline-block;
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--ss-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.ss-track-show-all:hover { color: var(--ss-text); }
+
+html.ss-light .ss-track-btn { background: var(--surface); border-color: var(--border); }
+html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-color: #0288d1; }
+
+@media (max-width: 600px) {
+  .ss-track-options { flex-direction: column; align-items: center; }
+  .ss-track-btn { width: 100%; max-width: 280px; justify-content: center; }
+}
+
 .ss-dashboard {
   background: var(--ss-surface);
   border: 1px solid var(--ss-border);
@@ -1172,6 +1235,25 @@ html.ss-light .q-examtip     { background: #fff8f6; border-color: #ffccbc; }
   .q-step { background: #f0fdf4 !important; border-left-color: #4caf50 !important; }
   .q-examtip { background: #fff8f6 !important; }
 }
+
+/* ----------------------------------------------------------
+   14a. PAST PAPER / RESOURCE BLOCKS
+---------------------------------------------------------- */
+.info-block-title.resources { color: #4db6ac; }
+.resource-list { display: flex; flex-direction: column; gap: 8px; }
+.resource-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--ss-accent); text-decoration: none;
+  font-size: 0.85rem; font-weight: 500;
+  padding: 8px 14px;
+  background: rgba(79,195,247,0.06);
+  border: 1px solid rgba(79,195,247,0.15);
+  border-radius: 8px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.resource-link:hover { background: rgba(79,195,247,0.12); border-color: rgba(79,195,247,0.3); }
+.resource-note { font-size: 0.8rem; color: var(--ss-muted); line-height: 1.6; margin: 0; padding-left: 4px; }
+html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: rgba(2,136,209,0.15); color: #0288d1; }
 
 /* ----------------------------------------------------------
    14. SKIP-TO-CONTENT LINK (accessibility)

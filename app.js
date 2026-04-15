@@ -897,72 +897,133 @@ function initMindMap() {
 function initMasteryDashboard() {
   if (!document.querySelector('.systems')) return;
 
-  var subjects = [
-    { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7' },
-    { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65' },
-    { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff' },
-    { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7' },
-    { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65' },
-    { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff' }
-  ];
+  var allSubjects = {
+    ib: [
+      { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7' },
+      { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65' },
+      { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff' }
+    ],
+    swe: [
+      { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7' },
+      { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65' },
+      { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff' }
+    ]
+  };
 
-  var totalDone  = 0;
-  var totalCount = 0;
+  var track = _ls.get('ss-track') || ''; /* 'ib', 'swe', or '' */
+  var systems = document.querySelector('.systems');
 
-  /* Count progress from localStorage for each subject.
-     WHY TWO SEPARATE PASSES:
-     initProgress() removes the localStorage key when a topic is undone,
-     so the only keys present are DONE topics. That means counting keys
-     gives count === done always → always 100%. The fix: initProgress()
-     also stores the total as pageKey+':__total__'. We read that here for
-     the denominator, and count only '1'-valued topic keys for the numerator. */
-  var bars = subjects.map(function (s) {
-    var total = parseInt(_ls.get(s.path + ':__total__') || '0', 10);
-    var done  = 0;
-    _ls.keys().forEach(function (key) {
-      if (key.indexOf(s.path + ':topic-') !== -1 && _ls.get(key) === '1') {
-        done++;
-      }
-    });
-    totalDone  += done;
-    totalCount += total;
-    var pct = total ? Math.round((done / total) * 100) : 0;
-    return '<div class="ss-dash-row">' +
-      '<span class="ss-dash-label">' + s.label + '</span>' +
-      '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
-      '<span class="ss-dash-pct">' + (total ? pct + '%' : '—') + '</span>' +
-    '</div>';
-  });
-
-  if (totalCount === 0) {
-    /* Show empty state so first-time visitors know the feature exists */
-    var empty = document.createElement('div');
-    empty.className = 'ss-dashboard';
-    empty.innerHTML =
-      '<div class="ss-dash-header">' +
-        '<span class="ss-dash-title">📊 Your Study Progress</span>' +
-        '<span class="ss-dash-level" style="color:var(--ss-muted)">Visit any subject to start tracking</span>' +
-      '</div>';
-    var systems = document.querySelector('.systems');
-    systems.insertBefore(empty, systems.firstChild);
-    return;
+  /* --- Track selector UI --- */
+  function buildSelector() {
+    var sel = document.createElement('div');
+    sel.className = 'ss-track-selector';
+    sel.id = 'ss-track-selector';
+    sel.innerHTML =
+      '<p class="ss-track-prompt">What are you studying?</p>' +
+      '<div class="ss-track-options">' +
+        '<button class="ss-track-btn' + (track === 'ib' ? ' active' : '') + '" data-track="ib">' +
+          '<span class="ss-track-icon">🌍</span>IB Diploma Programme</button>' +
+        '<button class="ss-track-btn' + (track === 'swe' ? ' active' : '') + '" data-track="swe">' +
+          '<span class="ss-track-icon">🇸🇪</span>Swedish Gymnasium</button>' +
+      '</div>' +
+      (track ? '<button class="ss-track-show-all" id="ss-track-show-all">Show all subjects</button>' : '');
+    return sel;
   }
 
-  var overallPct = Math.round((totalDone / totalCount) * 100);
-  var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
+  function applyTrackFilter(selectedTrack) {
+    var groups = document.querySelectorAll('.system-group');
+    groups.forEach(function (g) {
+      var badge = g.querySelector('.system-badge');
+      if (!badge) return;
+      var isIB = badge.classList.contains('ib');
+      var isSwe = badge.classList.contains('swe');
+      if (!selectedTrack) {
+        g.style.opacity = ''; g.style.order = '';
+      } else if ((selectedTrack === 'ib' && isIB) || (selectedTrack === 'swe' && isSwe)) {
+        g.style.opacity = '1'; g.style.order = '0';
+      } else {
+        g.style.opacity = '0.4'; g.style.order = '1';
+      }
+    });
+  }
 
-  var dash = document.createElement('div');
-  dash.className = 'ss-dashboard';
-  dash.innerHTML =
-    '<div class="ss-dash-header">' +
-      '<span class="ss-dash-title">📊 Your Study Progress</span>' +
-      '<span class="ss-dash-level">' + level + ' — ' + overallPct + '% overall</span>' +
-    '</div>' +
-    '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
-    bars.join('');
+  function buildDashboard(selectedTrack) {
+    var subjects = selectedTrack ? allSubjects[selectedTrack] : allSubjects.ib.concat(allSubjects.swe);
+    var totalDone = 0, totalCount = 0;
 
-  var systems = document.querySelector('.systems');
-  systems.insertBefore(dash, systems.firstChild);
+    var bars = subjects.map(function (s) {
+      var total = parseInt(_ls.get(s.path + ':__total__') || '0', 10);
+      var done = 0;
+      _ls.keys().forEach(function (key) {
+        if (key.indexOf(s.path + ':topic-') !== -1 && _ls.get(key) === '1') done++;
+      });
+      totalDone += done;
+      totalCount += total;
+      var pct = total ? Math.round((done / total) * 100) : 0;
+      return '<div class="ss-dash-row">' +
+        '<span class="ss-dash-label">' + s.label + '</span>' +
+        '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
+        '<span class="ss-dash-pct">' + (total ? pct + '%' : '—') + '</span>' +
+      '</div>';
+    });
+
+    if (totalCount === 0) return null;
+
+    var overallPct = Math.round((totalDone / totalCount) * 100);
+    var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
+
+    var dash = document.createElement('div');
+    dash.className = 'ss-dashboard';
+    dash.id = 'ss-dashboard';
+    dash.innerHTML =
+      '<div class="ss-dash-header">' +
+        '<span class="ss-dash-title">📊 Your Study Progress</span>' +
+        '<span class="ss-dash-level">' + level + ' — ' + overallPct + '% overall</span>' +
+      '</div>' +
+      '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
+      bars.join('');
+    return dash;
+  }
+
+  function render() {
+    /* Remove old elements */
+    var old = document.getElementById('ss-track-selector');
+    if (old) old.remove();
+    old = document.getElementById('ss-dashboard');
+    if (old) old.remove();
+
+    /* Insert selector */
+    var sel = buildSelector();
+    systems.insertBefore(sel, systems.firstChild);
+
+    /* Insert dashboard */
+    var dash = buildDashboard(track);
+    if (dash) sel.insertAdjacentElement('afterend', dash);
+
+    /* Apply visual filter */
+    applyTrackFilter(track);
+
+    /* Bind events */
+    sel.querySelectorAll('.ss-track-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var newTrack = this.getAttribute('data-track');
+        track = (track === newTrack) ? '' : newTrack; /* toggle off if same */
+        _ls.set('ss-track', track);
+        render();
+      });
+    });
+
+    var showAll = document.getElementById('ss-track-show-all');
+    if (showAll) {
+      showAll.addEventListener('click', function () {
+        track = '';
+        _ls.del('ss-track');
+        render();
+      });
+    }
+  }
+
+  render();
 }
 
 /* ----------------------------------------------------------
