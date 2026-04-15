@@ -586,8 +586,25 @@ html.ss-light .ss-mindmap-fullscreen:hover {
   background: rgba(2, 136, 209, 0.08);
 }
 
-/* --- Filter bar (removed — radial map is clean without filters) --- */
+/* --- Filter bar (removed — mode toggle in toolbar instead) --- */
 .ss-mindmap-filters { display: none; }
+
+.ss-map-mode-btn {
+  background: rgba(79,195,247,0.12);
+  border: 1px solid rgba(79,195,247,0.3);
+  border-radius: 8px;
+  color: var(--ss-accent);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.ss-map-mode-btn:hover {
+  background: rgba(79,195,247,0.22);
+  border-color: rgba(79,195,247,0.5);
+}
 
 /* --- Map body: canvas + detail side panel --- */
 .ss-map-body {
