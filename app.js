@@ -908,12 +908,11 @@ function initMasteryDashboard() {
     { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff', group: 'swe', href: 'matematik5.html' }
   ];
 
-  var track = _ls.get('ss-track') || ''; /* 'ib' or 'swe' or '' */
+  var track = _ls.get('ss-track') || '';
+  var mySubjects = [];
+  try { mySubjects = JSON.parse(_ls.get('ss-my-subjects') || '[]'); } catch (e) { mySubjects = []; }
+
   var systems = document.querySelector('.systems');
-  var ibGroup = document.querySelector('.system-badge.ib');
-  var sweGroup = document.querySelector('.system-badge.swe');
-  var ibSection = ibGroup ? ibGroup.closest('.system-group') : null;
-  var sweSection = sweGroup ? sweGroup.closest('.system-group') : null;
 
   function getProgress(path) {
     var total = parseInt(_ls.get(path + ':__total__') || '0', 10);
@@ -924,24 +923,35 @@ function initMasteryDashboard() {
     return { total: total, done: done };
   }
 
-  function applyTrack() {
-    /* Reorder: selected track on top */
-    if (track === 'ib' && ibSection) {
-      systems.appendChild(sweSection || document.createTextNode(''));
-    } else if (track === 'swe' && sweSection) {
+  function save() {
+    if (track) _ls.set('ss-track', track); else _ls.del('ss-track');
+    _ls.set('ss-my-subjects', JSON.stringify(mySubjects));
+  }
+
+  function applyVisuals() {
+    var ibGroup = document.querySelector('.system-badge.ib');
+    var sweGroup = document.querySelector('.system-badge.swe');
+    var ibSection = ibGroup ? ibGroup.closest('.system-group') : null;
+    var sweSection = sweGroup ? sweGroup.closest('.system-group') : null;
+
+    /* Reorder sections */
+    if (track === 'swe' && sweSection && ibSection) {
       systems.insertBefore(sweSection, ibSection);
     }
 
-    /* Dim the non-selected track's cards */
+    /* Dim cards */
     document.querySelectorAll('.subject-card').forEach(function (card) {
       card.classList.remove('ss-card-dimmed');
     });
+
     if (track) {
-      var dimGroup = track === 'ib' ? 'swe' : 'ib';
       subjects.forEach(function (s) {
-        if (s.group === dimGroup) {
-          var card = document.querySelector('a.subject-card[href="' + s.href + '"]');
-          if (card) card.classList.add('ss-card-dimmed');
+        var card = document.querySelector('a.subject-card[href="' + s.href + '"]');
+        if (!card) return;
+        if (s.group !== track) {
+          card.classList.add('ss-card-dimmed');
+        } else if (mySubjects.length > 0 && mySubjects.indexOf(s.path) === -1) {
+          card.classList.add('ss-card-dimmed');
         }
       });
     }
@@ -955,55 +965,96 @@ function initMasteryDashboard() {
     panel.id = 'ss-track-panel';
     panel.className = 'ss-track-panel';
 
-    /* Track toggle + progress */
+    /* Dynamic title */
+    var title, subtitle;
+    if (!track) {
+      title = '👋 What are you studying?';
+      subtitle = 'Select your programme to personalise your dashboard';
+    } else if (mySubjects.length === 0) {
+      title = '📚 Choose your subjects';
+      subtitle = 'Pick the subjects you\'re taking this year';
+    } else {
+      title = '📊 My Study Progress';
+      subtitle = '';
+    }
+
     var html = '<div class="ss-track-header">' +
-      '<span class="ss-track-title">📊 Study Progress</span>' +
-      '</div>' +
-      '<div class="ss-track-chips" style="margin-bottom:12px">' +
-        '<button class="ss-track-chip' + (track === 'ib' ? ' on' : '') + '" data-track="ib" style="--chip-color:#4fc3f7">🌍 IB Diploma</button>' +
-        '<button class="ss-track-chip' + (track === 'swe' ? ' on' : '') + '" data-track="swe" style="--chip-color:#ffd54f">🇸🇪 Gymnasium</button>' +
-      '</div>';
+      '<div><span class="ss-track-title">' + title + '</span>' +
+      (subtitle ? '<span class="ss-track-subtitle">' + subtitle + '</span>' : '') + '</div>' +
+      (track ? '<button class="ss-track-reset" id="ss-track-reset">Reset</button>' : '') +
+    '</div>';
 
-    /* Progress bars for selected track (or all if none selected) */
-    var trackSubjects = track ? subjects.filter(function (s) { return s.group === track; }) : subjects;
-    var totalDone = 0, totalCount = 0, bars = '';
+    /* Track chips */
+    html += '<div class="ss-track-chips">' +
+      '<button class="ss-track-chip' + (track === 'ib' ? ' on' : '') + '" data-track="ib" style="--chip-color:#4fc3f7">🌍 IB Diploma</button>' +
+      '<button class="ss-track-chip' + (track === 'swe' ? ' on' : '') + '" data-track="swe" style="--chip-color:#ffd54f">🇸🇪 Gymnasium</button>' +
+    '</div>';
 
-    trackSubjects.forEach(function (s) {
-      var p = getProgress(s.path);
-      totalDone += p.done; totalCount += p.total;
-      var pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
-      bars += '<div class="ss-dash-row"><span class="ss-dash-label">' + s.label + '</span>' +
-        '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
-        '<span class="ss-dash-pct">' + (p.total ? pct + '%' : '—') + '</span></div>';
-    });
+    /* Subject chips — show when track is selected */
+    if (track) {
+      var trackSubs = subjects.filter(function (s) { return s.group === track; });
+      html += '<div class="ss-subject-chips">';
+      trackSubs.forEach(function (s) {
+        var on = mySubjects.indexOf(s.path) !== -1;
+        html += '<button class="ss-subject-chip' + (on ? ' on' : '') + '" data-path="' + s.path + '" style="--chip-color:' + s.color + '">' + s.label + '</button>';
+      });
+      html += '</div>';
+    }
 
-    if (totalCount > 0) {
-      var pct = Math.round((totalDone / totalCount) * 100);
+    /* Progress bars */
+    var showSubjects = mySubjects.length > 0
+      ? subjects.filter(function (s) { return mySubjects.indexOf(s.path) !== -1; })
+      : (track ? subjects.filter(function (s) { return s.group === track; }) : []);
+
+    if (showSubjects.length > 0) {
+      var totalDone = 0, totalCount = 0, bars = '';
+      showSubjects.forEach(function (s) {
+        var p = getProgress(s.path);
+        totalDone += p.done; totalCount += p.total;
+        var pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
+        bars += '<div class="ss-dash-row"><span class="ss-dash-label">' + s.label + '</span>' +
+          '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
+          '<span class="ss-dash-pct">' + (p.total ? pct + '%' : '—') + '</span></div>';
+      });
+      var pct = totalCount ? Math.round((totalDone / totalCount) * 100) : 0;
       var level = pct < 25 ? 'Novice' : pct < 50 ? 'Apprentice' : pct < 75 ? 'Scholar' : pct < 100 ? 'Master' : 'Legend ⭐';
       html += '<div class="ss-dash-progress">' +
-        '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + pct + '%</span></div>' +
-        '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + pct + '%"></div></div>' +
-        bars + '</div>';
-    } else {
-      html += '<div class="ss-dash-progress">' +
-        '<div class="ss-dash-header"><span class="ss-dash-level" style="color:var(--ss-muted)">Visit a subject to start tracking</span></div>' +
+        (totalCount > 0 ? '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + pct + '%</span></div><div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + pct + '%"></div></div>' : '') +
         bars + '</div>';
     }
 
     panel.innerHTML = html;
     systems.insertBefore(panel, systems.firstChild);
+    applyVisuals();
 
-    applyTrack();
-
-    /* Bind track toggle */
+    /* Bind track chips */
     panel.querySelectorAll('.ss-track-chip').forEach(function (chip) {
       chip.addEventListener('click', function () {
         var t = this.getAttribute('data-track');
-        track = (track === t) ? '' : t;
-        if (track) { _ls.set('ss-track', track); } else { _ls.del('ss-track'); }
-        render();
+        if (track === t) { track = ''; mySubjects = []; }
+        else { track = t; mySubjects = []; }
+        save(); render();
       });
     });
+
+    /* Bind subject chips */
+    panel.querySelectorAll('.ss-subject-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var p = this.getAttribute('data-path');
+        var idx = mySubjects.indexOf(p);
+        if (idx !== -1) mySubjects.splice(idx, 1); else mySubjects.push(p);
+        save(); render();
+      });
+    });
+
+    /* Reset */
+    var resetBtn = document.getElementById('ss-track-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        track = ''; mySubjects = [];
+        save(); render();
+      });
+    }
   }
 
   render();
@@ -1108,7 +1159,7 @@ function initFeedbackTab() {
 
 function openCommentBox(topic, pageKey) {
   var existing = topic.querySelector('.ss-comment-box');
-  if (existing) { existing.remove(); return; } /* toggle off */
+  if (existing) { existing.remove(); return; }
 
   var key = 'ss-comments:' + pageKey + ':' + topic.id;
   var comments = JSON.parse(_ls.get(key) || '[]');
@@ -1116,39 +1167,116 @@ function openCommentBox(topic, pageKey) {
   var box = document.createElement('div');
   box.className = 'ss-comment-box';
 
-  var html = '';
-  if (comments.length) {
-    html += '<div class="ss-comment-list">';
-    comments.forEach(function (c, i) {
-      html += '<div class="ss-comment-item"><span class="ss-comment-text">' + c.text.replace(/</g, '&lt;') + '</span><span class="ss-comment-time">' + c.time + '</span></div>';
+  function renderBox() {
+    var html = '';
+    var visible = comments.filter(function (c) { return !c.hidden; });
+    var hidden = comments.filter(function (c) { return c.hidden; });
+
+    if (visible.length) {
+      html += '<div class="ss-comment-list">';
+      visible.forEach(function (c, i) {
+        var idx = comments.indexOf(c);
+        html += '<div class="ss-comment-item">' +
+          '<span class="ss-comment-text">' + c.text.replace(/</g, '&lt;') + '</span>' +
+          '<span class="ss-comment-time">' + c.time + '</span>' +
+          '<div class="ss-comment-item-actions">' +
+            '<button class="ss-comment-act" data-action="edit" data-idx="' + idx + '" title="Edit">✏️</button>' +
+            '<button class="ss-comment-act" data-action="hide" data-idx="' + idx + '" title="Hide">👁️</button>' +
+            '<button class="ss-comment-act" data-action="delete" data-idx="' + idx + '" title="Delete">🗑️</button>' +
+          '</div></div>';
+      });
+      html += '</div>';
+    }
+
+    if (hidden.length) {
+      html += '<button class="ss-comment-show-hidden" id="ss-show-hidden">' + hidden.length + ' hidden suggestion' + (hidden.length > 1 ? 's' : '') + '</button>';
+    }
+
+    html += '<textarea class="ss-comment-input" placeholder="What\'s missing or unclear?" rows="2"></textarea>' +
+      '<div class="ss-comment-actions"><button class="ss-comment-submit">Add suggestion</button></div>';
+
+    box.innerHTML = html;
+
+    /* Bind actions */
+    box.querySelectorAll('.ss-comment-act').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = parseInt(this.getAttribute('data-idx'));
+        var action = this.getAttribute('data-action');
+        if (action === 'delete') {
+          comments.splice(idx, 1);
+        } else if (action === 'hide') {
+          comments[idx].hidden = true;
+        } else if (action === 'edit') {
+          var newText = prompt('Edit suggestion:', comments[idx].text);
+          if (newText !== null && newText.trim()) comments[idx].text = newText.trim();
+        }
+        _ls.set(key, JSON.stringify(comments));
+        updateBtn();
+        renderBox();
+      });
     });
-    html += '</div>';
-  }
-  html += '<textarea class="ss-comment-input" placeholder="What\'s missing or unclear? Suggest improvements..." rows="2"></textarea>' +
-    '<div class="ss-comment-actions"><button class="ss-comment-submit">Add suggestion</button></div>';
 
-  box.innerHTML = html;
-  topic.appendChild(box);
+    var showHidden = box.querySelector('#ss-show-hidden');
+    if (showHidden) {
+      showHidden.addEventListener('click', function () {
+        comments.forEach(function (c) { c.hidden = false; });
+        _ls.set(key, JSON.stringify(comments));
+        renderBox();
+      });
+    }
 
-  box.querySelector('.ss-comment-submit').addEventListener('click', function () {
+    box.querySelector('.ss-comment-submit').addEventListener('click', function () {
+      var input = box.querySelector('.ss-comment-input');
+      var text = input.value.trim();
+      if (!text) return;
+      var comment = { text: text, time: new Date().toLocaleDateString(), hidden: false };
+      comments.push(comment);
+      _ls.set(key, JSON.stringify(comments));
+      sendToSheet(pageKey, topic.id, comment);
+      input.value = '';
+      updateBtn();
+      renderBox();
+    });
+
     var input = box.querySelector('.ss-comment-input');
-    var text = input.value.trim();
-    if (!text) return;
-    comments.push({ text: text, time: new Date().toLocaleDateString() });
-    _ls.set(key, JSON.stringify(comments));
-    input.value = '';
-    /* Refresh */
-    box.remove();
-    openCommentBox(topic, pageKey);
-    /* Update button count */
+    if (input) input.focus();
+  }
+
+  function updateBtn() {
     var btn = topic.querySelector('.ss-comment-btn');
-    if (btn) btn.textContent = '💬 ' + comments.length;
-    /* Show export button */
+    var visible = comments.filter(function (c) { return !c.hidden; });
+    if (btn) btn.textContent = visible.length ? '💬 ' + visible.length : '💬';
     var exp = document.querySelector('.ss-export-comments-btn');
     if (exp) exp.style.display = '';
-  });
+  }
 
-  box.querySelector('.ss-comment-input').focus();
+  topic.appendChild(box);
+  renderBox();
+}
+
+/* Send comment to Google Sheets via Apps Script web app.
+   To set up:
+   1. Create a Google Sheet
+   2. Go to Extensions > Apps Script
+   3. Paste this code:
+      function doPost(e) {
+        var data = JSON.parse(e.postData.contents);
+        var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        sheet.appendRow([new Date(), data.page, data.topic, data.text]);
+        return ContentService.createTextOutput('ok');
+      }
+   4. Deploy as web app (Execute as: Me, Access: Anyone)
+   5. Replace the URL below with your deployment URL
+*/
+var SS_SHEET_URL = ''; /* Paste your Apps Script web app URL here */
+
+function sendToSheet(page, topicId, comment) {
+  if (!SS_SHEET_URL) return; /* Skip if not configured */
+  try {
+    navigator.sendBeacon(SS_SHEET_URL, JSON.stringify({
+      page: page, topic: topicId, text: comment.text
+    }));
+  } catch (e) { /* Silent fail — local storage is the primary store */ }
 }
 
 /* (boot sequence consolidated in section 2 above) */
