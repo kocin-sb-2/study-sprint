@@ -992,12 +992,12 @@ function initMasteryDashboard() {
       var href = card.getAttribute('href');
       if (!href || !hasSelection) {
         card.style.opacity = '';
-        card.style.display = '';
         return;
       }
-      var isSelected = selected.indexOf('/' + href) !== -1;
+      /* Match by filename — strip any path prefix */
+      var filename = href.split('/').pop();
+      var isSelected = selected.some(function (p) { return p.split('/').pop() === filename; });
       card.style.opacity = isSelected ? '1' : '0.45';
-      card.style.display = '';
     });
 
     /* Always show all system groups */
