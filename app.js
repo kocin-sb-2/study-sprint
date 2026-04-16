@@ -188,6 +188,8 @@ function initProgress() {
         btn.textContent = '✓';
         btn.setAttribute('aria-label', 'Mark as not done');
         topic.classList.add('ss-done');
+        /* Counts toward today's "studied" record for streak engine */
+        if (typeof ssRecordAction === 'function') ssRecordAction('topic');
       }
       refreshProgressBar(pageKey, topics);
     });
@@ -901,13 +903,18 @@ function initMindMap() {
 function initMasteryDashboard() {
   if (!document.querySelector('.systems')) return;
 
+  /* Hardcoded fallback topic counts so the Novice/level line and percentages
+     can be computed even before the user has visited each subject page (which
+     is when :__total__ gets written). This was the bug: Swedish track showed
+     no overall % because the user hadn't opened those pages yet, while IB
+     looked correct only because those pages had been opened. */
   var subjects = [
-    { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7', group: 'ib', href: 'ib-physics-hl.html' },
-    { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65', group: 'ib', href: 'ib-chemistry-hl.html' },
-    { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff', group: 'ib', href: 'ib-math-aa-hl.html' },
-    { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7', group: 'swe', href: 'fysik2.html' },
-    { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65', group: 'swe', href: 'kemi2.html' },
-    { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff', group: 'swe', href: 'matematik5.html' }
+    { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7', group: 'ib',  href: 'ib-physics-hl.html',   fallback: 24 },
+    { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65', group: 'ib',  href: 'ib-chemistry-hl.html', fallback: 26 },
+    { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff', group: 'ib',  href: 'ib-math-aa-hl.html',   fallback: 29 },
+    { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7', group: 'swe', href: 'fysik2.html',          fallback: 19 },
+    { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65', group: 'swe', href: 'kemi2.html',           fallback: 24 },
+    { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff', group: 'swe', href: 'matematik5.html',      fallback: 18 }
   ];
 
   var track = _ls.get('ss-track') || '';
@@ -917,12 +924,17 @@ function initMasteryDashboard() {
   var systems = document.querySelector('.systems');
 
   function getProgress(path) {
-    var total = parseInt(_ls.get(path + ':__total__') || '0', 10);
+    /* Use stored total if the page has been visited; else fall back to
+       the hardcoded subject topic count so percentages and the Novice/
+       Apprentice level line work consistently for every track. */
+    var stored = parseInt(_ls.get(path + ':__total__') || '0', 10);
+    var subj = subjects.filter(function (s) { return s.path === path; })[0];
+    var total = stored > 0 ? stored : (subj ? subj.fallback : 0);
     var done = 0;
     _ls.keys().forEach(function (k) {
       if (k.indexOf(path + ':topic-') !== -1 && _ls.get(k) === '1') done++;
     });
-    return { total: total, done: done };
+    return { total: total, done: done, visited: stored > 0 };
   }
 
   function save() {
@@ -1276,9 +1288,212 @@ function sendToSheet(page, topicId, comment) {
   } catch (e) { /* Silent fail — local storage is the primary store */ }
 }
 
-/* ----------------------------------------------------------
-   13. STUDY TOOLS: Pomodoro, Wellness, Study Log + Streaks
----------------------------------------------------------- */
+/* ============================================================
+   13. STUDY TOOLS — REWRITTEN & EXPANDED
+   ----
+   A wellbeing-first, research-backed companion that lives at the
+   bottom of every page. Modules:
+
+     A. Wellbeing Panel — categorised, contextual, compassionate
+        tips that adapt to time of day, day of week, current
+        streak, and life context (eg "exam-week" mode).
+     B. Pomodoro — circular SVG progress ring, auto-cycle through
+        work / short-break / long-break, real Web Audio chime
+        (no broken data URI), browser notifications, today's
+        session count + total focus minutes, smart reminders.
+     C. Streak engine — counts a day "studied" only if the user
+        did something meaningful (a pomodoro, a study log, OR
+        marking ≥ 1 topic done). Tracks current streak, longest
+        streak, and a 14-day mini calendar.
+     D. Study Log — daily reflection journal with optional
+        attachment; persists last 50 entries.
+     E. How To Study — wisdom panel with study-technique guidance
+        (active recall, spaced repetition, exam compassion, etc.)
+
+   The whole thing is collapsible (state remembered in
+   localStorage) so it never gets in the way once you've read it.
+============================================================ */
+
+/* ---- A. WELLBEING TIP DATABASE ----
+   Categories:
+     sleep        — sleep is the #1 memory consolidator
+     nutrition    — fuel for the brain
+     movement     — short bursts beat marathons
+     mental       — psychological wellbeing & exam anxiety
+     technique    — study method science
+     compassion   — humane reminders for crunch time
+     environment  — phone, light, noise, posture
+*/
+var SS_WELLBEING_TIPS = [
+  /* SLEEP */
+  { cat: 'sleep', icon: '😴', text: 'Sleep is when your brain replays and consolidates today\'s learning. 7-9 hours before an exam outperforms 3 extra hours of cramming.', source: 'Walker, "Why We Sleep" (2017)' },
+  { cat: 'sleep', icon: '🌙', text: 'A short nap (10-20 min) after a study session boosts memory retention by up to 30%. Set a timer; longer naps cause grogginess.', source: 'Lahl et al., 2008' },
+  { cat: 'sleep', icon: '🛏️', text: 'No screens 30 min before bed. Blue light suppresses melatonin by ~50%. Your past-self studied so future-you could rest.', source: 'Chang et al., 2015' },
+  { cat: 'sleep', icon: '☀️', text: 'Same wake time every day — even weekends — stabilises your circadian rhythm and improves cognition more than long lie-ins.', source: 'Walker, 2017' },
+
+  /* NUTRITION */
+  { cat: 'nutrition', icon: '🧠', text: 'Your brain uses 20% of your daily calories. Skipping meals directly impairs working memory and concentration.', source: 'Gailliot et al., 2007' },
+  { cat: 'nutrition', icon: '💧', text: 'Even 1-2% dehydration reduces cognitive performance and mood. Keep water at your desk; refill it twice today.', source: 'Masento et al., 2014' },
+  { cat: 'nutrition', icon: '🥦', text: 'Slow-release carbs (oats, beans, whole grains) sustain focus 2-3× longer than sugar spikes followed by crashes.', source: 'Benton, 2002' },
+  { cat: 'nutrition', icon: '🐟', text: 'Omega-3 (fish, walnuts, chia) supports neural plasticity. Long-term diet quality predicts academic results.', source: 'Gómez-Pinilla, 2008' },
+  { cat: 'nutrition', icon: '☕', text: 'Caffeine helps focus but has a 5-6h half-life. A 4pm coffee is still in your brain at 10pm — and ruins sleep.', source: 'Drake et al., 2013' },
+
+  /* MOVEMENT */
+  { cat: 'movement', icon: '🚶', text: 'A 20-minute walk boosts creative thinking by up to 60% for the next 2+ hours. Study, walk, study — not study, study, study.', source: 'Oppezzo & Schwartz, 2014' },
+  { cat: 'movement', icon: '🧘', text: 'Stand up, stretch, and look 6 metres into the distance for 30 seconds every 25 minutes. Saves your eyes, neck, and focus.', source: 'Rosenfield, 2011 (20-20-20 rule)' },
+  { cat: 'movement', icon: '💪', text: 'Even one session of moderate exercise enhances memory encoding for the next 30-60 minutes. Try 10 push-ups before a hard topic.', source: 'Roig et al., 2013' },
+
+  /* MENTAL HEALTH & EXAM ANXIETY */
+  { cat: 'mental', icon: '✍️', text: 'Spending 10 minutes writing about your exam worries beforehand reduces test anxiety and improves scores by ~15%.', source: 'Ramirez & Beilock, 2011' },
+  { cat: 'mental', icon: '🌬️', text: 'Box breathing — 4 in, 4 hold, 4 out, 4 hold — for 90 seconds drops your heart rate and reactivates the prefrontal cortex.', source: 'US Navy SEAL training protocol' },
+  { cat: 'mental', icon: '💛', text: 'Self-compassion (talking to yourself like a friend) predicts exam performance better than self-criticism. Be kind to yourself.', source: 'Neff & Germer, 2013' },
+  { cat: 'mental', icon: '🧘‍♀️', text: 'Two weeks of 10-minute daily mindfulness raises GRE-style reading scores by ~16%. Even short practices add up.', source: 'Mrazek et al., 2013' },
+  { cat: 'mental', icon: '🤝', text: 'Loneliness reduces cognitive function as much as poor sleep. Text a friend, study with one, or eat a meal with family today.', source: 'Cacioppo & Hawkley, 2009' },
+
+  /* STUDY TECHNIQUE */
+  { cat: 'technique', icon: '🎯', text: 'Active recall (closing the book and trying to remember) is 2-3× more effective than re-reading. Use Quiz Mode on every topic.', source: 'Roediger & Butler, 2011' },
+  { cat: 'technique', icon: '🔁', text: 'Spaced repetition: revisit a topic after 1 day, then 3, then 7, then 21. You\'ll remember 5× more for the same time invested.', source: 'Cepeda et al., 2008' },
+  { cat: 'technique', icon: '🔀', text: 'Interleaving topics (mixing subjects) feels harder but produces 43% better long-term retention than blocked practice.', source: 'Rohrer & Taylor, 2007' },
+  { cat: 'technique', icon: '🗺️', text: 'Drawing a concept map by hand activates the same memory networks as the test will. Use the Mind Map button on each subject page.', source: 'Nesbit & Adesope, 2006' },
+  { cat: 'technique', icon: '👨‍🏫', text: 'Explaining a topic out loud as if teaching someone (the Feynman technique) reveals every gap in your understanding.', source: 'Bargh & Schul, 1980' },
+  { cat: 'technique', icon: '⏰', text: 'Your brain focuses deeply for ~25 minutes before drifting. Use the Pomodoro timer — short bursts beat marathons.', source: 'Cirillo, 2006' },
+
+  /* COMPASSIONATE — exam crunch */
+  { cat: 'compassion', icon: '🌱', text: 'You are not behind. You are exactly where someone who is learning would be. Progress is not linear.', source: 'Carol Dweck, growth mindset research' },
+  { cat: 'compassion', icon: '🤍', text: 'Your worth is not your grade. The exam measures recall under pressure, not your intelligence or your future.', source: 'Self-compassion research, Neff' },
+  { cat: 'compassion', icon: '🍵', text: 'It\'s OK to take a real break. A bath, a meal with someone you love, an episode of a show — these are not laziness; they\'re recovery.', source: 'Kahneman & Tversky, attention as a resource' },
+  { cat: 'compassion', icon: '🌧️', text: 'A bad study day does not mean a bad week. Tomorrow is a clean slate. Treat yourself like someone you\'re responsible for helping.', source: 'Jordan Peterson paraphrase' },
+  { cat: 'compassion', icon: '☂️', text: 'If you are crying, anxious, or shaking — please pause. Eat something, drink water, message someone. The studying can wait 20 minutes.', source: 'Compassionate exam care' },
+
+  /* ENVIRONMENT */
+  { cat: 'environment', icon: '📵', text: 'Just having your phone visible — even face-down and silent — reduces cognitive capacity by ~10%. Put it in another room.', source: 'Ward et al., 2017' },
+  { cat: 'environment', icon: '🌅', text: 'Morning study sessions have ~20% better retention than late-night ones. Save passive review (videos) for evenings.', source: 'May et al., 2005' },
+  { cat: 'environment', icon: '🌡️', text: 'Cooler rooms (18-21°C) improve concentration and reduce drowsiness. Crack a window before a long session.', source: 'Lan et al., 2009' },
+  { cat: 'environment', icon: '🎵', text: 'Lyrics in your study music compete with reading. Lo-fi, classical, or ambient is far less disruptive than vocals.', source: 'Perham & Vizard, 2011' }
+];
+
+/* Subset selectors used by the smart-tip rotation */
+function ssPickTipsForContext(streak, sessionsToday) {
+  var hour = new Date().getHours();
+  var dow = new Date().getDay(); /* 0 Sun..6 Sat */
+  var pool = SS_WELLBEING_TIPS.slice();
+
+  /* Time-of-day biases */
+  var morningCats   = ['sleep', 'nutrition', 'technique', 'movement'];
+  var afternoonCats = ['movement', 'technique', 'environment', 'nutrition'];
+  var eveningCats   = ['mental', 'compassion', 'sleep'];
+  var nightCats     = ['sleep', 'compassion', 'mental'];
+
+  var preferred;
+  if (hour >= 5 && hour < 12)       preferred = morningCats;
+  else if (hour >= 12 && hour < 17) preferred = afternoonCats;
+  else if (hour >= 17 && hour < 22) preferred = eveningCats;
+  else                              preferred = nightCats;
+
+  /* Weekend → bias compassion + rest */
+  if (dow === 0 || dow === 6) preferred = preferred.concat(['compassion', 'mental']);
+
+  /* Long streak (5+) → compassion-bias to prevent burnout */
+  if (streak >= 5) preferred = preferred.concat(['compassion', 'mental']);
+
+  /* Lots of sessions today (4+) → suggest rest */
+  if (sessionsToday >= 4) preferred = ['compassion', 'mental', 'movement'];
+
+  /* Filter pool to preferred categories, fallback to all */
+  var filtered = pool.filter(function (t) { return preferred.indexOf(t.cat) !== -1; });
+  return filtered.length ? filtered : pool;
+}
+
+/* ---- B. AUDIO CHIME (Web Audio API, no external file) ---- */
+function ssPlayChime(kind) {
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    var ctx = new Ctx();
+    var notes = kind === 'break' ? [523.25, 659.25, 783.99]   /* C5 E5 G5 — bright */
+                                 : [783.99, 659.25, 523.25];  /* G5 E5 C5 — settle */
+    notes.forEach(function (freq, i) {
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      g.gain.value = 0.0001;
+      o.connect(g); g.connect(ctx.destination);
+      var t0 = ctx.currentTime + i * 0.18;
+      g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.32);
+      o.start(t0); o.stop(t0 + 0.34);
+    });
+    setTimeout(function () { try { ctx.close(); } catch (e) {} }, 1200);
+  } catch (e) { /* silent fail */ }
+}
+
+/* ---- C. STREAK ENGINE ----
+   A "study day" requires meaningful action. We track:
+     ss-study-days   : { 'YYYY-MM-DD': { pomos: n, logs: n, topicsDone: n } }
+     ss-streak-best  : longest consecutive study-day streak
+   A day counts as STUDIED if:
+       pomos >= 1  OR  logs >= 1  OR  topicsDone >= 1
+*/
+function ssLoadStudyDays() {
+  try { return JSON.parse(_ls.get('ss-study-days') || '{}'); }
+  catch (e) { return {}; }
+}
+function ssSaveStudyDays(d) { _ls.set('ss-study-days', JSON.stringify(d)); }
+
+function ssIsStudied(day) {
+  if (!day) return false;
+  return (day.pomos || 0) >= 1 || (day.logs || 0) >= 1 || (day.topicsDone || 0) >= 1;
+}
+
+function ssRecordAction(kind /* 'pomo' | 'log' | 'topic' */) {
+  var days = ssLoadStudyDays();
+  var today = new Date().toISOString().slice(0, 10);
+  if (!days[today]) days[today] = { pomos: 0, logs: 0, topicsDone: 0 };
+  if (kind === 'pomo')  days[today].pomos     = (days[today].pomos || 0) + 1;
+  if (kind === 'log')   days[today].logs      = (days[today].logs  || 0) + 1;
+  if (kind === 'topic') days[today].topicsDone= (days[today].topicsDone || 0) + 1;
+  ssSaveStudyDays(days);
+  /* Update best streak */
+  var s = ssComputeStreak(days);
+  var best = parseInt(_ls.get('ss-streak-best') || '0', 10);
+  if (s.current > best) _ls.set('ss-streak-best', String(s.current));
+}
+
+function ssComputeStreak(days) {
+  if (!days) days = ssLoadStudyDays();
+  var current = 0, d = new Date();
+  for (var i = 0; i < 365; i++) {
+    var key = d.toISOString().slice(0, 10);
+    if (ssIsStudied(days[key])) { current++; d.setDate(d.getDate() - 1); }
+    else if (i === 0) {
+      /* Today not yet studied — don't break the chain; check yesterday */
+      d.setDate(d.getDate() - 1);
+    } else break;
+  }
+  var best = parseInt(_ls.get('ss-streak-best') || '0', 10);
+  return { current: current, best: Math.max(best, current) };
+}
+
+/* Build a 14-day mini calendar of study days */
+function ssBuildCalendar(days) {
+  var html = '<div class="ss-cal">';
+  var today = new Date();
+  for (var i = 13; i >= 0; i--) {
+    var d = new Date(today); d.setDate(today.getDate() - i);
+    var key = d.toISOString().slice(0, 10);
+    var dayLabel = d.toLocaleDateString(undefined, { weekday: 'short' }).slice(0, 1);
+    var studied = ssIsStudied(days[key]);
+    var isToday = i === 0;
+    var cls = 'ss-cal-cell' + (studied ? ' on' : '') + (isToday ? ' today' : '');
+    var title = key + (studied ? ' — studied' : '');
+    html += '<div class="' + cls + '" title="' + title + '"><span class="ss-cal-d">' + dayLabel + '</span><span class="ss-cal-n">' + d.getDate() + '</span></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+/* ---- D. MAIN STUDY TOOLS RENDER ---- */
 function initStudyTools() {
   var footer = document.querySelector('footer, .footer, .footer-note');
   var anchor = footer || document.body;
@@ -1287,162 +1502,427 @@ function initStudyTools() {
   tools.className = 'ss-study-tools';
   tools.id = 'ss-study-tools';
 
-  /* --- Streak calculation --- */
-  var logs = JSON.parse(_ls.get('ss-study-logs') || '[]');
-  var today = new Date().toISOString().slice(0, 10);
-  var streak = 0;
-  var d = new Date();
-  for (var i = 0; i < 365; i++) {
-    var dateStr = d.toISOString().slice(0, 10);
-    if (logs.some(function (l) { return l.date === dateStr; })) { streak++; d.setDate(d.getDate() - 1); }
-    else break;
-  }
-
-  /* --- Wellness tips (research-backed, rotating) --- */
-  var tips = [
-    { icon: '😴', text: 'Sleep consolidates memory. 7-9 hours before an exam is worth more than 3 extra hours of cramming.', source: 'Walker, 2017' },
-    { icon: '🧠', text: 'Your brain uses 20% of your calories. Skipping meals impairs working memory and concentration.', source: 'Gailliot et al., 2007' },
-    { icon: '💧', text: 'Even 1-2% dehydration reduces cognitive performance. Keep water nearby while studying.', source: 'Masento et al., 2014' },
-    { icon: '🚶', text: 'A 20-minute walk boosts focus for 2+ hours. Study, walk, study — not study, study, study.', source: 'Oppezzo & Schwartz, 2014' },
-    { icon: '🎯', text: 'Testing yourself is 2-3× more effective than re-reading. Use Quiz Mode on every topic.', source: 'Roediger & Butler, 2011' },
-    { icon: '⏰', text: 'Your brain can focus deeply for ~25 minutes. Use the Pomodoro timer below — it works.', source: 'Cirillo, 2006' },
-    { icon: '📵', text: 'Having your phone visible (even off) reduces cognitive capacity by ~10%. Put it in another room.', source: 'Ward et al., 2017' },
-    { icon: '🌅', text: 'Morning study sessions have 20% better retention than late-night ones. Start early when you can.', source: 'May et al., 2005' }
-  ];
-  var tip = tips[Math.floor(Math.random() * tips.length)];
+  /* Collapsed state — remembered across pages */
+  var collapsed = _ls.get('ss-tools-collapsed') === '1';
+  if (collapsed) tools.classList.add('ss-tools-collapsed');
 
   var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
-  var pageName = (document.querySelector('.hero h1') || {}).textContent || 'Study Sprint';
 
+  /* Initial data */
+  var days = ssLoadStudyDays();
+  var todayKey = new Date().toISOString().slice(0, 10);
+  var todayData = days[todayKey] || { pomos: 0, logs: 0, topicsDone: 0 };
+  var streak = ssComputeStreak(days);
+  var pomoMinutesToday = parseInt(_ls.get('ss-pomo-minutes:' + todayKey) || '0', 10);
+  var logs = JSON.parse(_ls.get('ss-study-logs') || '[]');
+
+  /* Pick a tip set; show first by default, allow next/category nav */
+  var tipPool = ssPickTipsForContext(streak.current, todayData.pomos);
+  var tipIdx = Math.floor(Math.random() * tipPool.length);
+  function currentTip() { return tipPool[tipIdx % tipPool.length]; }
+
+  /* Build the markup */
   tools.innerHTML =
-    /* Wellness tip */
-    '<div class="ss-wellness">' +
-      '<span class="ss-wellness-icon">' + tip.icon + '</span>' +
-      '<div class="ss-wellness-body">' +
-        '<span class="ss-wellness-text">' + tip.text + '</span>' +
-        '<span class="ss-wellness-source">' + tip.source + '</span>' +
+    /* ---- Toolbar (header + collapse toggle) ---- */
+    '<div class="ss-tools-bar">' +
+      '<div class="ss-tools-bar-left">' +
+        '<span class="ss-tools-title">🧘 Study Companion</span>' +
+        '<span class="ss-tools-meta">' +
+          '<span class="ss-tools-stat" title="Current streak">🔥 <b id="ss-streak-cur">' + streak.current + '</b>d</span>' +
+          '<span class="ss-tools-stat" title="Longest streak">🏆 <b>' + streak.best + '</b>d best</span>' +
+          '<span class="ss-tools-stat" title="Focus minutes today">⏱️ <b id="ss-pomo-mins">' + pomoMinutesToday + '</b>m today</span>' +
+        '</span>' +
       '</div>' +
+      '<button class="ss-tools-toggle" id="ss-tools-toggle" aria-label="Toggle study companion">' +
+        (collapsed ? '▾ Show' : '▴ Hide') +
+      '</button>' +
     '</div>' +
 
-    /* Pomodoro timer */
-    '<div class="ss-pomodoro">' +
-      '<div class="ss-pomo-header">' +
-        '<span class="ss-pomo-title">🍅 Focus Timer</span>' +
-        '<span class="ss-pomo-streak">🔥 ' + streak + '-day streak</span>' +
-      '</div>' +
-      '<div class="ss-pomo-display">' +
-        '<span class="ss-pomo-time" id="ss-pomo-time">25:00</span>' +
-        '<div class="ss-pomo-controls">' +
-          '<button class="ss-pomo-btn" id="ss-pomo-start">▶ Start</button>' +
-          '<button class="ss-pomo-btn ss-pomo-btn--secondary" id="ss-pomo-reset">↺ Reset</button>' +
-        '</div>' +
-        '<div class="ss-pomo-presets">' +
-          '<button class="ss-pomo-preset on" data-min="25">25m</button>' +
-          '<button class="ss-pomo-preset" data-min="15">15m</button>' +
-          '<button class="ss-pomo-preset" data-min="5">5m break</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
+    '<div class="ss-tools-body">' +
 
-    /* Study log */
-    '<div class="ss-study-log">' +
-      '<div class="ss-log-header">📝 Study Log</div>' +
-      '<textarea class="ss-log-textarea" id="ss-log-text" placeholder="What did I learn today? What felt hard? One thing I\'m proud of..." rows="2"></textarea>' +
-      '<div class="ss-log-actions">' +
-        '<input class="ss-log-attach" id="ss-log-attach" type="text" placeholder="Paste image/doc link (optional)">' +
-        '<button class="ss-log-submit" id="ss-log-submit">Save entry</button>' +
+      /* ---- Tabs ---- */
+      '<div class="ss-tabs" role="tablist">' +
+        '<button class="ss-tab on" data-tab="wellbeing">💛 Wellbeing</button>' +
+        '<button class="ss-tab" data-tab="pomodoro">🍅 Focus Timer</button>' +
+        '<button class="ss-tab" data-tab="streak">📅 Streak</button>' +
+        '<button class="ss-tab" data-tab="log">📝 Study Log</button>' +
+        '<button class="ss-tab" data-tab="howto">📚 How to Study</button>' +
       '</div>' +
-      '<div class="ss-log-entries" id="ss-log-entries"></div>' +
-    '</div>';
+
+      /* ---- WELLBEING PANEL ---- */
+      '<div class="ss-panel on" data-panel="wellbeing">' +
+        '<div class="ss-tip" id="ss-tip">' +
+          '<div class="ss-tip-icon">' + currentTip().icon + '</div>' +
+          '<div class="ss-tip-body">' +
+            '<p class="ss-tip-text">' + currentTip().text + '</p>' +
+            '<span class="ss-tip-source">— ' + currentTip().source + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ss-tip-controls">' +
+          '<button class="ss-tip-btn" id="ss-tip-next">Another tip →</button>' +
+          '<div class="ss-tip-cats">' +
+            '<button class="ss-tip-cat" data-cat="sleep">😴 Sleep</button>' +
+            '<button class="ss-tip-cat" data-cat="nutrition">🥦 Food</button>' +
+            '<button class="ss-tip-cat" data-cat="movement">🚶 Move</button>' +
+            '<button class="ss-tip-cat" data-cat="mental">🧘 Mind</button>' +
+            '<button class="ss-tip-cat" data-cat="compassion">💛 Care</button>' +
+            '<button class="ss-tip-cat" data-cat="technique">🎯 Method</button>' +
+            '<button class="ss-tip-cat" data-cat="environment">📵 Setup</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ss-care-box">' +
+          '<strong>A reminder:</strong> Sleep, food, water, and a friend nearby will do more for your exam than another hour of cramming. ' +
+          'Your brain is a body part — take care of the body and the brain works.' +
+        '</div>' +
+      '</div>' +
+
+      /* ---- POMODORO PANEL ---- */
+      '<div class="ss-panel" data-panel="pomodoro">' +
+        '<div class="ss-pomo-wrap">' +
+          /* SVG progress ring */
+          '<div class="ss-pomo-ring">' +
+            '<svg viewBox="0 0 200 200" width="200" height="200">' +
+              '<circle cx="100" cy="100" r="90" stroke="var(--ss-border)" stroke-width="6" fill="none"/>' +
+              '<circle id="ss-pomo-progress" cx="100" cy="100" r="90" stroke="var(--ss-accent)" stroke-width="6" fill="none" ' +
+                'stroke-linecap="round" stroke-dasharray="565.5" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>' +
+            '</svg>' +
+            '<div class="ss-pomo-center">' +
+              '<div class="ss-pomo-time" id="ss-pomo-time">25:00</div>' +
+              '<div class="ss-pomo-mode" id="ss-pomo-mode">Focus</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ss-pomo-side">' +
+            '<div class="ss-pomo-cycle" id="ss-pomo-cycle">Session 1 of 4 · then long break</div>' +
+            '<div class="ss-pomo-controls">' +
+              '<button class="ss-pomo-btn ss-pomo-btn--primary" id="ss-pomo-start">▶ Start</button>' +
+              '<button class="ss-pomo-btn" id="ss-pomo-skip">⏭ Skip</button>' +
+              '<button class="ss-pomo-btn" id="ss-pomo-reset">↺ Reset</button>' +
+            '</div>' +
+            '<div class="ss-pomo-presets">' +
+              '<button class="ss-pomo-preset on" data-mode="focus" data-min="25">25 / 5</button>' +
+              '<button class="ss-pomo-preset" data-mode="focus" data-min="50">50 / 10</button>' +
+              '<button class="ss-pomo-preset" data-mode="focus" data-min="15">15 / 3 (light)</button>' +
+            '</div>' +
+            '<div class="ss-pomo-today">' +
+              'Today: <b id="ss-pomo-sessions">' + todayData.pomos + '</b> session' + (todayData.pomos === 1 ? '' : 's') +
+              ' · <b id="ss-pomo-mins-2">' + pomoMinutesToday + '</b> focus minutes' +
+            '</div>' +
+            '<label class="ss-pomo-opt">' +
+              '<input type="checkbox" id="ss-pomo-notify"' + (Notification && Notification.permission === 'granted' ? ' checked' : '') + '>' +
+              ' Browser notification when timer ends' +
+            '</label>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      /* ---- STREAK PANEL ---- */
+      '<div class="ss-panel" data-panel="streak">' +
+        '<div class="ss-streak-stats">' +
+          '<div class="ss-streak-stat"><div class="ss-streak-num">' + streak.current + '</div><div class="ss-streak-lbl">Current streak</div></div>' +
+          '<div class="ss-streak-stat"><div class="ss-streak-num">' + streak.best + '</div><div class="ss-streak-lbl">Longest streak</div></div>' +
+          '<div class="ss-streak-stat"><div class="ss-streak-num">' + Object.keys(days).filter(function (k) { return ssIsStudied(days[k]); }).length + '</div><div class="ss-streak-lbl">Study days total</div></div>' +
+        '</div>' +
+        ssBuildCalendar(days) +
+        '<p class="ss-streak-rule">A day counts as <em>studied</em> when you complete <strong>1+ Pomodoro</strong>, write a <strong>study log entry</strong>, or mark <strong>1+ topic done</strong>. Take guilt-free rest days — recovery is part of the work.</p>' +
+      '</div>' +
+
+      /* ---- LOG PANEL ---- */
+      '<div class="ss-panel" data-panel="log">' +
+        '<div class="ss-log-prompt">What did I learn today? What felt hard? One thing I\'m proud of?</div>' +
+        '<textarea class="ss-log-textarea" id="ss-log-text" placeholder="Two sentences are enough. Reflection is what turns practice into mastery." rows="3"></textarea>' +
+        '<div class="ss-log-actions">' +
+          '<input class="ss-log-attach" id="ss-log-attach" type="text" placeholder="Optional: link to notes, photo, doc">' +
+          '<button class="ss-log-submit" id="ss-log-submit">Save entry</button>' +
+        '</div>' +
+        '<div class="ss-log-entries" id="ss-log-entries"></div>' +
+      '</div>' +
+
+      /* ---- HOW TO STUDY PANEL ---- */
+      '<div class="ss-panel" data-panel="howto">' +
+        '<div class="ss-howto-grid">' +
+          '<div class="ss-howto-card">' +
+            '<h4>🎯 Active Recall</h4>' +
+            '<p>Close the book. Try to write the topic from scratch. The struggle is the learning. Use Quiz Mode on every topic.</p>' +
+            '<span class="ss-howto-src">Karpicke & Blunt, 2011</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>🔁 Spaced Repetition</h4>' +
+            '<p>Revisit a topic at intervals: 1 day → 3 days → 7 days → 21 days. Use the "done" buttons to track which topics need a review.</p>' +
+            '<span class="ss-howto-src">Cepeda et al., 2008</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>👨‍🏫 Feynman Technique</h4>' +
+            '<p>Explain the topic out loud as if to a 12-year-old. Where you stumble is what you don\'t understand yet. Go re-learn that, repeat.</p>' +
+            '<span class="ss-howto-src">Feynman, 1985</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>🔀 Interleaving</h4>' +
+            '<p>Don\'t study one subject for 3 hours. Mix Physics → Math → Chem in 25-min blocks. It feels harder but retention is 43% better.</p>' +
+            '<span class="ss-howto-src">Rohrer & Taylor, 2007</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>🗺️ Concept Mapping</h4>' +
+            '<p>Drawing connections between ideas builds the same neural pathways the exam will use. Use the Mind Map button on each subject.</p>' +
+            '<span class="ss-howto-src">Nesbit & Adesope, 2006</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>✍️ Worry Dump (Pre-Exam)</h4>' +
+            '<p>10 minutes before an exam, write your worries on paper. Doing this once raised average grades by 0.4 points in studies.</p>' +
+            '<span class="ss-howto-src">Ramirez & Beilock, 2011</span>' +
+          '</div>' +
+          '<div class="ss-howto-card ss-howto-care">' +
+            '<h4>💛 The Hardest Truth</h4>' +
+            '<p>Working harder while ignoring sleep, food, and emotions is not dedication — it\'s self-harm dressed up as virtue. Rest is a strategy.</p>' +
+            '<span class="ss-howto-src">Care for yourself first.</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>📅 Study Plan Skeleton</h4>' +
+            '<p>For each subject: <em>Read → Recall → Practice → Review</em>. Block 25-min Pomodoros, alternate subjects, finish with reflection in the Study Log.</p>' +
+            '<span class="ss-howto-src">Bjork & Bjork, 2011</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>'; /* end .ss-tools-body */
 
   if (footer) { footer.insertAdjacentElement('beforebegin', tools); }
   else { document.body.appendChild(tools); }
 
-  /* --- Pomodoro logic --- */
-  var pomoTime = 25 * 60, pomoLeft = pomoTime, pomoInterval = null, pomoRunning = false;
-  var timeEl = document.getElementById('ss-pomo-time');
-  var startBtn = document.getElementById('ss-pomo-start');
-  var resetBtn = document.getElementById('ss-pomo-reset');
+  /* ====== Wire up: collapse toggle ====== */
+  document.getElementById('ss-tools-toggle').addEventListener('click', function () {
+    var nowCollapsed = !tools.classList.contains('ss-tools-collapsed');
+    tools.classList.toggle('ss-tools-collapsed', nowCollapsed);
+    _ls.set('ss-tools-collapsed', nowCollapsed ? '1' : '0');
+    this.textContent = nowCollapsed ? '▾ Show' : '▴ Hide';
+  });
 
-  function formatTime(s) { return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
-  function updateDisplay() { if (timeEl) timeEl.textContent = formatTime(pomoLeft); }
+  /* ====== Wire up: tabs ====== */
+  document.querySelectorAll('.ss-tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      var name = this.getAttribute('data-tab');
+      document.querySelectorAll('.ss-tab').forEach(function (x) { x.classList.toggle('on', x === t); });
+      document.querySelectorAll('.ss-panel').forEach(function (p) {
+        p.classList.toggle('on', p.getAttribute('data-panel') === name);
+      });
+      _ls.set('ss-tools-tab', name);
+    });
+  });
+  /* Restore last tab */
+  var lastTab = _ls.get('ss-tools-tab');
+  if (lastTab) {
+    var btn = document.querySelector('.ss-tab[data-tab="' + lastTab + '"]');
+    if (btn) btn.click();
+  }
+
+  /* ====== Wire up: wellbeing tip rotation + categories ====== */
+  function paintTip() {
+    var t = currentTip();
+    var box = document.getElementById('ss-tip');
+    if (!box) return;
+    box.querySelector('.ss-tip-icon').textContent = t.icon;
+    box.querySelector('.ss-tip-text').textContent = t.text;
+    box.querySelector('.ss-tip-source').textContent = '— ' + t.source;
+    box.classList.remove('ss-tip-fade'); void box.offsetWidth; box.classList.add('ss-tip-fade');
+  }
+  document.getElementById('ss-tip-next').addEventListener('click', function () {
+    tipIdx = (tipIdx + 1) % tipPool.length;
+    paintTip();
+  });
+  document.querySelectorAll('.ss-tip-cat').forEach(function (cb) {
+    cb.addEventListener('click', function () {
+      var cat = this.getAttribute('data-cat');
+      tipPool = SS_WELLBEING_TIPS.filter(function (t) { return t.cat === cat; });
+      tipIdx = 0;
+      document.querySelectorAll('.ss-tip-cat').forEach(function (x) { x.classList.remove('on'); });
+      this.classList.add('on');
+      paintTip();
+    });
+  });
+
+  /* ====== Wire up: Pomodoro ====== */
+  var pomoFocus = 25, pomoBreak = 5, pomoLong = 15;
+  var pomoMode = 'focus';      /* 'focus' | 'break' | 'long' */
+  var pomoLeft = pomoFocus * 60;
+  var pomoTotal = pomoFocus * 60;
+  var pomoRunning = false;
+  var pomoInterval = null;
+  var pomoSessionInCycle = 1;  /* 1..4 then long break */
+
+  var timeEl    = document.getElementById('ss-pomo-time');
+  var modeEl    = document.getElementById('ss-pomo-mode');
+  var cycleEl   = document.getElementById('ss-pomo-cycle');
+  var ringEl    = document.getElementById('ss-pomo-progress');
+  var startBtn  = document.getElementById('ss-pomo-start');
+  var skipBtn   = document.getElementById('ss-pomo-skip');
+  var resetBtn  = document.getElementById('ss-pomo-reset');
+  var notifyChk = document.getElementById('ss-pomo-notify');
+
+  var RING_LEN = 2 * Math.PI * 90; /* circumference for r=90 */
+  if (ringEl) ringEl.setAttribute('stroke-dasharray', RING_LEN.toFixed(2));
+
+  function fmt(s) { var m = Math.floor(s / 60); var x = s % 60; return m + ':' + (x < 10 ? '0' : '') + x; }
+  function paintTimer() {
+    if (timeEl) timeEl.textContent = fmt(pomoLeft);
+    if (modeEl) modeEl.textContent = pomoMode === 'focus' ? 'Focus' : (pomoMode === 'long' ? 'Long break' : 'Break');
+    if (cycleEl) cycleEl.textContent = pomoMode === 'focus'
+      ? 'Session ' + pomoSessionInCycle + ' of 4 · then long break'
+      : (pomoMode === 'long' ? '15 min long break — stretch, snack, breathe' : '5 min break — stand up, water, eyes off screen');
+    if (ringEl) {
+      var ratio = pomoTotal > 0 ? (pomoLeft / pomoTotal) : 0;
+      ringEl.setAttribute('stroke-dashoffset', (RING_LEN * (1 - ratio)).toFixed(2));
+      ringEl.setAttribute('stroke', pomoMode === 'focus' ? 'var(--ss-accent)' : '#66bb6a');
+    }
+  }
+  paintTimer();
+
+  function notifyEnd(kind) {
+    ssPlayChime(kind);
+    if (notifyChk && notifyChk.checked && 'Notification' in window) {
+      try {
+        if (Notification.permission === 'granted') {
+          new Notification(kind === 'break' ? '🍅 Time to focus' : '✅ Focus session complete', {
+            body: kind === 'break' ? 'Break over — back to work for 25 minutes.' : 'Take a 5-min break. Stand up, drink water.',
+            icon: 'favicon.svg'
+          });
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission();
+        }
+      } catch (e) {}
+    }
+  }
+
+  function advanceCycle() {
+    /* On finishing a focus block: log it + decide next mode */
+    if (pomoMode === 'focus') {
+      ssRecordAction('pomo');
+      var mins = Math.round(pomoTotal / 60);
+      var k = 'ss-pomo-minutes:' + new Date().toISOString().slice(0, 10);
+      _ls.set(k, String(parseInt(_ls.get(k) || '0', 10) + mins));
+      /* update the bar stats */
+      var total = parseInt(_ls.get(k), 10);
+      var minsEl = document.getElementById('ss-pomo-mins');
+      var mins2  = document.getElementById('ss-pomo-mins-2');
+      var sessEl = document.getElementById('ss-pomo-sessions');
+      if (minsEl) minsEl.textContent = total;
+      if (mins2) mins2.textContent = total;
+      var d2 = ssLoadStudyDays();
+      var todayD = d2[new Date().toISOString().slice(0,10)] || { pomos: 0 };
+      if (sessEl) sessEl.textContent = todayD.pomos;
+      var streakNow = ssComputeStreak();
+      var sCur = document.getElementById('ss-streak-cur');
+      if (sCur) sCur.textContent = streakNow.current;
+
+      if (pomoSessionInCycle >= 4) { pomoMode = 'long'; pomoTotal = pomoLong * 60; pomoSessionInCycle = 1; }
+      else { pomoMode = 'break'; pomoTotal = pomoBreak * 60; pomoSessionInCycle++; }
+      pomoLeft = pomoTotal;
+      notifyEnd('break');
+    } else {
+      /* End of break — back to focus */
+      pomoMode = 'focus'; pomoTotal = pomoFocus * 60; pomoLeft = pomoTotal;
+      notifyEnd('focus');
+    }
+    paintTimer();
+  }
 
   startBtn.addEventListener('click', function () {
     if (pomoRunning) {
       clearInterval(pomoInterval);
       pomoRunning = false;
-      startBtn.textContent = '▶ Start';
+      startBtn.textContent = '▶ Resume';
     } else {
       pomoRunning = true;
       startBtn.textContent = '⏸ Pause';
+      /* Ask for notification permission early */
+      if (notifyChk && notifyChk.checked && 'Notification' in window && Notification.permission === 'default') {
+        try { Notification.requestPermission(); } catch (e) {}
+      }
       pomoInterval = setInterval(function () {
         pomoLeft--;
-        updateDisplay();
+        paintTimer();
         if (pomoLeft <= 0) {
           clearInterval(pomoInterval);
           pomoRunning = false;
           startBtn.textContent = '▶ Start';
-          try { new Audio('data:audio/wav;base64,UklGRl9vT19teleVBRk1teleUAAAA').play(); } catch (e) {}
-          alert('⏰ Time\'s up! Take a break.');
+          advanceCycle();
         }
       }, 1000);
     }
   });
 
+  skipBtn.addEventListener('click', function () {
+    clearInterval(pomoInterval);
+    pomoRunning = false;
+    startBtn.textContent = '▶ Start';
+    pomoLeft = 0;
+    advanceCycle();
+  });
+
   resetBtn.addEventListener('click', function () {
     clearInterval(pomoInterval);
     pomoRunning = false;
-    pomoLeft = pomoTime;
+    pomoMode = 'focus';
+    pomoSessionInCycle = 1;
+    pomoTotal = pomoFocus * 60;
+    pomoLeft = pomoTotal;
     startBtn.textContent = '▶ Start';
-    updateDisplay();
+    paintTimer();
   });
 
-  document.querySelectorAll('.ss-pomo-preset').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.ss-pomo-preset').forEach(function (b) { b.classList.remove('on'); });
+  document.querySelectorAll('.ss-pomo-preset').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.ss-pomo-preset').forEach(function (x) { x.classList.remove('on'); });
       this.classList.add('on');
-      pomoTime = parseInt(this.getAttribute('data-min')) * 60;
-      pomoLeft = pomoTime;
+      pomoFocus = parseInt(this.getAttribute('data-min'), 10);
+      pomoBreak = pomoFocus >= 50 ? 10 : (pomoFocus >= 25 ? 5 : 3);
+      pomoLong  = pomoFocus >= 50 ? 20 : 15;
       clearInterval(pomoInterval);
       pomoRunning = false;
+      pomoMode = 'focus';
+      pomoSessionInCycle = 1;
+      pomoTotal = pomoFocus * 60;
+      pomoLeft = pomoTotal;
       startBtn.textContent = '▶ Start';
-      updateDisplay();
+      paintTimer();
     });
   });
 
-  /* --- Study log logic --- */
+  /* ====== Wire up: Study Log ====== */
   function renderLogs() {
     var el = document.getElementById('ss-log-entries');
     if (!el) return;
     var recent = logs.slice(0, 5);
-    if (!recent.length) { el.innerHTML = '<span class="ss-log-empty">No entries yet — start your streak!</span>'; return; }
+    if (!recent.length) {
+      el.innerHTML = '<span class="ss-log-empty">No entries yet — write your first reflection. Two sentences is enough to build the habit.</span>';
+      return;
+    }
     el.innerHTML = recent.map(function (l) {
       return '<div class="ss-log-entry">' +
         '<span class="ss-log-date">' + l.date + '</span>' +
-        '<span class="ss-log-note">' + l.note.replace(/</g, '&lt;').slice(0, 120) + (l.note.length > 120 ? '…' : '') + '</span>' +
-        (l.attachment ? '<a class="ss-log-link" href="' + l.attachment.replace(/"/g, '') + '" target="_blank">📎</a>' : '') +
+        '<span class="ss-log-note">' + l.note.replace(/</g, '&lt;').slice(0, 180) + (l.note.length > 180 ? '…' : '') + '</span>' +
+        (l.attachment ? '<a class="ss-log-link" href="' + l.attachment.replace(/"/g, '') + '" target="_blank" rel="noopener">📎</a>' : '') +
       '</div>';
     }).join('');
   }
+  renderLogs();
 
   document.getElementById('ss-log-submit').addEventListener('click', function () {
     var text = document.getElementById('ss-log-text').value.trim();
     if (!text) return;
     var attach = document.getElementById('ss-log-attach').value.trim();
-    var entry = { date: today, page: pageKey, note: text, attachment: attach || '' };
+    var entry = { date: new Date().toISOString().slice(0, 10), page: pageKey, note: text, attachment: attach };
     logs.unshift(entry);
     _ls.set('ss-study-logs', JSON.stringify(logs.slice(0, 50)));
     document.getElementById('ss-log-text').value = '';
     document.getElementById('ss-log-attach').value = '';
     sendToSheet(pageKey, 'study-log', entry);
-    /* Update streak display */
-    streak = streak || 1;
-    var streakEl = document.querySelector('.ss-pomo-streak');
-    if (streakEl) streakEl.textContent = '🔥 ' + streak + '-day streak';
+    /* Record the day */
+    ssRecordAction('log');
+    /* Update header stats */
+    var s = ssComputeStreak();
+    var sCur = document.getElementById('ss-streak-cur');
+    if (sCur) sCur.textContent = s.current;
     renderLogs();
   });
-
-  renderLogs();
 }
 
 /* (boot sequence consolidated in section 2 above) */
