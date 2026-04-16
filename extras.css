@@ -839,7 +839,6 @@ html.ss-light .ss-track-chip.on { color: #fff; }
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--ss-border);
-  animation: ss-fadeSlideIn 0.3s ease-out;
 }
 .ss-subject-chip {
   background: transparent;
@@ -864,9 +863,8 @@ html.ss-light .ss-track-chip.on { color: #fff; }
   font-weight: 600;
 }
 
-/* Panel expand animation */
+/* Panel — no animation on re-render */
 .ss-track-panel {
-  animation: ss-panelIn 0.3s ease-out;
 }
 @keyframes ss-panelIn {
   from { opacity: 0; transform: translateY(-8px); }
@@ -874,7 +872,6 @@ html.ss-light .ss-track-chip.on { color: #fff; }
 }
 
 .ss-dash-progress {
-  animation: ss-fadeSlideIn 0.3s ease-out;
 }
 
 .ss-card-dimmed {
