@@ -825,6 +825,15 @@ html.ss-light .ss-track-panel { background: var(--surface); border-color: var(--
 html.ss-light .ss-track-chip { border-color: var(--border); color: var(--text-muted); }
 html.ss-light .ss-track-chip.on { color: #fff; }
 
+.ss-card-dimmed {
+  opacity: 0.35 !important;
+  transform: scale(0.97) !important;
+}
+.ss-card-dimmed:hover {
+  opacity: 0.7 !important;
+  transform: scale(1) !important;
+}
+
 @media (max-width: 600px) {
   .ss-track-panel { padding: 16px; }
   .ss-track-chips { gap: 6px; }
@@ -1276,7 +1285,54 @@ html.ss-light .q-examtip     { background: #fff8f6; border-color: #ffccbc; }
 }
 
 /* ----------------------------------------------------------
-   14a. PAST PAPER / RESOURCE BLOCKS
+   14a. FEEDBACK TAB
+---------------------------------------------------------- */
+.ss-feedback-tab {
+  position: fixed;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 800;
+  background: var(--ss-surface);
+  border: 1px solid var(--ss-border);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  color: var(--ss-muted);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 10px 8px;
+  writing-mode: vertical-rl;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: opacity 0.4s, color 0.2s, background 0.2s;
+  box-shadow: -2px 0 12px rgba(0,0,0,0.15);
+}
+.ss-feedback-tab:hover {
+  color: var(--ss-accent);
+  background: rgba(79,195,247,0.08);
+}
+.ss-feedback-close {
+  background: none;
+  border: none;
+  color: var(--ss-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 2px;
+  margin-top: 6px;
+  writing-mode: horizontal-tb;
+  line-height: 1;
+}
+.ss-feedback-close:hover { color: var(--ss-text); }
+
+html.ss-light .ss-feedback-tab { background: var(--surface); border-color: var(--border); box-shadow: -2px 0 12px rgba(0,0,0,0.06); }
+
+@media (max-width: 600px) {
+  .ss-feedback-tab { font-size: 0.65rem; padding: 8px 6px; }
+}
+
+/* ----------------------------------------------------------
+   14b. PAST PAPER / RESOURCE BLOCKS
 ---------------------------------------------------------- */
 .info-block-title.resources { color: #4db6ac; }
 .resource-list { display: flex; flex-direction: column; gap: 8px; }

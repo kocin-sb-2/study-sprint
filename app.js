@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initPrintButton();       /* floating print/PDF button    */
     initMindMap();           /* interactive vis.js concept map */
     initQuizMode();          /* quiz mode toggle for PQS     */
+    initFeedbackTab();       /* subtle feedback side tab     */
   }
 
   /* Homepage */
@@ -98,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initHomeSearch();        /* subject filter input         */
     injectSyllabusLink();    /* link to syllabus guide       */
     initMasteryDashboard();  /* cross-subject progress panel */
+    initFeedbackTab();       /* subtle feedback side tab     */
   }
 });
 
@@ -987,17 +989,16 @@ function initMasteryDashboard() {
     panel.innerHTML = html;
     systems.insertBefore(panel, systems.firstChild);
 
-    /* Visual feedback on subject cards — highlight selected, dim others, but never hide */
+    /* Visual feedback on subject cards — highlight selected, dim others */
     document.querySelectorAll('.subject-card').forEach(function (card) {
       var href = card.getAttribute('href');
       if (!href || !hasSelection) {
-        card.style.opacity = '';
+        card.classList.remove('ss-card-dimmed');
         return;
       }
-      /* Match by filename — strip any path prefix */
       var filename = href.split('/').pop();
       var isSelected = selected.some(function (p) { return p.split('/').pop() === filename; });
-      card.style.opacity = isSelected ? '1' : '0.45';
+      card.classList.toggle('ss-card-dimmed', !isSelected);
     });
 
     /* Always show all system groups */
@@ -1065,6 +1066,48 @@ function initQuizMode() {
       document.querySelectorAll('.q-toggle-btn').forEach(function (b) { b.textContent = '▸ Show Solution'; b.classList.remove('q-toggle-btn--open'); });
     }
   });
+}
+
+/* ----------------------------------------------------------
+   12. FEEDBACK TAB
+   A subtle side-tab that links to a Google Form.
+   Appears after scrolling down 300px so it doesn't distract
+   on first load. Dismissable per session.
+---------------------------------------------------------- */
+function initFeedbackTab() {
+  if (_ls.get('ss-feedback-dismissed') === '1') return;
+
+  var tab = document.createElement('a');
+  tab.className = 'ss-feedback-tab';
+  tab.href = 'https://forms.gle/REPLACE_WITH_YOUR_FORM_ID';
+  tab.target = '_blank';
+  tab.rel = 'noopener';
+  tab.innerHTML = '💬 Feedback';
+  tab.style.opacity = '0';
+
+  var close = document.createElement('button');
+  close.className = 'ss-feedback-close';
+  close.innerHTML = '×';
+  close.setAttribute('aria-label', 'Dismiss feedback tab');
+  close.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    tab.remove();
+    _ls.set('ss-feedback-dismissed', '1');
+  });
+  tab.appendChild(close);
+  document.body.appendChild(tab);
+
+  /* Show after scrolling past 300px */
+  var shown = false;
+  function checkScroll() {
+    if (window.scrollY > 300 && !shown) {
+      shown = true;
+      tab.style.opacity = '1';
+    }
+  }
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  checkScroll();
 }
 
 /* (boot sequence consolidated in section 2 above) */
