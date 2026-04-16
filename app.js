@@ -933,10 +933,13 @@ function initMasteryDashboard() {
     var sweGroup = document.querySelector('.system-badge.swe');
     var ibSection = ibGroup ? ibGroup.closest('.system-group') : null;
     var sweSection = sweGroup ? sweGroup.closest('.system-group') : null;
+    var panel = document.getElementById('ss-track-panel');
 
-    /* Reorder sections */
-    if (track === 'swe' && sweSection && ibSection) {
-      systems.insertBefore(sweSection, ibSection);
+    /* Reorder: selected track goes right after the panel */
+    if (track === 'swe' && sweSection && panel) {
+      panel.insertAdjacentElement('afterend', sweSection);
+    } else if (track === 'ib' && ibSection && panel) {
+      panel.insertAdjacentElement('afterend', ibSection);
     }
 
     /* Dim cards */

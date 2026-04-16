@@ -863,8 +863,14 @@ html.ss-light .ss-track-chip.on { color: #fff; }
   font-weight: 600;
 }
 
-/* Panel — no animation on re-render */
+/* Panel — smooth height transitions */
 .ss-track-panel {
+  min-height: 80px;
+}
+
+/* Course sections — smooth reordering */
+.system-group {
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 @keyframes ss-panelIn {
   from { opacity: 0; transform: translateY(-8px); }
