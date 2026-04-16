@@ -992,9 +992,11 @@ function initMasteryDashboard() {
     }
 
     /* Progress bars */
-    var showSubjects = mySubjects.length > 0
-      ? subjects.filter(function (s) { return mySubjects.indexOf(s.path) !== -1; })
-      : (track ? subjects.filter(function (s) { return s.group === track; }) : []);
+    /* Always show progress for the selected track's subjects */
+    var showSubjects = track ? subjects.filter(function (s) { return s.group === track; }) : [];
+    if (mySubjects.length > 0) {
+      showSubjects = subjects.filter(function (s) { return mySubjects.indexOf(s.path) !== -1; });
+    }
 
     if (showSubjects.length > 0) {
       var totalDone = 0, totalCount = 0, bars = '';
@@ -1006,11 +1008,14 @@ function initMasteryDashboard() {
           '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
           '<span class="ss-dash-pct">' + (p.total ? pct + '%' : '—') + '</span></div>';
       });
-      var pct = totalCount ? Math.round((totalDone / totalCount) * 100) : 0;
-      var level = pct < 25 ? 'Novice' : pct < 50 ? 'Apprentice' : pct < 75 ? 'Scholar' : pct < 100 ? 'Master' : 'Legend ⭐';
-      html += '<div class="ss-dash-progress">' +
-        (totalCount > 0 ? '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + pct + '%</span></div><div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + pct + '%"></div></div>' : '') +
-        bars + '</div>';
+      html += '<div class="ss-dash-progress">';
+      if (totalCount > 0) {
+        var pct = Math.round((totalDone / totalCount) * 100);
+        var level = pct < 25 ? 'Novice' : pct < 50 ? 'Apprentice' : pct < 75 ? 'Scholar' : pct < 100 ? 'Master' : 'Legend ⭐';
+        html += '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + pct + '%</span></div>' +
+          '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + pct + '%"></div></div>';
+      }
+      html += bars + '</div>';
     }
 
     panel.innerHTML = html;
