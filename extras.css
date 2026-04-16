@@ -1221,9 +1221,11 @@ html.ss-light .ss-track-chip.on { color: #fff; }
 html.ss-light .ss-quiz-mode-btn { background: var(--surface); border-color: var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 
 @media (max-width: 600px) {
-  .ss-quiz-mode-btn { bottom: 80px; right: 16px; font-size: 0.75rem; padding: 7px 14px; }
-  .ss-print-btn { right: 16px; font-size: 0.75rem; padding: 7px 14px; }
-  .ss-darkmode-btn { left: 16px; width: 38px; height: 38px; font-size: 1rem; }
+  .ss-quiz-mode-btn { bottom: 76px; right: 12px; font-size: 0.7rem; padding: 6px 12px; border-radius: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .ss-print-btn { right: 12px; font-size: 0.7rem; padding: 6px 12px; border-radius: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .ss-darkmode-btn { left: 12px; width: 34px; height: 34px; font-size: 0.9rem; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  /* Prevent floating buttons from covering page content */
+  body { padding-bottom: 120px; }
 }
 
 /* ---- Quiz mode: hide all solutions + show placeholder ---- */

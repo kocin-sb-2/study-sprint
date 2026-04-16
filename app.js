@@ -976,29 +976,32 @@ function initMasteryDashboard() {
           '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + overallPct + '%</span></div>' +
           '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
           bars + '</div>';
+      } else if (bars) {
+        /* Show bars with dashes even if no pages visited yet */
+        html += '<div class="ss-dash-progress">' +
+          '<div class="ss-dash-header"><span class="ss-dash-level" style="color:var(--ss-muted)">Visit a subject to start tracking</span></div>' +
+          bars + '</div>';
       }
     }
 
     panel.innerHTML = html;
     systems.insertBefore(panel, systems.firstChild);
 
-    /* Apply visibility to subject cards */
+    /* Visual feedback on subject cards — highlight selected, dim others, but never hide */
     document.querySelectorAll('.subject-card').forEach(function (card) {
       var href = card.getAttribute('href');
-      if (!href || !hasSelection) { card.style.display = ''; return; }
-      card.style.display = selected.indexOf('/' + href) !== -1 ? '' : 'none';
+      if (!href || !hasSelection) {
+        card.style.opacity = '';
+        card.style.display = '';
+        return;
+      }
+      var isSelected = selected.indexOf('/' + href) !== -1;
+      card.style.opacity = isSelected ? '1' : '0.45';
+      card.style.display = '';
     });
 
-    /* Show/hide system groups based on whether any of their subjects are selected */
-    if (hasSelection) {
-      document.querySelectorAll('.system-group').forEach(function (g) {
-        var visibleCards = g.querySelectorAll('.subject-card');
-        var anyVisible = Array.prototype.some.call(visibleCards, function (c) { return c.style.display !== 'none'; });
-        g.style.display = anyVisible ? '' : 'none';
-      });
-    } else {
-      document.querySelectorAll('.system-group').forEach(function (g) { g.style.display = ''; });
-    }
+    /* Always show all system groups */
+    document.querySelectorAll('.system-group').forEach(function (g) { g.style.display = ''; });
 
     /* Bind chip clicks */
     panel.querySelectorAll('.ss-track-chip').forEach(function (chip) {
