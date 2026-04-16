@@ -1285,51 +1285,79 @@ html.ss-light .q-examtip     { background: #fff8f6; border-color: #ffccbc; }
 }
 
 /* ----------------------------------------------------------
-   14a. FEEDBACK TAB
+   14a. INLINE TOPIC COMMENTS
 ---------------------------------------------------------- */
-.ss-feedback-tab {
-  position: fixed;
-  right: -2px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 800;
-  background: var(--ss-surface);
-  border: 1px solid var(--ss-border);
-  border-right: none;
-  border-radius: 8px 0 0 8px;
-  color: var(--ss-muted);
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 10px 8px;
-  writing-mode: vertical-rl;
-  text-decoration: none;
-  letter-spacing: 0.5px;
-  transition: opacity 0.4s, color 0.2s, background 0.2s;
-  box-shadow: -2px 0 12px rgba(0,0,0,0.15);
-}
-.ss-feedback-tab:hover {
-  color: var(--ss-accent);
-  background: rgba(79,195,247,0.08);
-}
-.ss-feedback-close {
+.ss-comment-btn {
+  margin-left: auto;
+  flex-shrink: 0;
   background: none;
   border: none;
-  color: var(--ss-muted);
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   cursor: pointer;
-  padding: 2px;
-  margin-top: 6px;
-  writing-mode: horizontal-tb;
-  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  padding: 2px 6px;
 }
-.ss-feedback-close:hover { color: var(--ss-text); }
+.ss-comment-btn:hover { opacity: 1; }
 
-html.ss-light .ss-feedback-tab { background: var(--surface); border-color: var(--border); box-shadow: -2px 0 12px rgba(0,0,0,0.06); }
-
-@media (max-width: 600px) {
-  .ss-feedback-tab { font-size: 0.65rem; padding: 8px 6px; }
+.ss-comment-box {
+  padding: 12px 16px;
+  border-top: 1px solid var(--ss-border);
+  margin-top: 8px;
+  animation: ss-fadeSlideIn 0.2s ease-out;
 }
+.ss-comment-list { margin-bottom: 10px; }
+.ss-comment-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--ss-border);
+  font-size: 0.8rem;
+}
+.ss-comment-text { color: var(--ss-text); flex: 1; }
+.ss-comment-time { color: var(--ss-muted); font-size: 0.7rem; flex-shrink: 0; }
+.ss-comment-input {
+  width: 100%;
+  background: var(--ss-bg);
+  border: 1px solid var(--ss-border);
+  border-radius: 8px;
+  color: var(--ss-text);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  resize: vertical;
+  outline: none;
+}
+.ss-comment-input:focus { border-color: var(--ss-accent); }
+.ss-comment-actions { margin-top: 6px; }
+.ss-comment-submit {
+  background: rgba(79,195,247,0.1);
+  border: 1px solid rgba(79,195,247,0.25);
+  border-radius: 6px;
+  color: var(--ss-accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.ss-comment-submit:hover { background: rgba(79,195,247,0.2); }
+
+.ss-export-comments-btn {
+  background: none;
+  border: 1px solid var(--ss-border);
+  border-radius: 20px;
+  color: var(--ss-muted);
+  font-size: 0.75rem;
+  padding: 5px 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.ss-export-comments-btn:hover { color: var(--ss-text); border-color: var(--ss-text); }
+
+html.ss-light .ss-comment-input { background: var(--surface); border-color: var(--border); }
 
 /* ----------------------------------------------------------
    14b. PAST PAPER / RESOURCE BLOCKS

@@ -908,11 +908,12 @@ function initMasteryDashboard() {
     { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff', group: 'swe', href: 'matematik5.html' }
   ];
 
-  /* Load saved selection: array of selected subject paths, or empty = show all */
-  var selected = [];
-  try { selected = JSON.parse(_ls.get('ss-my-subjects') || '[]'); } catch (e) { selected = []; }
-
+  var track = _ls.get('ss-track') || ''; /* 'ib' or 'swe' or '' */
   var systems = document.querySelector('.systems');
+  var ibGroup = document.querySelector('.system-badge.ib');
+  var sweGroup = document.querySelector('.system-badge.swe');
+  var ibSection = ibGroup ? ibGroup.closest('.system-group') : null;
+  var sweSection = sweGroup ? sweGroup.closest('.system-group') : null;
 
   function getProgress(path) {
     var total = parseInt(_ls.get(path + ':__total__') || '0', 10);
@@ -923,8 +924,30 @@ function initMasteryDashboard() {
     return { total: total, done: done };
   }
 
+  function applyTrack() {
+    /* Reorder: selected track on top */
+    if (track === 'ib' && ibSection) {
+      systems.appendChild(sweSection || document.createTextNode(''));
+    } else if (track === 'swe' && sweSection) {
+      systems.insertBefore(sweSection, ibSection);
+    }
+
+    /* Dim the non-selected track's cards */
+    document.querySelectorAll('.subject-card').forEach(function (card) {
+      card.classList.remove('ss-card-dimmed');
+    });
+    if (track) {
+      var dimGroup = track === 'ib' ? 'swe' : 'ib';
+      subjects.forEach(function (s) {
+        if (s.group === dimGroup) {
+          var card = document.querySelector('a.subject-card[href="' + s.href + '"]');
+          if (card) card.classList.add('ss-card-dimmed');
+        }
+      });
+    }
+  }
+
   function render() {
-    /* Clean up previous */
     var old = document.getElementById('ss-track-panel');
     if (old) old.remove();
 
@@ -932,98 +955,55 @@ function initMasteryDashboard() {
     panel.id = 'ss-track-panel';
     panel.className = 'ss-track-panel';
 
-    var hasSelection = selected.length > 0;
-
-    /* Build subject picker: simple chip toggles */
+    /* Track toggle + progress */
     var html = '<div class="ss-track-header">' +
-      '<span class="ss-track-title">' + (hasSelection ? '📊 My Subjects' : '👋 Choose your subjects') + '</span>' +
-      (hasSelection ? '<button class="ss-track-reset" id="ss-track-reset">Reset</button>' : '') +
-    '</div>';
+      '<span class="ss-track-title">📊 Study Progress</span>' +
+      '</div>' +
+      '<div class="ss-track-chips" style="margin-bottom:12px">' +
+        '<button class="ss-track-chip' + (track === 'ib' ? ' on' : '') + '" data-track="ib" style="--chip-color:#4fc3f7">🌍 IB Diploma</button>' +
+        '<button class="ss-track-chip' + (track === 'swe' ? ' on' : '') + '" data-track="swe" style="--chip-color:#ffd54f">🇸🇪 Gymnasium</button>' +
+      '</div>';
 
-    /* IB group */
-    html += '<div class="ss-track-group"><span class="ss-track-group-label">🌍 IB Diploma</span><div class="ss-track-chips">';
-    subjects.filter(function (s) { return s.group === 'ib'; }).forEach(function (s) {
-      var on = selected.indexOf(s.path) !== -1;
-      html += '<button class="ss-track-chip' + (on ? ' on' : '') + '" data-path="' + s.path + '" style="--chip-color:' + s.color + '">' + s.label + '</button>';
+    /* Progress bars for selected track (or all if none selected) */
+    var trackSubjects = track ? subjects.filter(function (s) { return s.group === track; }) : subjects;
+    var totalDone = 0, totalCount = 0, bars = '';
+
+    trackSubjects.forEach(function (s) {
+      var p = getProgress(s.path);
+      totalDone += p.done; totalCount += p.total;
+      var pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
+      bars += '<div class="ss-dash-row"><span class="ss-dash-label">' + s.label + '</span>' +
+        '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
+        '<span class="ss-dash-pct">' + (p.total ? pct + '%' : '—') + '</span></div>';
     });
-    html += '</div></div>';
 
-    /* Swedish group */
-    html += '<div class="ss-track-group"><span class="ss-track-group-label">🇸🇪 Gymnasium</span><div class="ss-track-chips">';
-    subjects.filter(function (s) { return s.group === 'swe'; }).forEach(function (s) {
-      var on = selected.indexOf(s.path) !== -1;
-      html += '<button class="ss-track-chip' + (on ? ' on' : '') + '" data-path="' + s.path + '" style="--chip-color:' + s.color + '">' + s.label + '</button>';
-    });
-    html += '</div></div>';
-
-    /* Progress bars — only for selected subjects */
-    if (hasSelection) {
-      var totalDone = 0, totalCount = 0;
-      var bars = '';
-      selected.forEach(function (path) {
-        var s = subjects.filter(function (x) { return x.path === path; })[0];
-        if (!s) return;
-        var p = getProgress(path);
-        totalDone += p.done; totalCount += p.total;
-        var pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
-        bars += '<div class="ss-dash-row"><span class="ss-dash-label">' + s.label + '</span>' +
-          '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
-          '<span class="ss-dash-pct">' + (p.total ? pct + '%' : '—') + '</span></div>';
-      });
-
-      if (totalCount > 0) {
-        var overallPct = Math.round((totalDone / totalCount) * 100);
-        var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
-        html += '<div class="ss-dash-progress">' +
-          '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + overallPct + '%</span></div>' +
-          '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
-          bars + '</div>';
-      } else if (bars) {
-        /* Show bars with dashes even if no pages visited yet */
-        html += '<div class="ss-dash-progress">' +
-          '<div class="ss-dash-header"><span class="ss-dash-level" style="color:var(--ss-muted)">Visit a subject to start tracking</span></div>' +
-          bars + '</div>';
-      }
+    if (totalCount > 0) {
+      var pct = Math.round((totalDone / totalCount) * 100);
+      var level = pct < 25 ? 'Novice' : pct < 50 ? 'Apprentice' : pct < 75 ? 'Scholar' : pct < 100 ? 'Master' : 'Legend ⭐';
+      html += '<div class="ss-dash-progress">' +
+        '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + pct + '%</span></div>' +
+        '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + pct + '%"></div></div>' +
+        bars + '</div>';
+    } else {
+      html += '<div class="ss-dash-progress">' +
+        '<div class="ss-dash-header"><span class="ss-dash-level" style="color:var(--ss-muted)">Visit a subject to start tracking</span></div>' +
+        bars + '</div>';
     }
 
     panel.innerHTML = html;
     systems.insertBefore(panel, systems.firstChild);
 
-    /* Visual feedback on subject cards — highlight selected, dim others */
-    document.querySelectorAll('.subject-card').forEach(function (card) {
-      var href = card.getAttribute('href');
-      if (!href || !hasSelection) {
-        card.classList.remove('ss-card-dimmed');
-        return;
-      }
-      var filename = href.split('/').pop();
-      var isSelected = selected.some(function (p) { return p.split('/').pop() === filename; });
-      card.classList.toggle('ss-card-dimmed', !isSelected);
-    });
+    applyTrack();
 
-    /* Always show all system groups */
-    document.querySelectorAll('.system-group').forEach(function (g) { g.style.display = ''; });
-
-    /* Bind chip clicks */
+    /* Bind track toggle */
     panel.querySelectorAll('.ss-track-chip').forEach(function (chip) {
       chip.addEventListener('click', function () {
-        var path = this.getAttribute('data-path');
-        var idx = selected.indexOf(path);
-        if (idx !== -1) { selected.splice(idx, 1); } else { selected.push(path); }
-        _ls.set('ss-my-subjects', JSON.stringify(selected));
+        var t = this.getAttribute('data-track');
+        track = (track === t) ? '' : t;
+        if (track) { _ls.set('ss-track', track); } else { _ls.del('ss-track'); }
         render();
       });
     });
-
-    /* Reset button */
-    var resetBtn = document.getElementById('ss-track-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', function () {
-        selected = [];
-        _ls.del('ss-my-subjects');
-        render();
-      });
-    }
   }
 
   render();
@@ -1069,45 +1049,106 @@ function initQuizMode() {
 }
 
 /* ----------------------------------------------------------
-   12. FEEDBACK TAB
-   A subtle side-tab that links to a Google Form.
-   Appears after scrolling down 300px so it doesn't distract
-   on first load. Dismissable per session.
+   12. INLINE TOPIC COMMENTS
+   Students can leave comments on any topic about what's
+   missing or unclear. Stored in localStorage, exportable.
 ---------------------------------------------------------- */
 function initFeedbackTab() {
-  if (_ls.get('ss-feedback-dismissed') === '1') return;
+  var topics = document.querySelectorAll('.topic[id]');
+  if (!topics.length) return;
 
-  var tab = document.createElement('a');
-  tab.className = 'ss-feedback-tab';
-  tab.href = 'https://forms.gle/REPLACE_WITH_YOUR_FORM_ID';
-  tab.target = '_blank';
-  tab.rel = 'noopener';
-  tab.innerHTML = '💬 Feedback';
-  tab.style.opacity = '0';
+  var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
 
-  var close = document.createElement('button');
-  close.className = 'ss-feedback-close';
-  close.innerHTML = '×';
-  close.setAttribute('aria-label', 'Dismiss feedback tab');
-  close.addEventListener('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    tab.remove();
-    _ls.set('ss-feedback-dismissed', '1');
+  topics.forEach(function (topic) {
+    var header = topic.querySelector('.topic-header');
+    if (!header) return;
+
+    var btn = document.createElement('button');
+    btn.className = 'ss-comment-btn';
+    btn.title = 'Leave a suggestion';
+    var existing = JSON.parse(_ls.get('ss-comments:' + pageKey + ':' + topic.id) || '[]');
+    btn.textContent = existing.length ? '💬 ' + existing.length : '💬';
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openCommentBox(topic, pageKey);
+    });
+    header.appendChild(btn);
   });
-  tab.appendChild(close);
-  document.body.appendChild(tab);
 
-  /* Show after scrolling past 300px */
-  var shown = false;
-  function checkScroll() {
-    if (window.scrollY > 300 && !shown) {
-      shown = true;
-      tab.style.opacity = '1';
-    }
+  /* Export button in hero area */
+  var hero = document.querySelector('.hero');
+  if (hero) {
+    var exportBtn = document.createElement('button');
+    exportBtn.className = 'ss-export-comments-btn';
+    exportBtn.textContent = '📋 Export all suggestions';
+    exportBtn.style.display = 'none';
+    /* Show only if there are any comments */
+    var anyComments = _ls.keys().some(function (k) { return k.indexOf('ss-comments:' + pageKey) === 0; });
+    if (anyComments) exportBtn.style.display = '';
+
+    exportBtn.addEventListener('click', function () {
+      var all = [];
+      _ls.keys().forEach(function (k) {
+        if (k.indexOf('ss-comments:' + pageKey) !== 0) return;
+        var tid = k.replace('ss-comments:' + pageKey + ':', '');
+        var comments = JSON.parse(_ls.get(k) || '[]');
+        comments.forEach(function (c) { all.push(tid + '\t' + c.text + '\t' + c.time); });
+      });
+      if (!all.length) { alert('No suggestions yet.'); return; }
+      var tsv = 'Topic\tSuggestion\tTime\n' + all.join('\n');
+      var blob = new Blob([tsv], { type: 'text/tab-separated-values' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = pageKey.replace('/', '') + '-suggestions.tsv';
+      a.click();
+    });
+    hero.appendChild(exportBtn);
   }
-  window.addEventListener('scroll', checkScroll, { passive: true });
-  checkScroll();
+}
+
+function openCommentBox(topic, pageKey) {
+  var existing = topic.querySelector('.ss-comment-box');
+  if (existing) { existing.remove(); return; } /* toggle off */
+
+  var key = 'ss-comments:' + pageKey + ':' + topic.id;
+  var comments = JSON.parse(_ls.get(key) || '[]');
+
+  var box = document.createElement('div');
+  box.className = 'ss-comment-box';
+
+  var html = '';
+  if (comments.length) {
+    html += '<div class="ss-comment-list">';
+    comments.forEach(function (c, i) {
+      html += '<div class="ss-comment-item"><span class="ss-comment-text">' + c.text.replace(/</g, '&lt;') + '</span><span class="ss-comment-time">' + c.time + '</span></div>';
+    });
+    html += '</div>';
+  }
+  html += '<textarea class="ss-comment-input" placeholder="What\'s missing or unclear? Suggest improvements..." rows="2"></textarea>' +
+    '<div class="ss-comment-actions"><button class="ss-comment-submit">Add suggestion</button></div>';
+
+  box.innerHTML = html;
+  topic.appendChild(box);
+
+  box.querySelector('.ss-comment-submit').addEventListener('click', function () {
+    var input = box.querySelector('.ss-comment-input');
+    var text = input.value.trim();
+    if (!text) return;
+    comments.push({ text: text, time: new Date().toLocaleDateString() });
+    _ls.set(key, JSON.stringify(comments));
+    input.value = '';
+    /* Refresh */
+    box.remove();
+    openCommentBox(topic, pageKey);
+    /* Update button count */
+    var btn = topic.querySelector('.ss-comment-btn');
+    if (btn) btn.textContent = '💬 ' + comments.length;
+    /* Show export button */
+    var exp = document.querySelector('.ss-export-comments-btn');
+    if (exp) exp.style.display = '';
+  });
+
+  box.querySelector('.ss-comment-input').focus();
 }
 
 /* (boot sequence consolidated in section 2 above) */
