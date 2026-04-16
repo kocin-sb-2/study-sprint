@@ -504,6 +504,8 @@ body {
             <div class="exam-tip">Identify whether an equation is separable or requires an integrating factor.</div>
             <div class="exam-tip">Calculate the integrating factor and solve a linear first-order ODE step-by-step.</div>
             <div class="exam-tip">Verify a solution by substitution: differentiate and check it satisfies the original equation.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="4"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[4p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Lös differentialekvationen dy/dx = 3x²y med begynnelsevillkoret y(0) = 2.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Separera:</strong> dy/y = 3x² dx [1]</div><div class="q-step"><strong>Integrera:</strong> ln|y| = x³ + C [1]</div><div class="q-step"><strong>Begynnelsevillkor:</strong> ln 2 = 0 + C → C = ln 2 [1]</div><div class="q-step"><strong>Lösning:</strong> y = 2e^(x³) [1]</div></div><div class="q-examtip">Vanligt fel: Att glömma integrationskonstanten C. Utan C och begynnelsevillkor får man bara den allmänna lösningen, inte den partikulära.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -551,6 +553,8 @@ body {
             <div class="exam-tip">Write the complementary solution y_c based on root type.</div>
             <div class="exam-tip">Apply initial conditions y(x₀) and y'(x₀) to find C₁ and C₂.</div>
             <div class="exam-tip">Solve nonhomogeneous equations by finding y_p (via undetermined coefficients or variation of parameters) and adding y_c.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="4"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[4p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Lös y'' − 5y' + 6y = 0 med y(0) = 1, y'(0) = 1.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Karakteristisk ekvation:</strong> r² − 5r + 6 = 0 → (r−2)(r−3) = 0 → r = 2, 3 [1]</div><div class="q-step"><strong>Allmän lösning:</strong> y = Ae²ˣ + Be³ˣ [1]</div><div class="q-step"><strong>y(0) = 1:</strong> A + B = 1. y'(0) = 1: 2A + 3B = 1 [1]</div><div class="q-step"><strong>Lös:</strong> A = 2, B = −1. y = 2e²ˣ − e³ˣ [1]</div></div><div class="q-examtip">Vanligt fel: Att glömma att använda BÅDA begynnelsevillkoren. En andra ordningens ODE kräver två villkor för att bestämma A och B.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -599,6 +603,8 @@ body {
             <div class="exam-tip">Calculate half-life or doubling time from the growth constant.</div>
             <div class="exam-tip">Apply Newton's law of cooling: identify T₀, Tₐ, and k; solve for time to reach a target temperature.</div>
             <div class="exam-tip">Interpret damped oscillations: describe behavior and predict long-term motion.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="application" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--application">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">En population P växer enligt dP/dt = 0,03P med P(0) = 5000. Bestäm P(t) och beräkna fördubblingstiden.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Lösning:</strong> P = 5000e^(0,03t) [1]</div><div class="q-step"><strong>Fördubbling:</strong> 10000 = 5000e^(0,03t) → 2 = e^(0,03t) → t = ln2/0,03 = 23,1 [1]</div><div class="q-step"><strong>Svar:</strong> Fördubblingstiden är ca 23 tidsenheter. Generellt: T₂ = ln2/k. [1]</div></div><div class="q-examtip">Vanligt fel: Att använda log₁₀ istället för ln. Exponentialmodellen använder e, så naturlig logaritm krävs.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -643,6 +649,8 @@ body {
             <div class="exam-tip">Find equilibrium points of an autonomous ODE and determine their stability.</div>
             <div class="exam-tip">Draw a phase portrait for an autonomous ODE, showing equilibria and solution behavior.</div>
             <div class="exam-tip">Use qualitative analysis to predict long-term behavior without explicitly solving the ODE.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="analysis" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--analysis">A-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l3">A</span></div><p class="q-stem">Skissa riktningsfältet för dy/dx = x − y och beskriv lösningskurvornas kvalitativa beteende.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Isokliner:</strong> dy/dx = k när x − y = k, dvs y = x − k. Parallella linjer med lutning 1. [1]</div><div class="q-step"><strong>Jämvikt:</strong> dy/dx = 0 längs y = x. Ovanför linjen: dy/dx < 0 (avtagande). Under: dy/dx > 0 (ökande). [1]</div><div class="q-step"><strong>Beteende:</strong> Alla lösningar närmar sig asymptotiskt linjen y = x − 1 (partikulärlösning). Systemet är stabilt. [1]</div></div><div class="q-examtip">Vanligt fel: Att rita riktningsfältet utan att identifiera isokliner. Isokliner ger struktur åt fältet och gör skissen mycket enklare.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -682,6 +690,8 @@ body {
             <div class="info-block-title exam">Exam Focus</div>
             <div class="exam-tip">Determine whether a given IVP satisfies Picard-Lindelöf conditions; justify existence and uniqueness.</div>
             <div class="exam-tip">Identify situations where solutions are non-unique (e.g., dy/dx = √y) and explain the failure of continuity.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="recall" data-marks="2"><div class="q-meta"><span class="q-badge q-badge--recall">E-nivå</span><span class="q-marks">[2p]</span><span class="q-diff q-diff--l1">E</span></div><p class="q-stem">Formulera existens- och entydighetssatsen för första ordningens ODE. Vad garanterar den?</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Sats:</strong> Om f(x,y) och ∂f/∂y är kontinuerliga i en omgivning av (x₀,y₀), då har begynnelseproblemet y' = f(x,y), y(x₀) = y₀ en unik lösning i ett intervall kring x₀. [1]</div><div class="q-step"><strong>Betydelse:</strong> Satsen garanterar att lösningen existerar OCH är unik. Utan dessa villkor kan det finnas ingen, en eller oändligt många lösningar. [1]</div></div><div class="q-examtip">Vanligt fel: Att anta att alla ODE har unika lösningar. Satsen kräver specifika villkor — om de inte uppfylls kan lösningen grena sig.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -742,6 +752,8 @@ body {
             <div class="exam-tip">Rationalize complex denominators using conjugates.</div>
             <div class="exam-tip">Calculate modulus and identify real/imaginary parts.</div>
             <div class="exam-tip">Apply properties: |z₁z₂| = |z₁||z₂|, (zw)* = z*w*.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Givet z₁ = 3 + 4i och z₂ = 1 − 2i. Beräkna z₁z₂ och z₁/z₂.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Produkt:</strong> z₁z₂ = (3+4i)(1−2i) = 3 − 6i + 4i − 8i² = 3 − 2i + 8 = 11 − 2i [1]</div><div class="q-step"><strong>Kvot:</strong> z₁/z₂ = (3+4i)/(1−2i) × (1+2i)/(1+2i) = (3+6i+4i+8i²)/(1+4) = (−5+10i)/5 = −1 + 2i [2]</div></div><div class="q-examtip">Vanligt fel: Att glömma att multiplicera med konjugatet vid division. Konjugatet av (a+bi) är (a−bi).</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -785,6 +797,8 @@ body {
             <div class="exam-tip">Plot complex numbers on an Argand diagram; find modulus and argument.</div>
             <div class="exam-tip">Use geometric operations: visualize multiplication, division, rotation in the complex plane.</div>
             <div class="exam-tip">Solve geometric problems using complex numbers (e.g., finding vertices of polygons, angles).</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="application" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--application">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Rita z = −3 + 3i i det komplexa talplanet. Bestäm |z| och arg(z).</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Belopp:</strong> |z| = √(9 + 9) = √18 = 3√2 [1]</div><div class="q-step"><strong>Argument:</strong> tan θ = 3/(−3) = −1. Punkten ligger i andra kvadranten → arg(z) = π − π/4 = 3π/4 [1]</div><div class="q-step"><strong>Position:</strong> Punkten (−3, 3) i det komplexa planet. Avståndet från origo = 3√2 ≈ 4,24. [1]</div></div><div class="q-examtip">Vanligt fel: Att ge argumentet i fel kvadrant. Kontrollera alltid vilken kvadrant punkten ligger i innan du bestämmer vinkeln.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -830,6 +844,8 @@ body {
             <div class="exam-tip">Multiply or divide complex numbers using polar form; verify moduli and arguments.</div>
             <div class="exam-tip">Use Euler's formula to connect trigonometric and exponential representations.</div>
             <div class="exam-tip">Evaluate expressions like e^(iπ) = -1 using Euler's formula.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Skriv z = 1 + i på polär form och exponentialform.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Belopp:</strong> |z| = √(1+1) = √2 [1]</div><div class="q-step"><strong>Argument:</strong> arg(z) = arctan(1/1) = π/4 (första kvadranten) [1]</div><div class="q-step"><strong>Former:</strong> Polär: z = √2(cos π/4 + i sin π/4) = √2 cis(π/4). Exponential: z = √2 · e^(iπ/4) [1]</div></div><div class="q-examtip">Vanligt fel: Att skriva e^(iπ/4) utan beloppet framför. Exponentialformen är r·e^(iθ), inte bara e^(iθ).</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -873,6 +889,8 @@ body {
             <div class="exam-tip">Find all nth roots of a complex number; identify the principal root and express others.</div>
             <div class="exam-tip">Solve equations like z^n = a by converting to polar and finding roots.</div>
             <div class="exam-tip">Derive trigonometric identities using De Moivre (e.g., cos(2θ), cos(3θ)).</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="4"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[4p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Beräkna (1 + i)⁸ med de Moivres sats.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Polär form:</strong> 1 + i = √2 cis(π/4) [1]</div><div class="q-step"><strong>de Moivre:</strong> (√2)⁸ cis(8 × π/4) = (√2)⁸ cis(2π) [1]</div><div class="q-step"><strong>(√2)⁸:</strong> = 2⁴ = 16 [1]</div><div class="q-step"><strong>Svar:</strong> 16(cos 2π + i sin 2π) = 16(1 + 0) = 16 [1]</div></div><div class="q-examtip">Vanligt fel: Att glömma att upphöja beloppet. (r cis θ)ⁿ = rⁿ cis(nθ) — BÅDA r och θ påverkas.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -917,6 +935,8 @@ body {
             <div class="exam-tip">Apply complex conjugate root theorem to real polynomials; predict root structure.</div>
             <div class="exam-tip">Factor polynomials completely over ℂ; express as product of linear factors.</div>
             <div class="exam-tip">Solve cubic or quartic equations; identify multiplicities and repeated roots.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="4"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[4p]</span><span class="q-diff q-diff--l3">A</span></div><p class="q-stem">Lös z³ = −8i. Ange alla tre rötter på rektangulär form.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Polär form:</strong> −8i = 8 cis(−π/2) = 8 cis(3π/2) [1]</div><div class="q-step"><strong>Rötter:</strong> z = 8^(1/3) cis((3π/2 + 2kπ)/3) = 2 cis((3π/2 + 2kπ)/3) för k = 0,1,2 [1]</div><div class="q-step"><strong>k=0:</strong> 2 cis(π/2) = 2i. k=1: 2 cis(7π/6) = −√3 − i. k=2: 2 cis(11π/6) = √3 − i [1]</div><div class="q-step"><strong>Kontroll:</strong> (2i)³ = 8i³ = −8i ✓. Rötterna ligger jämnt fördelade med 120° mellanrum på en cirkel med radie 2. [1]</div></div><div class="q-examtip">Vanligt fel: Att bara hitta en rot. En tredjegradsekvation har alltid exakt 3 rötter i ℂ.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -975,6 +995,8 @@ body {
             <div class="exam-tip">Expand (x + y)^n using the binomial theorem; find specific coefficients.</div>
             <div class="exam-tip">Use Pascal's triangle to find binomial coefficients and verify relationships.</div>
             <div class="exam-tip">Apply multiplication principle to multi-step counting problems.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">På hur många sätt kan 5 personer placeras i en rad? På hur många sätt kan man välja 3 personer ur en grupp på 8?</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Permutation:</strong> 5! = 120 sätt (ordningen spelar roll). [1]</div><div class="q-step"><strong>Kombination:</strong> C(8,3) = 8!/(3!5!) = (8×7×6)/(3×2×1) = 56 sätt (ordningen spelar inte roll). [1]</div><div class="q-step"><strong>Skillnad:</strong> Permutation = ordning spelar roll. Kombination = ordning spelar inte roll. P(n,r) = n!/(n−r)!, C(n,r) = n!/(r!(n−r)!). [1]</div></div><div class="q-examtip">Vanligt fel: Att använda permutation när kombination krävs (eller tvärtom). Fråga dig: "Spelar ordningen roll?"</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1021,6 +1043,8 @@ body {
             <div class="exam-tip">Factor integers into primes; apply fundamental theorem.</div>
             <div class="exam-tip">Solve modular arithmetic problems: find inverses, solve congruences.</div>
             <div class="exam-tip">Determine coprimality; apply divisibility properties to proofs.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Bestäm GCD(252, 198) med Euklides algoritm. Skriv GCD som en linjärkombination av 252 och 198.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Euklides:</strong> 252 = 1×198 + 54. 198 = 3×54 + 36. 54 = 1×36 + 18. 36 = 2×18 + 0. GCD = 18. [1]</div><div class="q-step"><strong>Bakåt:</strong> 18 = 54 − 1×36 = 54 − 1×(198 − 3×54) = 4×54 − 198 = 4×(252 − 198) − 198 = 4×252 − 5×198. [1]</div><div class="q-step"><strong>Svar:</strong> GCD(252, 198) = 18 = 4×252 − 5×198. [1]</div></div><div class="q-examtip">Vanligt fel: Att stanna för tidigt i Euklides algoritm. Fortsätt tills resten = 0. Den sista icke-noll resten är GCD.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1064,6 +1088,8 @@ body {
             <div class="exam-tip">Use strong induction when base case or inductive step requires multiple previous values.</div>
             <div class="exam-tip">Apply well-ordering principle to prove existence or non-existence (proof by contradiction).</div>
             <div class="exam-tip">Verify induction proofs for common formulas: summations, inequalities, divisibility.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="analysis" data-marks="5"><div class="q-meta"><span class="q-badge q-badge--analysis">A-nivå</span><span class="q-marks">[5p]</span><span class="q-diff q-diff--l3">A</span></div><p class="q-stem">Bevisa med induktion att 1 + 2 + 3 + ... + n = n(n+1)/2 för alla positiva heltal n.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Basfall (n=1):</strong> VL = 1. HL = 1(2)/2 = 1. VL = HL ✓ [1]</div><div class="q-step"><strong>Induktionsantagande:</strong> Antag att påståendet gäller för n = k: 1+2+...+k = k(k+1)/2. [1]</div><div class="q-step"><strong>Induktionssteg (n=k+1):</strong> 1+2+...+k+(k+1) = k(k+1)/2 + (k+1) = (k+1)(k/2 + 1) = (k+1)(k+2)/2. [1]</div><div class="q-step"><strong>Verifiering:</strong> Detta är formeln med n = k+1: (k+1)((k+1)+1)/2 ✓ [1]</div><div class="q-step"><strong>Slutsats:</strong> Enligt induktionsprincipen gäller påståendet för alla n ∈ ℤ⁺. [1]</div></div><div class="q-examtip">Vanligt fel: Att utelämna slutsatsen. Induktionsbeviset är inte komplett utan den explicita slutsatsen som refererar till induktionsprincipen.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1110,6 +1136,8 @@ body {
             <div class="exam-tip">Find Euler paths/circuits; check degree conditions.</div>
             <div class="exam-tip">Identify trees and spanning trees; verify edge count and connectivity.</div>
             <div class="exam-tip">Solve problems about paths, cycles, and graph coloring using graph theory principles.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="application" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--application">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">En graf har 6 noder med graderna 2, 3, 3, 3, 3, 4. Hur många kanter har grafen? Kan grafen vara Eulersk?</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Kanter:</strong> Summa av grader = 2+3+3+3+3+4 = 18. Antal kanter = 18/2 = 9 (handskakningslemmat). [1]</div><div class="q-step"><strong>Eulersk:</strong> En Eulersk krets existerar om och bara om alla noder har jämn grad. Här har 4 noder udda grad (3) → inte Eulersk. [1]</div><div class="q-step"><strong>Eulersk väg:</strong> En Eulersk väg existerar om exakt 2 noder har udda grad. Här har 4 udda → ingen Eulersk väg heller. [1]</div></div><div class="q-examtip">Vanligt fel: Att blanda ihop Eulersk (besöker varje KANT en gång) och Hamiltonsk (besöker varje NOD en gång).</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1156,6 +1184,8 @@ body {
             <div class="exam-tip">Calculate sum of finite arithmetic/geometric series using formulas.</div>
             <div class="exam-tip">Evaluate infinite geometric series; check convergence condition |r| < 1.</div>
             <div class="exam-tip">Solve recurrence relations; find closed-form formulas and prove by induction.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="calculation" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--calculation">C-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">En rekursiv följd definieras av a₁ = 1, aₙ₊₁ = 2aₙ + 1. Beräkna a₂, a₃, a₄ och gissa en sluten formel. Verifiera med induktion.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Beräkna:</strong> a₂ = 2(1)+1 = 3. a₃ = 2(3)+1 = 7. a₄ = 2(7)+1 = 15. Mönster: 1, 3, 7, 15 = 2ⁿ − 1. [1]</div><div class="q-step"><strong>Gissning:</strong> aₙ = 2ⁿ − 1. Basfall: a₁ = 2¹ − 1 = 1 ✓ [1]</div><div class="q-step"><strong>Induktion:</strong> Om aₖ = 2ᵏ − 1, då aₖ₊₁ = 2(2ᵏ − 1) + 1 = 2ᵏ⁺¹ − 2 + 1 = 2ᵏ⁺¹ − 1 ✓ [1]</div></div><div class="q-examtip">Vanligt fel: Att gissa formeln utan att verifiera den. En gissning baserad på mönster kan vara fel — induktionsbeviset bekräftar den.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1214,6 +1244,8 @@ body {
             <div class="exam-tip">Prove a statement using contrapositive when the contrapositive is simpler.</div>
             <div class="exam-tip">Use proof by contradiction: assume the negation and derive an absurdity.</div>
             <div class="exam-tip">Negate quantified statements correctly; identify logical structure (AND, OR, IMPLIES).</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="analysis" data-marks="4"><div class="q-meta"><span class="q-badge q-badge--analysis">A-nivå</span><span class="q-marks">[4p]</span><span class="q-diff q-diff--l3">A</span></div><p class="q-stem">Bevisa att √2 är irrationellt (bevis genom motsägelse).</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Antagande:</strong> Antag att √2 = p/q där p,q ∈ ℤ, q ≠ 0, och bråket är maximalt förkortat (GCD(p,q) = 1). [1]</div><div class="q-step"><strong>Kvadrera:</strong> 2 = p²/q² → p² = 2q². Alltså p² är jämnt → p är jämnt. Skriv p = 2k. [1]</div><div class="q-step"><strong>Substituera:</strong> (2k)² = 2q² → 4k² = 2q² → q² = 2k². Alltså q² är jämnt → q är jämnt. [1]</div><div class="q-step"><strong>Motsägelse:</strong> Både p och q är jämna → GCD(p,q) ≥ 2. Men vi antog GCD(p,q) = 1. Motsägelse! Alltså är √2 irrationellt. □ [1]</div></div><div class="q-examtip">Vanligt fel: Att inte explicit ange att bråket är maximalt förkortat i antagandet. Utan detta villkor uppstår ingen motsägelse.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1256,6 +1288,8 @@ body {
             <div class="exam-tip">Use invariants to prove impossibility or constrain solutions.</div>
             <div class="exam-tip">Apply pigeonhole principle for existence proofs.</div>
             <div class="exam-tip">Test extreme/boundary cases to understand problem behavior.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="analysis" data-marks="3"><div class="q-meta"><span class="q-badge q-badge--analysis">A-nivå</span><span class="q-marks">[3p]</span><span class="q-diff q-diff--l3">A</span></div><p class="q-stem">Visa att om n² är jämnt, så är n jämnt (kontrapositivt bevis).</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Kontrapositivt:</strong> Istället för "n² jämnt → n jämnt", bevisar vi "n udda → n² udda" (logiskt ekvivalent). [1]</div><div class="q-step"><strong>Bevis:</strong> Antag n udda: n = 2k+1. Då n² = (2k+1)² = 4k²+4k+1 = 2(2k²+2k)+1, som är udda. [1]</div><div class="q-step"><strong>Slutsats:</strong> Vi har visat kontrapositiven. Alltså: om n² är jämnt måste n vara jämnt. □ [1]</div></div><div class="q-examtip">Vanligt fel: Att försöka bevisa påståendet direkt utan att inse att kontrapositivt bevis är enklare. Identifiera alltid vilken bevismetod som passar bäst.</div></div></div></div></div>
           </div>
         </div>
       </div>
@@ -1293,6 +1327,8 @@ body {
             <div class="exam-tip">For proofs, state what you're proving and clearly show logical flow.</div>
             <div class="exam-tip">Check special cases and edge conditions to verify solutions.</div>
             <div class="exam-tip">Manage time: easier problems first, clear communication, partial work shown.</div>
+
+          <div class="info-block"><div class="info-block-title questions">🎯 Övningsfrågor</div><div class="q-list"><div class="q-item" data-type="application" data-marks="4"><div class="q-meta"><span class="q-badge q-badge--application">C-nivå</span><span class="q-marks">[4p]</span><span class="q-diff q-diff--l2">C</span></div><p class="q-stem">Lös ekvationen z⁴ + 4 = 0 och ange alla rötter på rektangulär form.</p><button class="q-toggle-btn" onclick="toggleSolution(this)">▸ Visa lösning</button><div class="q-solution"><div class="q-steps"><div class="q-step"><strong>Omskrivning:</strong> z⁴ = −4 = 4 cis(π). Fjärde rötter: z = 4^(1/4) cis((π + 2kπ)/4) = √2 cis((π + 2kπ)/4). [1]</div><div class="q-step"><strong>k=0:</strong> √2 cis(π/4) = 1 + i. k=1: √2 cis(3π/4) = −1 + i. [1]</div><div class="q-step"><strong>k=2:</strong> √2 cis(5π/4) = −1 − i. k=3: √2 cis(7π/4) = 1 − i. [1]</div><div class="q-step"><strong>Svar:</strong> z = 1+i, −1+i, −1−i, 1−i. Fyra rötter jämnt fördelade på en cirkel med radie √2. [1]</div></div><div class="q-examtip">Vanligt fel: Att bara hitta 2 av 4 rötter. En fjärdegradsekvation har alltid exakt 4 rötter i ℂ (med multiplicitet).</div></div></div></div></div>
           </div>
         </div>
       </div>
