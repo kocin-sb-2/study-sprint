@@ -965,22 +965,9 @@ function initMasteryDashboard() {
     panel.id = 'ss-track-panel';
     panel.className = 'ss-track-panel';
 
-    /* Dynamic title */
-    var title, subtitle;
-    if (!track) {
-      title = '👋 What are you studying?';
-      subtitle = 'Select your programme to personalise your dashboard';
-    } else if (mySubjects.length === 0) {
-      title = '📚 Choose your subjects';
-      subtitle = 'Pick the subjects you\'re taking this year';
-    } else {
-      title = '📊 My Study Progress';
-      subtitle = '';
-    }
-
+    /* Static title, no explanatory text */
     var html = '<div class="ss-track-header">' +
-      '<div><span class="ss-track-title">' + title + '</span>' +
-      (subtitle ? '<span class="ss-track-subtitle">' + subtitle + '</span>' : '') + '</div>' +
+      '<span class="ss-track-title">📊 Study Progress</span>' +
       (track ? '<button class="ss-track-reset" id="ss-track-reset">Reset</button>' : '') +
     '</div>';
 
