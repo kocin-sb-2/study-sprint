@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initMindMap();           /* interactive vis.js concept map */
     initQuizMode();          /* quiz mode toggle for PQS     */
     initFeedbackTab();       /* subtle feedback side tab     */
+    initStudyTools();        /* pomodoro + wellness + log    */
   }
 
   /* Homepage */
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     injectSyllabusLink();    /* link to syllabus guide       */
     initMasteryDashboard();  /* cross-subject progress panel */
     initFeedbackTab();       /* subtle feedback side tab     */
+    initStudyTools();        /* pomodoro + wellness + log    */
   }
 });
 
@@ -935,11 +937,11 @@ function initMasteryDashboard() {
     var sweSection = sweGroup ? sweGroup.closest('.system-group') : null;
     var panel = document.getElementById('ss-track-panel');
 
-    /* Reorder: selected track goes right after the panel */
-    if (track === 'swe' && sweSection && panel) {
-      panel.insertAdjacentElement('afterend', sweSection);
-    } else if (track === 'ib' && ibSection && panel) {
-      panel.insertAdjacentElement('afterend', ibSection);
+    /* Reorder: selected track goes first, other goes second */
+    if (track === 'swe' && sweSection && ibSection) {
+      systems.appendChild(ibSection); /* moves IB to end */
+    } else if (track === 'ib' && sweSection && ibSection) {
+      systems.appendChild(sweSection); /* moves Swedish to end */
     }
 
     /* Dim cards */
@@ -1272,6 +1274,175 @@ function sendToSheet(page, topicId, comment) {
       page: page, topic: topicId, text: comment.text
     }));
   } catch (e) { /* Silent fail — local storage is the primary store */ }
+}
+
+/* ----------------------------------------------------------
+   13. STUDY TOOLS: Pomodoro, Wellness, Study Log + Streaks
+---------------------------------------------------------- */
+function initStudyTools() {
+  var footer = document.querySelector('footer, .footer, .footer-note');
+  var anchor = footer || document.body;
+
+  var tools = document.createElement('div');
+  tools.className = 'ss-study-tools';
+  tools.id = 'ss-study-tools';
+
+  /* --- Streak calculation --- */
+  var logs = JSON.parse(_ls.get('ss-study-logs') || '[]');
+  var today = new Date().toISOString().slice(0, 10);
+  var streak = 0;
+  var d = new Date();
+  for (var i = 0; i < 365; i++) {
+    var dateStr = d.toISOString().slice(0, 10);
+    if (logs.some(function (l) { return l.date === dateStr; })) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+
+  /* --- Wellness tips (research-backed, rotating) --- */
+  var tips = [
+    { icon: '😴', text: 'Sleep consolidates memory. 7-9 hours before an exam is worth more than 3 extra hours of cramming.', source: 'Walker, 2017' },
+    { icon: '🧠', text: 'Your brain uses 20% of your calories. Skipping meals impairs working memory and concentration.', source: 'Gailliot et al., 2007' },
+    { icon: '💧', text: 'Even 1-2% dehydration reduces cognitive performance. Keep water nearby while studying.', source: 'Masento et al., 2014' },
+    { icon: '🚶', text: 'A 20-minute walk boosts focus for 2+ hours. Study, walk, study — not study, study, study.', source: 'Oppezzo & Schwartz, 2014' },
+    { icon: '🎯', text: 'Testing yourself is 2-3× more effective than re-reading. Use Quiz Mode on every topic.', source: 'Roediger & Butler, 2011' },
+    { icon: '⏰', text: 'Your brain can focus deeply for ~25 minutes. Use the Pomodoro timer below — it works.', source: 'Cirillo, 2006' },
+    { icon: '📵', text: 'Having your phone visible (even off) reduces cognitive capacity by ~10%. Put it in another room.', source: 'Ward et al., 2017' },
+    { icon: '🌅', text: 'Morning study sessions have 20% better retention than late-night ones. Start early when you can.', source: 'May et al., 2005' }
+  ];
+  var tip = tips[Math.floor(Math.random() * tips.length)];
+
+  var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
+  var pageName = (document.querySelector('.hero h1') || {}).textContent || 'Study Sprint';
+
+  tools.innerHTML =
+    /* Wellness tip */
+    '<div class="ss-wellness">' +
+      '<span class="ss-wellness-icon">' + tip.icon + '</span>' +
+      '<div class="ss-wellness-body">' +
+        '<span class="ss-wellness-text">' + tip.text + '</span>' +
+        '<span class="ss-wellness-source">' + tip.source + '</span>' +
+      '</div>' +
+    '</div>' +
+
+    /* Pomodoro timer */
+    '<div class="ss-pomodoro">' +
+      '<div class="ss-pomo-header">' +
+        '<span class="ss-pomo-title">🍅 Focus Timer</span>' +
+        '<span class="ss-pomo-streak">🔥 ' + streak + '-day streak</span>' +
+      '</div>' +
+      '<div class="ss-pomo-display">' +
+        '<span class="ss-pomo-time" id="ss-pomo-time">25:00</span>' +
+        '<div class="ss-pomo-controls">' +
+          '<button class="ss-pomo-btn" id="ss-pomo-start">▶ Start</button>' +
+          '<button class="ss-pomo-btn ss-pomo-btn--secondary" id="ss-pomo-reset">↺ Reset</button>' +
+        '</div>' +
+        '<div class="ss-pomo-presets">' +
+          '<button class="ss-pomo-preset on" data-min="25">25m</button>' +
+          '<button class="ss-pomo-preset" data-min="15">15m</button>' +
+          '<button class="ss-pomo-preset" data-min="5">5m break</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    /* Study log */
+    '<div class="ss-study-log">' +
+      '<div class="ss-log-header">📝 Study Log</div>' +
+      '<textarea class="ss-log-textarea" id="ss-log-text" placeholder="What did I learn today? What felt hard? One thing I\'m proud of..." rows="2"></textarea>' +
+      '<div class="ss-log-actions">' +
+        '<input class="ss-log-attach" id="ss-log-attach" type="text" placeholder="Paste image/doc link (optional)">' +
+        '<button class="ss-log-submit" id="ss-log-submit">Save entry</button>' +
+      '</div>' +
+      '<div class="ss-log-entries" id="ss-log-entries"></div>' +
+    '</div>';
+
+  if (footer) { footer.insertAdjacentElement('beforebegin', tools); }
+  else { document.body.appendChild(tools); }
+
+  /* --- Pomodoro logic --- */
+  var pomoTime = 25 * 60, pomoLeft = pomoTime, pomoInterval = null, pomoRunning = false;
+  var timeEl = document.getElementById('ss-pomo-time');
+  var startBtn = document.getElementById('ss-pomo-start');
+  var resetBtn = document.getElementById('ss-pomo-reset');
+
+  function formatTime(s) { return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  function updateDisplay() { if (timeEl) timeEl.textContent = formatTime(pomoLeft); }
+
+  startBtn.addEventListener('click', function () {
+    if (pomoRunning) {
+      clearInterval(pomoInterval);
+      pomoRunning = false;
+      startBtn.textContent = '▶ Start';
+    } else {
+      pomoRunning = true;
+      startBtn.textContent = '⏸ Pause';
+      pomoInterval = setInterval(function () {
+        pomoLeft--;
+        updateDisplay();
+        if (pomoLeft <= 0) {
+          clearInterval(pomoInterval);
+          pomoRunning = false;
+          startBtn.textContent = '▶ Start';
+          try { new Audio('data:audio/wav;base64,UklGRl9vT19teleVBRk1teleUAAAA').play(); } catch (e) {}
+          alert('⏰ Time\'s up! Take a break.');
+        }
+      }, 1000);
+    }
+  });
+
+  resetBtn.addEventListener('click', function () {
+    clearInterval(pomoInterval);
+    pomoRunning = false;
+    pomoLeft = pomoTime;
+    startBtn.textContent = '▶ Start';
+    updateDisplay();
+  });
+
+  document.querySelectorAll('.ss-pomo-preset').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.ss-pomo-preset').forEach(function (b) { b.classList.remove('on'); });
+      this.classList.add('on');
+      pomoTime = parseInt(this.getAttribute('data-min')) * 60;
+      pomoLeft = pomoTime;
+      clearInterval(pomoInterval);
+      pomoRunning = false;
+      startBtn.textContent = '▶ Start';
+      updateDisplay();
+    });
+  });
+
+  /* --- Study log logic --- */
+  function renderLogs() {
+    var el = document.getElementById('ss-log-entries');
+    if (!el) return;
+    var recent = logs.slice(0, 5);
+    if (!recent.length) { el.innerHTML = '<span class="ss-log-empty">No entries yet — start your streak!</span>'; return; }
+    el.innerHTML = recent.map(function (l) {
+      return '<div class="ss-log-entry">' +
+        '<span class="ss-log-date">' + l.date + '</span>' +
+        '<span class="ss-log-note">' + l.note.replace(/</g, '&lt;').slice(0, 120) + (l.note.length > 120 ? '…' : '') + '</span>' +
+        (l.attachment ? '<a class="ss-log-link" href="' + l.attachment.replace(/"/g, '') + '" target="_blank">📎</a>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  document.getElementById('ss-log-submit').addEventListener('click', function () {
+    var text = document.getElementById('ss-log-text').value.trim();
+    if (!text) return;
+    var attach = document.getElementById('ss-log-attach').value.trim();
+    var entry = { date: today, page: pageKey, note: text, attachment: attach || '' };
+    logs.unshift(entry);
+    _ls.set('ss-study-logs', JSON.stringify(logs.slice(0, 50)));
+    document.getElementById('ss-log-text').value = '';
+    document.getElementById('ss-log-attach').value = '';
+    sendToSheet(pageKey, 'study-log', entry);
+    /* Update streak display */
+    streak = streak || 1;
+    var streakEl = document.querySelector('.ss-pomo-streak');
+    if (streakEl) streakEl.textContent = '🔥 ' + streak + '-day streak';
+    renderLogs();
+  });
+
+  renderLogs();
 }
 
 /* (boot sequence consolidated in section 2 above) */

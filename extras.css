@@ -1480,3 +1480,107 @@ html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: r
 .skip-link:focus {
   top: 0;
 }
+
+/* ----------------------------------------------------------
+   15. STUDY TOOLS: Wellness, Pomodoro, Study Log
+---------------------------------------------------------- */
+.ss-study-tools {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Wellness tip */
+.ss-wellness {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--ss-surface);
+  border: 1px solid var(--ss-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+.ss-wellness-icon { font-size: 1.6rem; flex-shrink: 0; }
+.ss-wellness-text { font-size: 0.85rem; color: var(--ss-text); line-height: 1.6; display: block; }
+.ss-wellness-source { font-size: 0.68rem; color: var(--ss-muted); font-style: italic; }
+
+/* Pomodoro */
+.ss-pomodoro {
+  background: var(--ss-surface);
+  border: 1px solid var(--ss-border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.ss-pomo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.ss-pomo-title { font-weight: 700; font-size: 0.9rem; color: var(--ss-text); }
+.ss-pomo-streak { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--ss-accent); }
+.ss-pomo-display { text-align: center; }
+.ss-pomo-time { font-family: 'JetBrains Mono', monospace; font-size: 2.8rem; font-weight: 700; color: var(--ss-text); display: block; margin-bottom: 12px; letter-spacing: 2px; }
+.ss-pomo-controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+.ss-pomo-btn {
+  background: var(--ss-accent); color: #0a0e17; border: none; border-radius: 8px;
+  padding: 8px 20px; font-weight: 600; font-size: 0.82rem; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif; transition: opacity 0.2s;
+}
+.ss-pomo-btn:hover { opacity: 0.85; }
+.ss-pomo-btn--secondary { background: var(--ss-border); color: var(--ss-muted); }
+.ss-pomo-presets { display: flex; gap: 6px; justify-content: center; }
+.ss-pomo-preset {
+  background: none; border: 1px solid var(--ss-border); border-radius: 12px;
+  color: var(--ss-muted); font-size: 0.72rem; padding: 3px 10px; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif; transition: all 0.15s;
+}
+.ss-pomo-preset.on { background: var(--ss-accent); border-color: var(--ss-accent); color: #0a0e17; font-weight: 600; }
+
+/* Study log */
+.ss-study-log {
+  background: var(--ss-surface);
+  border: 1px solid var(--ss-border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.ss-log-header { font-weight: 700; font-size: 0.9rem; color: var(--ss-text); margin-bottom: 10px; }
+.ss-log-textarea {
+  width: 100%; background: var(--ss-bg); border: 1px solid var(--ss-border);
+  border-radius: 8px; color: var(--ss-text); padding: 10px 12px; resize: vertical;
+  font-family: 'Source Sans 3', sans-serif; font-size: 0.82rem; outline: none;
+}
+.ss-log-textarea:focus { border-color: var(--ss-accent); }
+.ss-log-actions { display: flex; gap: 8px; margin-top: 8px; }
+.ss-log-attach {
+  flex: 1; background: var(--ss-bg); border: 1px solid var(--ss-border);
+  border-radius: 6px; color: var(--ss-text); padding: 6px 10px;
+  font-size: 0.78rem; font-family: 'Source Sans 3', sans-serif; outline: none;
+}
+.ss-log-attach:focus { border-color: var(--ss-accent); }
+.ss-log-submit {
+  background: var(--ss-accent); color: #0a0e17; border: none; border-radius: 6px;
+  padding: 6px 16px; font-weight: 600; font-size: 0.78rem; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif; white-space: nowrap;
+}
+.ss-log-entries { margin-top: 12px; }
+.ss-log-entry {
+  display: flex; align-items: center; gap: 8px; padding: 6px 0;
+  border-bottom: 1px solid var(--ss-border); font-size: 0.78rem;
+}
+.ss-log-date { color: var(--ss-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; flex-shrink: 0; }
+.ss-log-note { color: var(--ss-text); flex: 1; }
+.ss-log-link { text-decoration: none; flex-shrink: 0; }
+.ss-log-empty { color: var(--ss-muted); font-size: 0.78rem; font-style: italic; }
+
+html.ss-light .ss-wellness, html.ss-light .ss-pomodoro, html.ss-light .ss-study-log {
+  background: var(--surface); border-color: var(--border);
+}
+html.ss-light .ss-log-textarea, html.ss-light .ss-log-attach { background: var(--surface); }
+
+@media (max-width: 700px) {
+  .ss-study-tools { grid-template-columns: 1fr; padding: 0 16px; }
+}
+
+@media print {
+  .ss-study-tools { display: none !important; }
+}
