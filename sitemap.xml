@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://study-sprint.netlify.app/</loc></url>
-  <url><loc>https://study-sprint.netlify.app/fysik2.html</loc></url>
-  <url><loc>https://study-sprint.netlify.app/kemi2.html</loc></url>
-  <url><loc>https://study-sprint.netlify.app/matematik5.html</loc></url>
-  <url><loc>https://study-sprint.netlify.app/ib-physics-hl.html</loc></url>
-  <url><loc>https://study-sprint.netlify.app/ib-chemistry-hl.html</loc></url>
-  <url><loc>https://study-sprint.netlify.app/ib-math-aa-hl.html</loc></url>
-  <url><loc>https://study-sprint.netlify.app/study-sprint-syllabus-guide.html</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/ib-physics-hl.html</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/ib-chemistry-hl.html</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/ib-math-aa-hl.html</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/fysik2.html</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/kemi2.html</loc></url>
+  <url><loc>https://study-sprint-kocin.netlify.app/matematik5.html</loc></url>
 </urlset>

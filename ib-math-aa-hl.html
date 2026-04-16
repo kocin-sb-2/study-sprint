@@ -451,7 +451,14 @@ body {
         <span class="topic-expand-icon">▸</span>
       </div>
       <div class="topic-body">
-        <div class="info-block">
+        <div class="info-block"><div class="info-block-title resources">📄 Past Papers & Resources</div>
+            <div class="resource-list">
+              <a class="resource-link" href="https://www.smashingscience.org" target="_blank" rel="noopener">IB Math past papers — Smashing Science ↗</a>
+              <a class="resource-link" href="https://www.revisionvillage.com" target="_blank" rel="noopener">IB Math AA revision — Revision Village ↗</a>
+              <p class="resource-note">Key exam patterns: sequences/series appear in Paper 1 and Paper 2 every session. Practice sum formulas, convergence tests, and sigma notation.</p>
+            </div>
+          </div>
+          <div class="info-block">
           <div class="info-block-title concepts">Key Concepts</div>
           <div class="concept-item"><strong>Arithmetic sequences:</strong> Sequences where consecutive terms differ by a constant d. General term: uₙ = u₁ + (n−1)d. Sum: Sₙ = n/2(2u₁ + (n−1)d).</div>
           <div class="concept-item"><strong>Geometric sequences:</strong> Sequences where consecutive terms have constant ratio r. General term: uₙ = u₁ · r^(n−1). Sum: Sₙ = u₁(1−rⁿ)/(1−r).</div>
@@ -1857,6 +1864,7 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script src="app.js"></script>
+<form name="study-log" netlify hidden><input type="text" name="page"><input type="text" name="date"><input type="text" name="note"><input type="text" name="attachment"></form>
 
 </body>
 </html>

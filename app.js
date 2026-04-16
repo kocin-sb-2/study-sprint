@@ -86,22 +86,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* Subject pages */
   if (hasTopics && !isHomepage) {
-    initProgress();          /* progress bar + done buttons  */
-    initSubjectSearch();     /* in-page topic search         */
-    initPrintButton();       /* floating print/PDF button    */
-    initMindMap();           /* interactive vis.js concept map */
-    initQuizMode();          /* quiz mode toggle for PQS     */
-    initFeedbackTab();       /* subtle feedback side tab     */
-    initStudyTools();        /* pomodoro + wellness + log    */
+    initProgress();
+    initSubjectSearch();
+    initPrintButton();
+    initMindMap();
+    initQuizMode();
+    initFeedbackTab();
+    initStudyTools();
+    initOnboarding();
   }
 
   /* Homepage */
   if (isHomepage) {
-    initHomeSearch();        /* subject filter input         */
-    injectSyllabusLink();    /* link to syllabus guide       */
-    initMasteryDashboard();  /* cross-subject progress panel */
-    initFeedbackTab();       /* subtle feedback side tab     */
-    initStudyTools();        /* pomodoro + wellness + log    */
+    initHomeSearch();
+    injectSyllabusLink();
+    initMasteryDashboard();
+    initFeedbackTab();
+    initStudyTools();
   }
 });
 
@@ -1922,6 +1923,27 @@ function initStudyTools() {
     var sCur = document.getElementById('ss-streak-cur');
     if (sCur) sCur.textContent = s.current;
     renderLogs();
+  });
+}
+
+/* ----------------------------------------------------------
+   14. FIRST-VISIT ONBOARDING
+---------------------------------------------------------- */
+function initOnboarding() {
+  if (_ls.get('ss-onboarded') === '1') return;
+  var hero = document.querySelector('.hero');
+  if (!hero) return;
+
+  var bar = document.createElement('div');
+  bar.className = 'ss-onboard';
+  bar.innerHTML =
+    '<span class="ss-onboard-text">💡 <strong>Tip:</strong> Try <em>🧠 Concept Map</em> to see how topics connect, <em>🎯 Quiz Mode</em> to test yourself, and <em>💬</em> on any topic to suggest improvements.</span>' +
+    '<button class="ss-onboard-close" id="ss-onboard-close">Got it</button>';
+  hero.insertAdjacentElement('afterend', bar);
+
+  document.getElementById('ss-onboard-close').addEventListener('click', function () {
+    bar.remove();
+    _ls.set('ss-onboarded', '1');
   });
 }
 

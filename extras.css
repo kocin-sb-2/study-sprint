@@ -2007,3 +2007,35 @@ html.ss-light .ss-log-textarea, html.ss-light .ss-log-attach { background: var(-
 @media print {
   .ss-study-tools { display: none !important; }
 }
+
+/* Onboarding banner */
+.ss-onboard {
+  max-width: 900px;
+  margin: 0 auto 16px;
+  padding: 12px 20px;
+  background: rgba(79,195,247,0.08);
+  border: 1px solid rgba(79,195,247,0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: var(--ss-text);
+}
+.ss-onboard-text { flex: 1; line-height: 1.6; }
+.ss-onboard-text em { color: var(--ss-accent); font-style: normal; font-weight: 600; }
+.ss-onboard-close {
+  background: var(--ss-accent);
+  color: #0a0e17;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Source Sans 3', sans-serif;
+}
+@media (max-width: 600px) {
+  .ss-onboard { flex-direction: column; text-align: center; margin: 0 16px 16px; }
+}
