@@ -1187,8 +1187,8 @@ html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-co
 /* ---- Quiz mode toggle button (injected by JS into toolbar) ---- */
 .ss-quiz-mode-btn {
   position: fixed;
-  bottom: 28px;
-  right: 160px;
+  bottom: 80px;
+  right: 28px;
   z-index: 900;
   display: inline-flex;
   align-items: center;
@@ -1221,7 +1221,9 @@ html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-co
 html.ss-light .ss-quiz-mode-btn { background: var(--surface); border-color: var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 
 @media (max-width: 600px) {
-  .ss-quiz-mode-btn { right: auto; left: 80px; bottom: 28px; font-size: 0.75rem; padding: 7px 14px; }
+  .ss-quiz-mode-btn { bottom: 80px; right: 16px; font-size: 0.75rem; padding: 7px 14px; }
+  .ss-print-btn { right: 16px; font-size: 0.75rem; padding: 7px 14px; }
+  .ss-darkmode-btn { left: 16px; width: 38px; height: 38px; font-size: 1rem; }
 }
 
 /* ---- Quiz mode: hide all solutions + show placeholder ---- */

@@ -911,7 +911,8 @@ function initMasteryDashboard() {
   };
 
   var track = _ls.get('ss-track') || '';
-  var hiddenSubjects = JSON.parse(_ls.get('ss-hidden-subjects') || '[]');
+  var hiddenSubjects = [];
+  try { hiddenSubjects = JSON.parse(_ls.get('ss-hidden-subjects') || '[]'); } catch (e) { hiddenSubjects = []; }
   var systems = document.querySelector('.systems');
 
   function isSubjectVisible(path) { return hiddenSubjects.indexOf(path) === -1; }
@@ -942,12 +943,13 @@ function initMasteryDashboard() {
       html += '</div>';
     }
 
-    if (track) html += '<button class="ss-track-show-all" id="ss-track-show-all">Show all subjects</button>';
+    if (track) html += '<button class="ss-track-show-all" id="ss-track-show-all">✕ Reset selection</button>';
     sel.innerHTML = html;
     return sel;
   }
 
   function applyTrackFilter(selectedTrack) {
+    /* Hide/show entire system groups */
     var groups = document.querySelectorAll('.system-group');
     groups.forEach(function (g) {
       var badge = g.querySelector('.system-badge');
@@ -955,11 +957,23 @@ function initMasteryDashboard() {
       var isIB = badge.classList.contains('ib');
       var isSwe = badge.classList.contains('swe');
       if (!selectedTrack) {
-        g.style.opacity = ''; g.style.order = '';
+        g.style.display = ''; g.style.order = '';
       } else if ((selectedTrack === 'ib' && isIB) || (selectedTrack === 'swe' && isSwe)) {
-        g.style.opacity = '1'; g.style.order = '0';
+        g.style.display = ''; g.style.order = '0';
       } else {
-        g.style.opacity = '0.4'; g.style.order = '1';
+        g.style.display = 'none'; g.style.order = '1';
+      }
+    });
+
+    /* Hide/show individual subject cards based on checkbox state */
+    document.querySelectorAll('.subject-card').forEach(function (card) {
+      var href = card.getAttribute('href');
+      if (!href) return;
+      var path = '/' + href;
+      if (hiddenSubjects.indexOf(path) !== -1) {
+        card.style.display = 'none';
+      } else {
+        card.style.display = '';
       }
     });
   }
@@ -1025,8 +1039,18 @@ function initMasteryDashboard() {
     sel.querySelectorAll('.ss-track-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var newTrack = this.getAttribute('data-track');
-        track = (track === newTrack) ? '' : newTrack; /* toggle off if same */
-        _ls.set('ss-track', track);
+        if (track === newTrack) {
+          /* Toggle off */
+          track = '';
+          hiddenSubjects = [];
+          _ls.del('ss-track');
+          _ls.del('ss-hidden-subjects');
+        } else {
+          track = newTrack;
+          hiddenSubjects = []; /* Reset subject picks when switching tracks */
+          _ls.set('ss-track', track);
+          _ls.del('ss-hidden-subjects');
+        }
         render();
       });
     });
@@ -1038,6 +1062,9 @@ function initMasteryDashboard() {
         hiddenSubjects = [];
         _ls.del('ss-track');
         _ls.del('ss-hidden-subjects');
+        /* Re-show all cards and groups */
+        document.querySelectorAll('.subject-card').forEach(function (c) { c.style.display = ''; });
+        document.querySelectorAll('.system-group').forEach(function (g) { g.style.display = ''; g.style.order = ''; });
         render();
       });
     }
