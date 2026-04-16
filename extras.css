@@ -742,95 +742,96 @@ html.ss-light .ss-map-detail { background: var(--surface); border-left-color: va
    Card-style panel showing per-subject progress bars.
 ---------------------------------------------------------- */
 
-/* Track selector */
-.ss-track-selector {
-  text-align: center;
-  margin-bottom: 28px;
-}
-.ss-track-prompt {
-  font-size: 0.9rem;
-  color: var(--ss-muted);
-  margin-bottom: 12px;
-}
-.ss-track-options {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.ss-track-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--ss-surface);
-  border: 1.5px solid var(--ss-border);
-  border-radius: 12px;
-  color: var(--ss-text);
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  padding: 12px 22px;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.15s;
-}
-.ss-track-btn:hover {
-  border-color: var(--ss-accent);
-  transform: translateY(-2px);
-}
-.ss-track-btn.active {
-  border-color: var(--ss-accent);
-  background: rgba(79,195,247,0.1);
-  box-shadow: 0 0 0 3px rgba(79,195,247,0.12);
-}
-.ss-track-icon { font-size: 1.2rem; }
-.ss-track-show-all {
-  display: inline-block;
-  margin-top: 10px;
-  background: none;
-  border: none;
-  color: var(--ss-muted);
-  font-size: 0.75rem;
-  cursor: pointer;
-  text-decoration: underline;
-  font-family: 'Source Sans 3', sans-serif;
-}
-.ss-track-show-all:hover { color: var(--ss-text); }
-
-.ss-subject-picks {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-.ss-subject-pick {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.82rem;
-  color: var(--ss-text);
-  cursor: pointer;
-}
-.ss-subject-pick input { cursor: pointer; accent-color: var(--ss-accent); }
-.ss-subject-pick-dot {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-}
-
-html.ss-light .ss-track-btn { background: var(--surface); border-color: var(--border); }
-html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-color: #0288d1; }
-
-@media (max-width: 600px) {
-  .ss-track-options { flex-direction: column; align-items: center; }
-  .ss-track-btn { width: 100%; max-width: 280px; justify-content: center; }
-}
-
-.ss-dashboard {
+/* Track panel */
+.ss-track-panel {
   background: var(--ss-surface);
   border: 1px solid var(--ss-border);
   border-radius: 16px;
-  padding: 24px 28px;
-  margin-bottom: 36px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
 }
+.ss-track-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.ss-track-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ss-text);
+}
+.ss-track-reset {
+  background: none;
+  border: 1px solid var(--ss-border);
+  border-radius: 6px;
+  color: var(--ss-muted);
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  transition: color 0.2s, border-color 0.2s;
+}
+.ss-track-reset:hover { color: var(--ss-text); border-color: var(--ss-text); }
+
+.ss-track-group {
+  margin-bottom: 10px;
+}
+.ss-track-group-label {
+  font-size: 0.72rem;
+  color: var(--ss-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+.ss-track-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ss-track-chip {
+  background: transparent;
+  border: 1.5px solid var(--ss-border);
+  border-radius: 20px;
+  color: var(--ss-muted);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ss-track-chip:hover {
+  border-color: var(--chip-color, var(--ss-accent));
+  color: var(--chip-color, var(--ss-accent));
+}
+.ss-track-chip.on {
+  background: var(--chip-color, var(--ss-accent));
+  border-color: var(--chip-color, var(--ss-accent));
+  color: #0a0e17;
+  font-weight: 600;
+}
+
+.ss-dash-progress {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ss-border);
+}
+
+html.ss-light .ss-track-panel { background: var(--surface); border-color: var(--border); }
+html.ss-light .ss-track-chip { border-color: var(--border); color: var(--text-muted); }
+html.ss-light .ss-track-chip.on { color: #fff; }
+
+@media (max-width: 600px) {
+  .ss-track-panel { padding: 16px; }
+  .ss-track-chips { gap: 6px; }
+  .ss-track-chip { font-size: 0.75rem; padding: 5px 12px; }
+}
+
+/* ss-dashboard class no longer used — progress is inside ss-track-panel */
 
 .ss-dash-header {
   display: flex;
@@ -913,7 +914,6 @@ html.ss-light .ss-track-btn.active { background: rgba(2,136,209,0.08); border-co
 
 @media (max-width: 600px) {
   .ss-dash-label { flex: 0 0 100px; font-size: 0.78rem; }
-  .ss-dashboard { padding: 18px 16px; }
 }
 
 /* ----------------------------------------------------------

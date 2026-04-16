@@ -897,191 +897,129 @@ function initMindMap() {
 function initMasteryDashboard() {
   if (!document.querySelector('.systems')) return;
 
-  var allSubjects = {
-    ib: [
-      { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7' },
-      { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65' },
-      { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff' }
-    ],
-    swe: [
-      { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7' },
-      { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65' },
-      { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff' }
-    ]
-  };
+  var subjects = [
+    { path: '/ib-physics-hl.html',   label: 'IB Physics HL',  color: '#4fc3f7', group: 'ib', href: 'ib-physics-hl.html' },
+    { path: '/ib-chemistry-hl.html', label: 'IB Chemistry HL',color: '#ff8a65', group: 'ib', href: 'ib-chemistry-hl.html' },
+    { path: '/ib-math-aa-hl.html',   label: 'IB Math AA HL',  color: '#b388ff', group: 'ib', href: 'ib-math-aa-hl.html' },
+    { path: '/fysik2.html',          label: 'Fysik 2',        color: '#4fc3f7', group: 'swe', href: 'fysik2.html' },
+    { path: '/kemi2.html',           label: 'Kemi 2',         color: '#ff8a65', group: 'swe', href: 'kemi2.html' },
+    { path: '/matematik5.html',      label: 'Matematik 5',    color: '#b388ff', group: 'swe', href: 'matematik5.html' }
+  ];
 
-  var track = _ls.get('ss-track') || '';
-  var hiddenSubjects = [];
-  try { hiddenSubjects = JSON.parse(_ls.get('ss-hidden-subjects') || '[]'); } catch (e) { hiddenSubjects = []; }
+  /* Load saved selection: array of selected subject paths, or empty = show all */
+  var selected = [];
+  try { selected = JSON.parse(_ls.get('ss-my-subjects') || '[]'); } catch (e) { selected = []; }
+
   var systems = document.querySelector('.systems');
 
-  function isSubjectVisible(path) { return hiddenSubjects.indexOf(path) === -1; }
-
-  function buildSelector() {
-    var sel = document.createElement('div');
-    sel.className = 'ss-track-selector';
-    sel.id = 'ss-track-selector';
-
-    var html = '<p class="ss-track-prompt">What are you studying?</p>' +
-      '<div class="ss-track-options">' +
-        '<button class="ss-track-btn' + (track === 'ib' ? ' active' : '') + '" data-track="ib">' +
-          '<span class="ss-track-icon">🌍</span>IB Diploma Programme</button>' +
-        '<button class="ss-track-btn' + (track === 'swe' ? ' active' : '') + '" data-track="swe">' +
-          '<span class="ss-track-icon">🇸🇪</span>Swedish Gymnasium</button>' +
-      '</div>';
-
-    /* Subject toggles — only show when a track is selected */
-    if (track && allSubjects[track]) {
-      html += '<div class="ss-subject-picks">';
-      allSubjects[track].forEach(function (s) {
-        var checked = isSubjectVisible(s.path) ? ' checked' : '';
-        html += '<label class="ss-subject-pick">' +
-          '<input type="checkbox" data-path="' + s.path + '"' + checked + '>' +
-          '<span class="ss-subject-pick-dot" style="background:' + s.color + '"></span>' +
-          s.label + '</label>';
-      });
-      html += '</div>';
-    }
-
-    if (track) html += '<button class="ss-track-show-all" id="ss-track-show-all">✕ Reset selection</button>';
-    sel.innerHTML = html;
-    return sel;
-  }
-
-  function applyTrackFilter(selectedTrack) {
-    /* Hide/show entire system groups */
-    var groups = document.querySelectorAll('.system-group');
-    groups.forEach(function (g) {
-      var badge = g.querySelector('.system-badge');
-      if (!badge) return;
-      var isIB = badge.classList.contains('ib');
-      var isSwe = badge.classList.contains('swe');
-      if (!selectedTrack) {
-        g.style.display = ''; g.style.order = '';
-      } else if ((selectedTrack === 'ib' && isIB) || (selectedTrack === 'swe' && isSwe)) {
-        g.style.display = ''; g.style.order = '0';
-      } else {
-        g.style.display = 'none'; g.style.order = '1';
-      }
+  function getProgress(path) {
+    var total = parseInt(_ls.get(path + ':__total__') || '0', 10);
+    var done = 0;
+    _ls.keys().forEach(function (k) {
+      if (k.indexOf(path + ':topic-') !== -1 && _ls.get(k) === '1') done++;
     });
-
-    /* Hide/show individual subject cards based on checkbox state */
-    document.querySelectorAll('.subject-card').forEach(function (card) {
-      var href = card.getAttribute('href');
-      if (!href) return;
-      var path = '/' + href;
-      if (hiddenSubjects.indexOf(path) !== -1) {
-        card.style.display = 'none';
-      } else {
-        card.style.display = '';
-      }
-    });
-  }
-
-  function buildDashboard(selectedTrack) {
-    var subjects = selectedTrack ? allSubjects[selectedTrack] : allSubjects.ib.concat(allSubjects.swe);
-    subjects = subjects.filter(function (s) { return isSubjectVisible(s.path); });
-    var totalDone = 0, totalCount = 0;
-
-    var bars = subjects.map(function (s) {
-      var total = parseInt(_ls.get(s.path + ':__total__') || '0', 10);
-      var done = 0;
-      _ls.keys().forEach(function (key) {
-        if (key.indexOf(s.path + ':topic-') !== -1 && _ls.get(key) === '1') done++;
-      });
-      totalDone += done;
-      totalCount += total;
-      var pct = total ? Math.round((done / total) * 100) : 0;
-      return '<div class="ss-dash-row">' +
-        '<span class="ss-dash-label">' + s.label + '</span>' +
-        '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
-        '<span class="ss-dash-pct">' + (total ? pct + '%' : '—') + '</span>' +
-      '</div>';
-    });
-
-    if (totalCount === 0) return null;
-
-    var overallPct = Math.round((totalDone / totalCount) * 100);
-    var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
-
-    var dash = document.createElement('div');
-    dash.className = 'ss-dashboard';
-    dash.id = 'ss-dashboard';
-    dash.innerHTML =
-      '<div class="ss-dash-header">' +
-        '<span class="ss-dash-title">📊 Your Study Progress</span>' +
-        '<span class="ss-dash-level">' + level + ' — ' + overallPct + '% overall</span>' +
-      '</div>' +
-      '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
-      bars.join('');
-    return dash;
+    return { total: total, done: done };
   }
 
   function render() {
-    /* Remove old elements */
-    var old = document.getElementById('ss-track-selector');
-    if (old) old.remove();
-    old = document.getElementById('ss-dashboard');
+    /* Clean up previous */
+    var old = document.getElementById('ss-track-panel');
     if (old) old.remove();
 
-    /* Insert selector */
-    var sel = buildSelector();
-    systems.insertBefore(sel, systems.firstChild);
+    var panel = document.createElement('div');
+    panel.id = 'ss-track-panel';
+    panel.className = 'ss-track-panel';
 
-    /* Insert dashboard */
-    var dash = buildDashboard(track);
-    if (dash) sel.insertAdjacentElement('afterend', dash);
+    var hasSelection = selected.length > 0;
 
-    /* Apply visual filter */
-    applyTrackFilter(track);
+    /* Build subject picker: simple chip toggles */
+    var html = '<div class="ss-track-header">' +
+      '<span class="ss-track-title">' + (hasSelection ? '📊 My Subjects' : '👋 Choose your subjects') + '</span>' +
+      (hasSelection ? '<button class="ss-track-reset" id="ss-track-reset">Reset</button>' : '') +
+    '</div>';
 
-    /* Bind events */
-    sel.querySelectorAll('.ss-track-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var newTrack = this.getAttribute('data-track');
-        if (track === newTrack) {
-          /* Toggle off */
-          track = '';
-          hiddenSubjects = [];
-          _ls.del('ss-track');
-          _ls.del('ss-hidden-subjects');
-        } else {
-          track = newTrack;
-          hiddenSubjects = []; /* Reset subject picks when switching tracks */
-          _ls.set('ss-track', track);
-          _ls.del('ss-hidden-subjects');
-        }
+    /* IB group */
+    html += '<div class="ss-track-group"><span class="ss-track-group-label">🌍 IB Diploma</span><div class="ss-track-chips">';
+    subjects.filter(function (s) { return s.group === 'ib'; }).forEach(function (s) {
+      var on = selected.indexOf(s.path) !== -1;
+      html += '<button class="ss-track-chip' + (on ? ' on' : '') + '" data-path="' + s.path + '" style="--chip-color:' + s.color + '">' + s.label + '</button>';
+    });
+    html += '</div></div>';
+
+    /* Swedish group */
+    html += '<div class="ss-track-group"><span class="ss-track-group-label">🇸🇪 Gymnasium</span><div class="ss-track-chips">';
+    subjects.filter(function (s) { return s.group === 'swe'; }).forEach(function (s) {
+      var on = selected.indexOf(s.path) !== -1;
+      html += '<button class="ss-track-chip' + (on ? ' on' : '') + '" data-path="' + s.path + '" style="--chip-color:' + s.color + '">' + s.label + '</button>';
+    });
+    html += '</div></div>';
+
+    /* Progress bars — only for selected subjects */
+    if (hasSelection) {
+      var totalDone = 0, totalCount = 0;
+      var bars = '';
+      selected.forEach(function (path) {
+        var s = subjects.filter(function (x) { return x.path === path; })[0];
+        if (!s) return;
+        var p = getProgress(path);
+        totalDone += p.done; totalCount += p.total;
+        var pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
+        bars += '<div class="ss-dash-row"><span class="ss-dash-label">' + s.label + '</span>' +
+          '<div class="ss-dash-track"><div class="ss-dash-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
+          '<span class="ss-dash-pct">' + (p.total ? pct + '%' : '—') + '</span></div>';
+      });
+
+      if (totalCount > 0) {
+        var overallPct = Math.round((totalDone / totalCount) * 100);
+        var level = overallPct < 25 ? 'Novice' : overallPct < 50 ? 'Apprentice' : overallPct < 75 ? 'Scholar' : overallPct < 100 ? 'Master' : 'Legend ⭐';
+        html += '<div class="ss-dash-progress">' +
+          '<div class="ss-dash-header"><span class="ss-dash-level">' + level + ' — ' + overallPct + '%</span></div>' +
+          '<div class="ss-dash-overall-track"><div class="ss-dash-overall-fill" style="width:' + overallPct + '%"></div></div>' +
+          bars + '</div>';
+      }
+    }
+
+    panel.innerHTML = html;
+    systems.insertBefore(panel, systems.firstChild);
+
+    /* Apply visibility to subject cards */
+    document.querySelectorAll('.subject-card').forEach(function (card) {
+      var href = card.getAttribute('href');
+      if (!href || !hasSelection) { card.style.display = ''; return; }
+      card.style.display = selected.indexOf('/' + href) !== -1 ? '' : 'none';
+    });
+
+    /* Show/hide system groups based on whether any of their subjects are selected */
+    if (hasSelection) {
+      document.querySelectorAll('.system-group').forEach(function (g) {
+        var visibleCards = g.querySelectorAll('.subject-card');
+        var anyVisible = Array.prototype.some.call(visibleCards, function (c) { return c.style.display !== 'none'; });
+        g.style.display = anyVisible ? '' : 'none';
+      });
+    } else {
+      document.querySelectorAll('.system-group').forEach(function (g) { g.style.display = ''; });
+    }
+
+    /* Bind chip clicks */
+    panel.querySelectorAll('.ss-track-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var path = this.getAttribute('data-path');
+        var idx = selected.indexOf(path);
+        if (idx !== -1) { selected.splice(idx, 1); } else { selected.push(path); }
+        _ls.set('ss-my-subjects', JSON.stringify(selected));
         render();
       });
     });
 
-    var showAll = document.getElementById('ss-track-show-all');
-    if (showAll) {
-      showAll.addEventListener('click', function () {
-        track = '';
-        hiddenSubjects = [];
-        _ls.del('ss-track');
-        _ls.del('ss-hidden-subjects');
-        /* Re-show all cards and groups */
-        document.querySelectorAll('.subject-card').forEach(function (c) { c.style.display = ''; });
-        document.querySelectorAll('.system-group').forEach(function (g) { g.style.display = ''; g.style.order = ''; });
+    /* Reset button */
+    var resetBtn = document.getElementById('ss-track-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        selected = [];
+        _ls.del('ss-my-subjects');
         render();
       });
     }
-
-    /* Subject checkboxes */
-    sel.querySelectorAll('.ss-subject-pick input').forEach(function (cb) {
-      cb.addEventListener('change', function () {
-        var path = this.getAttribute('data-path');
-        if (this.checked) {
-          hiddenSubjects = hiddenSubjects.filter(function (p) { return p !== path; });
-        } else {
-          if (hiddenSubjects.indexOf(path) === -1) hiddenSubjects.push(path);
-        }
-        _ls.set('ss-hidden-subjects', JSON.stringify(hiddenSubjects));
-        render();
-      });
-    });
   }
 
   render();
