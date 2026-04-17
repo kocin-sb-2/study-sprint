@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initFeedbackTab();
     initStudyTools();
     initOnboarding();
+    initFloatingLauncher(true);
   }
 
   /* Homepage */
@@ -103,8 +104,90 @@ document.addEventListener('DOMContentLoaded', function () {
     initMasteryDashboard();
     initFeedbackTab();
     initStudyTools();
+    initFloatingLauncher(false);
   }
 });
+
+/* ----------------------------------------------------------
+   FLOATING LAUNCHER — always-visible quick access dock
+   Bottom-right pill with Companion + (on subject pages) Feedback.
+   Solves the "companion is too far down the page to discover"
+   problem without forcing it into the top of every page.
+---------------------------------------------------------- */
+function initFloatingLauncher(hasTopics) {
+  if (document.getElementById('ss-launcher')) return;
+
+  var dock = document.createElement('div');
+  dock.id = 'ss-launcher';
+  dock.className = 'ss-launcher';
+  dock.innerHTML =
+    '<button class="ss-launch-btn ss-launch-btn--primary" id="ss-launch-companion" title="Open Study Companion (focus timer, wellbeing, streak)">' +
+      '<span class="ss-launch-emoji">🧘</span><span class="ss-launch-lbl">Companion</span>' +
+    '</button>' +
+    (hasTopics ?
+      '<button class="ss-launch-btn" id="ss-launch-feedback" title="Suggest an improvement to a topic">' +
+        '<span class="ss-launch-emoji">💡</span><span class="ss-launch-lbl">Feedback</span>' +
+      '</button>' : '');
+  document.body.appendChild(dock);
+
+  /* Companion: ensure expanded + scroll into view + open wellbeing tab */
+  document.getElementById('ss-launch-companion').addEventListener('click', function () {
+    var tools = document.getElementById('ss-study-tools');
+    if (!tools) return;
+    if (tools.classList.contains('ss-tools-collapsed')) {
+      var t = document.getElementById('ss-tools-toggle');
+      if (t) t.click();
+    }
+    tools.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    /* Briefly highlight so the user sees where it landed */
+    tools.classList.add('ss-pulse');
+    setTimeout(function () { tools.classList.remove('ss-pulse'); }, 1400);
+  });
+
+  /* Feedback: open a quick page-wide picker so they don't have to scroll
+     hunting for the right topic. Overlay lists every topic on this page. */
+  var fbBtn = document.getElementById('ss-launch-feedback');
+  if (fbBtn) fbBtn.addEventListener('click', function () {
+    var existing = document.getElementById('ss-fb-overlay');
+    if (existing) { existing.remove(); return; }
+
+    var topics = [].slice.call(document.querySelectorAll('.topic[id]'));
+    var overlay = document.createElement('div');
+    overlay.id = 'ss-fb-overlay';
+    overlay.className = 'ss-fb-overlay';
+    var items = topics.map(function (tp) {
+      var titleEl = tp.querySelector('.topic-header h3, .topic-header h2, .topic-header');
+      var title = (titleEl ? titleEl.textContent : tp.id).trim().replace(/💬.*$/, '').slice(0, 80);
+      return '<button class="ss-fb-item" data-tid="' + tp.id + '">' + title + '</button>';
+    }).join('') || '<p class="ss-fb-empty">No topics on this page yet.</p>';
+
+    overlay.innerHTML =
+      '<div class="ss-fb-card">' +
+        '<div class="ss-fb-head">' +
+          '<strong>💡 Suggest an improvement</strong>' +
+          '<button class="ss-fb-close" aria-label="Close">✕</button>' +
+        '</div>' +
+        '<p class="ss-fb-sub">Pick a topic — your suggestion stays private to your browser, plus syncs to the maintainer if the Sheet is configured.</p>' +
+        '<div class="ss-fb-list">' + items + '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay || e.target.classList.contains('ss-fb-close')) overlay.remove();
+    });
+    overlay.querySelectorAll('.ss-fb-item').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var tid = this.getAttribute('data-tid');
+        var topic = document.getElementById(tid);
+        overlay.remove();
+        if (!topic) return;
+        topic.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var btn = topic.querySelector('.ss-comment-btn');
+        if (btn) setTimeout(function () { btn.click(); }, 350);
+      });
+    });
+  });
+}
 
 /* ----------------------------------------------------------
    3. PROGRESS TRACKING

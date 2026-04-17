@@ -2092,6 +2092,131 @@ html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: r
 }
 
 /* =================================
+   FLOATING LAUNCHER (bottom-right dock)
+================================= */
+.ss-launcher {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9000;
+  pointer-events: none; /* let children grab events */
+}
+.ss-launch-btn {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ss-surface, #1a1f2e);
+  color: var(--ss-text, #e8eaed);
+  border: 1px solid var(--ss-border, #2a3142);
+  border-radius: 999px;
+  padding: 10px 16px 10px 12px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.ss-launch-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--ss-accent);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+}
+.ss-launch-btn--primary {
+  background: var(--ss-accent, #ffd54f);
+  color: #0a0e17;
+  border-color: var(--ss-accent, #ffd54f);
+}
+.ss-launch-emoji { font-size: 1.05rem; line-height: 1; }
+.ss-launch-lbl  { letter-spacing: 0.2px; }
+
+/* Pulse highlight when launcher targets the companion */
+.ss-pulse {
+  animation: ssPulse 1.4s ease;
+}
+@keyframes ssPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,213,79,0.6); }
+  60%  { box-shadow: 0 0 0 18px rgba(255,213,79,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,213,79,0); }
+}
+
+/* =================================
+   FEEDBACK OVERLAY (topic picker)
+================================= */
+.ss-fb-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: ssFadeIn 0.18s ease;
+}
+.ss-fb-card {
+  background: var(--ss-surface, #1a1f2e);
+  border: 1px solid var(--ss-border, #2a3142);
+  border-radius: 14px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.ss-fb-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+  color: var(--ss-text);
+}
+.ss-fb-close {
+  background: none; border: none; color: var(--ss-muted);
+  font-size: 1.05rem; cursor: pointer; padding: 4px 8px; border-radius: 6px;
+}
+.ss-fb-close:hover { color: var(--ss-accent); }
+.ss-fb-sub {
+  font-size: 0.82rem; color: var(--ss-muted);
+  margin: 0 0 12px 0; line-height: 1.5;
+}
+.ss-fb-list {
+  display: flex; flex-direction: column; gap: 4px;
+  overflow-y: auto;
+}
+.ss-fb-item {
+  background: transparent;
+  border: 1px solid var(--ss-border);
+  color: var(--ss-text);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.86rem;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  transition: all 0.12s;
+}
+.ss-fb-item:hover { border-color: var(--ss-accent); color: var(--ss-accent); transform: translateX(2px); }
+.ss-fb-empty { color: var(--ss-muted); font-size: 0.86rem; }
+
+/* Keep launcher out of the way of the companion when it's expanded */
+@media (max-width: 720px) {
+  .ss-launcher { right: 12px; bottom: 12px; gap: 6px; }
+  .ss-launch-btn { padding: 8px 14px 8px 10px; font-size: 0.78rem; }
+  .ss-launch-lbl { display: none; } /* shrink to icon-only on phones */
+  .ss-launch-btn { padding: 10px; }
+}
+
+@media print {
+  .ss-launcher, .ss-fb-overlay { display: none !important; }
+}
+
+/* =================================
    LIGHT THEME OVERRIDES
 ================================= */
 html.ss-light .ss-tools-bar,
