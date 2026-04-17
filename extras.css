@@ -1609,8 +1609,9 @@ html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: r
 .ss-tip-text {
   font-size: 0.95rem;
   color: var(--ss-text);
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0 0 6px 0;
+  white-space: pre-line; /* preserve the 4-line Thirukkural layout */
 }
 .ss-tip-source {
   font-size: 0.72rem;
@@ -1913,23 +1914,68 @@ html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: r
 .ss-log-submit:hover { opacity: 0.88; }
 .ss-log-entries { margin-top: 14px; }
 .ss-log-entry {
-  display: flex;
-  gap: 12px;
-  padding: 8px 0;
+  display: block;
+  padding: 10px 0;
   border-bottom: 1px solid var(--ss-border);
-  font-size: 0.82rem;
-  align-items: flex-start;
+  font-size: 0.84rem;
+}
+.ss-log-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
 }
 .ss-log-date {
   color: var(--ss-muted);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
-  flex-shrink: 0;
-  padding-top: 1px;
 }
-.ss-log-note { color: var(--ss-text); flex: 1; line-height: 1.5; }
-.ss-log-link { text-decoration: none; flex-shrink: 0; }
+.ss-log-page { color: var(--ss-accent); font-weight: 600; }
+.ss-log-acts { display: flex; gap: 2px; opacity: 0.4; transition: opacity 0.15s; }
+.ss-log-entry:hover .ss-log-acts { opacity: 1; }
+.ss-log-act {
+  background: none; border: none; padding: 2px 6px;
+  font-size: 0.85rem; cursor: pointer; border-radius: 4px;
+  color: var(--ss-muted);
+}
+.ss-log-act:hover { color: var(--ss-accent); background: rgba(255,213,79,0.08); }
+.ss-log-note {
+  color: var(--ss-text); line-height: 1.5;
+  white-space: pre-wrap; word-wrap: break-word;
+}
+.ss-log-link {
+  display: inline-block; margin-top: 4px;
+  text-decoration: none; color: var(--ss-accent);
+  font-size: 0.78rem; font-family: 'JetBrains Mono', monospace;
+}
+.ss-log-link:hover { text-decoration: underline; }
 .ss-log-empty { color: var(--ss-muted); font-size: 0.8rem; font-style: italic; }
+.ss-log-toggle {
+  background: none; border: 1px dashed var(--ss-border);
+  color: var(--ss-muted); width: 100%;
+  border-radius: 6px; padding: 6px;
+  margin-top: 8px; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem;
+}
+.ss-log-toggle:hover { border-color: var(--ss-accent); color: var(--ss-accent); }
+
+/* =================================
+   TOP-MOUNTED COMPANION VARIANT
+   When mounted at the top of the page (instead of above the footer),
+   tighten margins so the dock feels like part of the page header.
+================================= */
+.ss-study-tools.ss-tools--top {
+  margin: 18px auto 28px; /* much tighter than the 48px bottom-mount default */
+  max-width: 1100px;
+}
+.ss-study-tools.ss-tools--top .ss-tools-bar {
+  background: linear-gradient(135deg, rgba(255,213,79,0.04), rgba(179,136,255,0.03));
+}
+.ss-study-tools.ss-tools--top.ss-tools-collapsed .ss-tools-bar {
+  /* When closed at top, give it a friendlier "open me" cue */
+  cursor: pointer;
+}
+.ss-study-tools.ss-tools--top.ss-tools-collapsed .ss-tools-bar:hover {
+  border-color: var(--ss-accent);
+}
 
 /* =================================
    HOW TO STUDY PANEL

@@ -1391,18 +1391,23 @@ function openCommentBox(topic, pageKey) {
 */
 var SS_SHEET_URL = ''; /* Paste your Apps Script web app URL here */
 
-function sendToSheet(page, topicId, comment) {
+function sendToSheet(page, topicId, payload) {
   if (!SS_SHEET_URL) return; /* Skip if not configured */
   try {
-    var payload = {
-      page: String(page || '').slice(0, 80),
-      topic: String(topicId || '').slice(0, 80),
-      text: String(comment.text || '').slice(0, 500),
-      ts: Date.now(),
-      ua: (navigator.userAgent || '').slice(0, 120),
-      website: '' /* honeypot — server should drop any payload where this is non-empty */
+    /* Comments use .text; study logs use .note. Send whichever exists. */
+    var text = payload.text != null ? payload.text : (payload.note != null ? payload.note : '');
+    var body = {
+      page:       String(page || '').slice(0, 80),
+      topic:      String(topicId || '').slice(0, 40),
+      text:       String(text).slice(0, 1000),
+      date:       String(payload.date || '').slice(0, 12),
+      attachment: String(payload.attachment || '').slice(0, 300),
+      id:         String(payload.id || '').slice(0, 40),
+      ts:         Date.now(),
+      ua:         (navigator.userAgent || '').slice(0, 120),
+      website:    '' /* honeypot — server drops any payload where this is non-empty */
     };
-    var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    var blob = new Blob([JSON.stringify(body)], { type: 'application/json' });
     navigator.sendBeacon(SS_SHEET_URL, blob);
   } catch (e) { /* Silent fail — local storage is the primary store */ }
 }
@@ -1498,19 +1503,89 @@ var SS_WELLBEING_TIPS = [
   { cat: 'just-start', icon: '⏱️', text: 'The "two-minute rule": commit to just 2 minutes of studying. That\'s it. The hardest part is starting; once started, momentum carries you.', source: 'BJ Fogg, Tiny Habits (2019)' },
   { cat: 'just-start', icon: '📋', text: 'Make the next action absurdly small. Not "study chemistry" — "open the chemistry tab and read one paragraph." Big tasks paralyse; tiny ones get done.', source: 'Implementation intentions, Gollwitzer 1999' },
 
-  /* WISDOM — Thirukkural & timeless reminders */
-  { cat: 'wisdom', icon: '📜', text: '"உள்ளுவ தெல்லாம் உயர்வுள்ளல்; மற்றது தள்ளினும் தள்ளாமை நீர்த்து." — Aim only at noble heights; even if you fall, falling from height is itself dignity.', source: 'Thirukkural 596, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"கற்க கசடறக் கற்பவை; கற்றபின் நிற்க அதற்குத் தக." — Learn flawlessly what you must learn; then live by what you have learned.', source: 'Thirukkural 391, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"தொட்டனைத் தூறும் மணற்கேணி; மாந்தர்க்குக் கற்றனைத் தூறும் அறிவு." — Sand reveals water the deeper you dig; humans reveal wisdom the more they learn.', source: 'Thirukkural 396, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"யாதானும் நாடாமால் ஊராமால்; என்னொருவன் சாந்துணையும் கல்லாத வாறு." — All the world is your home, every town your own — once you have learnt. Why then would anyone refuse to study till the end?', source: 'Thirukkural 397, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"மடியுளாள் மாமுகடி; என்ப மடியிலான் தாளுளாள் தாமரையினாள்." — Misfortune dwells in laziness; fortune (Lakshmi) dwells in the feet of the diligent.', source: 'Thirukkural 617, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"ஆகூழால் தோன்றும் அசைவின்மை கைப்பொருள்; போகூழால் தோன்றும் மடி." — Unwavering effort brings fortune; laziness brings its loss. Effort is the only luck you control.', source: 'Thirukkural 619, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"வெள்ளத் தனைய மலர்நீட்டம்; மாந்தர்தம் உள்ளத் தனையது உயர்வு." — As deep as the water, so tall the lotus. As high as your thought, so high you rise.', source: 'Thirukkural 595, Thiruvalluvar' },
-  { cat: 'wisdom', icon: '📜', text: '"அழுக்கா றுடையான்கண் ஆக்கம்போன்று இல்லை; யாதனும் தீமை செயல்." — Nothing harms a person more than envy of another\'s success. Compare yourself only to who you were yesterday.', source: 'Thirukkural 169, Thiruvalluvar (paraphrase)' },
-  { cat: 'wisdom', icon: '🪷', text: '"You have a right to perform your duty, but never to the fruits of action." Study because the work is yours, not because the grade is.', source: 'Bhagavad Gita 2.47' },
-  { cat: 'wisdom', icon: '🌿', text: '"The wound is the place where the Light enters you." A bad mock exam is information, not identity. Read the wound, then keep walking.', source: 'Rumi' },
-  { cat: 'wisdom', icon: '🕊️', text: '"Between stimulus and response there is a space. In that space is our power to choose our response." When panic rises, breathe and choose.', source: 'Viktor Frankl' },
-  { cat: 'wisdom', icon: '🌅', text: '"Nothing in nature blooms all year." Your mind has seasons too — winter rest is preparation, not failure.', source: 'Folk wisdom' }
+  /* WISDOM — Thirukkural & timeless reminders.
+     Each kural shown in 4 layers so non-Tamil readers fully get it:
+       1. Tamil original
+       2. Transliteration (so anyone can hear the rhythm)
+       3. Literal translation
+       4. Meaning + how to apply it as a student today
+  */
+  { cat: 'wisdom', icon: '📜', text:
+      '"கற்க கசடறக் கற்பவை; கற்றபின் நிற்க அதற்குத் தக."\n' +
+      '(Karka kasadara karpavai; katrapin nirka adharkuth thaga.)\n' +
+      'Literal: "Learn without flaw what is worth learning; then live by what you have learnt."\n' +
+      'Meaning: Half-learning leaves you anxious; learn properly the first time, then act on it. For a student: don\'t skim — close the book and recall. The point of learning is to change how you live.',
+    source: 'Thirukkural 391 · Thiruvalluvar (chapter: On Learning)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"தொட்டனைத் தூறும் மணற்கேணி; மாந்தர்க்குக் கற்றனைத் தூறும் அறிவு."\n' +
+      '(Thottanaith thoorum manarkeni; maantharkku katranaith thoorum arivu.)\n' +
+      'Literal: "A sand-well yields water in proportion to how deep you dig; a person yields wisdom in proportion to how much they learn."\n' +
+      'Meaning: Effort is not wasted — every hour of study you put in opens a deeper layer. If you feel stuck, you haven\'t dug deep enough yet. Keep going.',
+    source: 'Thirukkural 396 · Thiruvalluvar (chapter: On Learning)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"யாதானும் நாடாமால் ஊராமால்; என்னொருவன் சாந்துணையும் கல்லாத வாறு."\n' +
+      '(Yaadhaanum naadaamaal ooraamaal; ennoruvan saanthunaiyum kallaada vaaru.)\n' +
+      'Literal: "Every land is your land, every town your town — to the learned. So why would anyone stop learning until they die?"\n' +
+      'Meaning: Knowledge is the one passport that opens every door. The skills you build now travel with you forever — across countries, careers, friendships.',
+    source: 'Thirukkural 397 · Thiruvalluvar (chapter: On Learning)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"வெள்ளத் தனைய மலர்நீட்டம்; மாந்தர்தம் உள்ளத் தனையது உயர்வு."\n' +
+      '(Vellath thanaiya malarneettam; maantharthamm ullath thanaiyathu uyarvu.)\n' +
+      'Literal: "A lotus rises as tall as the water it grows in; a person rises as high as their inner aim."\n' +
+      'Meaning: Your ceiling is set by your own ambition — not by your school, your background, or what others expect. Aim higher in private; the work follows the aim.',
+    source: 'Thirukkural 595 · Thiruvalluvar (chapter: On Greatness)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"உள்ளுவ தெல்லாம் உயர்வுள்ளல்; மற்றது தள்ளினும் தள்ளாமை நீர்த்து."\n' +
+      '(Ulluva thellaam uyarvullal; matrathu thallinum thallaamai neerthu.)\n' +
+      'Literal: "Whatever you contemplate, contemplate something noble; even if such an aim falls short, the falling itself is dignified."\n' +
+      'Meaning: Aim for the top grade, the harder problem, the better version of you — even if you don\'t reach it, you\'ll land far above where small dreams would have left you.',
+    source: 'Thirukkural 596 · Thiruvalluvar (chapter: On Greatness)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"மடியுளாள் மாமுகடி; என்ப மடியிலான் தாளுளாள் தாமரையினாள்."\n' +
+      '(Madiyulaal maamukadi; enpa madiyilaan thaalulaal thaamaraiyinaal.)\n' +
+      'Literal: "Misfortune lives inside laziness; Fortune (the lotus-goddess) lives at the feet of the diligent."\n' +
+      'Meaning: Where you put your hours decides what shows up in your life. Treat consistent effort as the price of admission for everything you want.',
+    source: 'Thirukkural 617 · Thiruvalluvar (chapter: Against Sloth)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"ஆகூழால் தோன்றும் அசைவின்மை கைப்பொருள்; போகூழால் தோன்றும் மடி."\n' +
+      '(Aakoozhaal thondrum asaivinmai kaipporul; pogoozhaal thondrum madi.)\n' +
+      'Literal: "Wealth comes from unwavering effort; loss comes from laziness."\n' +
+      'Meaning: People talk about luck — but unwavering daily effort IS the only luck you actually control. Show up tomorrow even when motivation is gone.',
+    source: 'Thirukkural 619 · Thiruvalluvar (chapter: Against Sloth)' },
+
+  { cat: 'wisdom', icon: '📜', text:
+      '"அழுக்கா றுடையான்கண் ஆக்கம்போன்று இல்லை; யாதனும் தீமை செயல்."\n' +
+      '(Azhukkaaru udaiyaankan aakkam ponru illai; yaathum theemai seyal.)\n' +
+      'Literal: "There is no greater self-harm than envy of another\'s success."\n' +
+      'Meaning: Comparison to classmates poisons your focus. Compare yourself only to who you were last week. That is the only fair scoreboard.',
+    source: 'Thirukkural 169 · Thiruvalluvar (chapter: On Avoiding Envy)' },
+
+  /* Cross-cultural wisdom — same theme, different voices */
+  { cat: 'wisdom', icon: '🪷', text:
+      '"You have a right to perform your duty, but never to the fruits of action."\n' +
+      'Meaning: Do the work because the work is yours. Do not let the grade or the result own you. The exam is a moment; the learning is yours forever.',
+    source: 'Bhagavad Gita 2.47' },
+
+  { cat: 'wisdom', icon: '🌿', text:
+      '"The wound is the place where the Light enters you."\n' +
+      'Meaning: A bad mock exam, a forgotten formula, a panicked freeze — these are not signs you are broken. They are exactly the gaps that show you what to study next. Read the wound, then walk on.',
+    source: 'Rumi' },
+
+  { cat: 'wisdom', icon: '🕊️', text:
+      '"Between stimulus and response there is a space. In that space is our power to choose our response."\n' +
+      'Meaning: When panic rises in an exam, breathe once. That breath is the space. Choose what to do next from that space, not from the panic.',
+    source: 'Viktor Frankl, "Man\'s Search for Meaning"' },
+
+  { cat: 'wisdom', icon: '🌅', text:
+      '"Nothing in nature blooms all year."\n' +
+      'Meaning: Your mind has seasons too. A "lazy" week can be the rest your brain needed to consolidate. Trust the cycle — winter is part of the harvest.',
+    source: 'Folk wisdom' }
 ];
 
 /* Subset selectors used by the smart-tip rotation */
@@ -1649,16 +1724,28 @@ function ssBuildCalendar(days) {
 
 /* ---- D. MAIN STUDY TOOLS RENDER ---- */
 function initStudyTools() {
+  /* Placement — TOP of the content, just under the hero/onboarding bar.
+     Falls back to before-footer or end-of-body. The dock is collapsed
+     by default for new users so it never pushes content; the floating
+     launcher (🧘) opens it from anywhere. */
+  var topMount = document.querySelector('.ss-onboard') ||
+                 document.querySelector('.hero')       ||
+                 document.querySelector('header')      ||
+                 document.querySelector('main');
   var footer = document.querySelector('footer, .footer, .footer-note');
-  var anchor = footer || document.body;
 
   var tools = document.createElement('div');
   tools.className = 'ss-study-tools';
   tools.id = 'ss-study-tools';
 
-  /* Collapsed state — remembered across pages */
-  var collapsed = _ls.get('ss-tools-collapsed') === '1';
+  /* Collapsed state — remembered across pages.
+     Default for first-time users: COLLAPSED (so the top placement
+     doesn't push content out of view). They can open it via the
+     floating launcher or by clicking the toolbar header. */
+  var collapsedSetting = _ls.get('ss-tools-collapsed');
+  var collapsed = collapsedSetting === null ? true : (collapsedSetting === '1');
   if (collapsed) tools.classList.add('ss-tools-collapsed');
+  tools.classList.add('ss-tools--top'); /* compact top-mounted styling */
 
   var pageKey = '/' + location.pathname.split('/').filter(Boolean).pop();
 
@@ -1912,15 +1999,25 @@ function initStudyTools() {
 
     '</div>'; /* end .ss-tools-body */
 
-  if (footer) { footer.insertAdjacentElement('beforebegin', tools); }
+  if (topMount) { topMount.insertAdjacentElement('afterend', tools); }
+  else if (footer) { footer.insertAdjacentElement('beforebegin', tools); }
   else { document.body.appendChild(tools); }
 
   /* ====== Wire up: collapse toggle ====== */
-  document.getElementById('ss-tools-toggle').addEventListener('click', function () {
-    var nowCollapsed = !tools.classList.contains('ss-tools-collapsed');
-    tools.classList.toggle('ss-tools-collapsed', nowCollapsed);
-    _ls.set('ss-tools-collapsed', nowCollapsed ? '1' : '0');
-    this.textContent = nowCollapsed ? '▾ Show' : '▴ Hide';
+  var toggleBtn = document.getElementById('ss-tools-toggle');
+  function setCollapsed(c) {
+    tools.classList.toggle('ss-tools-collapsed', c);
+    _ls.set('ss-tools-collapsed', c ? '1' : '0');
+    if (toggleBtn) toggleBtn.textContent = c ? '▾ Show' : '▴ Hide';
+  }
+  toggleBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    setCollapsed(!tools.classList.contains('ss-tools-collapsed'));
+  });
+  /* Whole top bar is clickable when collapsed (top-mount only) */
+  var topBar = tools.querySelector('.ss-tools-bar');
+  if (topBar) topBar.addEventListener('click', function () {
+    if (tools.classList.contains('ss-tools-collapsed')) setCollapsed(false);
   });
 
   /* ====== Wire up: tabs ====== */
@@ -2139,38 +2236,105 @@ function initStudyTools() {
     }, 200);
   });
 
-  /* ====== Wire up: Study Log ====== */
+  /* ====== Wire up: Study Log (editable, deletable, syncs to sheet) ====== */
+  function saveLogs() { _ls.set('ss-study-logs', JSON.stringify(logs.slice(0, 100))); }
+  function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+
   function renderLogs() {
     var el = document.getElementById('ss-log-entries');
     if (!el) return;
-    var recent = logs.slice(0, 5);
-    if (!recent.length) {
+    var showAll = el.getAttribute('data-show') === 'all';
+    var slice = showAll ? logs : logs.slice(0, 5);
+
+    if (!slice.length) {
       el.innerHTML = '<span class="ss-log-empty">No entries yet — write your first reflection. Two sentences is enough to build the habit.</span>';
       return;
     }
-    el.innerHTML = recent.map(function (l) {
-      return '<div class="ss-log-entry">' +
-        '<span class="ss-log-date">' + l.date + '</span>' +
-        '<span class="ss-log-note">' + l.note.replace(/</g, '&lt;').slice(0, 180) + (l.note.length > 180 ? '…' : '') + '</span>' +
-        (l.attachment ? '<a class="ss-log-link" href="' + l.attachment.replace(/"/g, '') + '" target="_blank" rel="noopener">📎</a>' : '') +
+
+    el.innerHTML = slice.map(function (l, i) {
+      var realIdx = showAll ? i : i; /* same in both modes — slice keeps order */
+      var noteHtml = esc(l.note);
+      return '<div class="ss-log-entry" data-idx="' + realIdx + '">' +
+        '<div class="ss-log-row">' +
+          '<span class="ss-log-date">' + esc(l.date) + (l.page && l.page !== '/' ? ' · <span class="ss-log-page">' + esc(l.page.replace(/^\//, '')) + '</span>' : '') + '</span>' +
+          '<div class="ss-log-acts">' +
+            '<button class="ss-log-act" data-act="edit"   data-idx="' + realIdx + '" title="Edit">✏️</button>' +
+            '<button class="ss-log-act" data-act="delete" data-idx="' + realIdx + '" title="Delete">🗑️</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ss-log-note">' + noteHtml + '</div>' +
+        (l.attachment ? '<a class="ss-log-link" href="' + esc(l.attachment) + '" target="_blank" rel="noopener">📎 ' + esc(l.attachment).slice(0, 60) + '</a>' : '') +
       '</div>';
-    }).join('');
+    }).join('') +
+    (logs.length > 5 ?
+      '<button class="ss-log-toggle" id="ss-log-toggle">' +
+        (showAll ? '▴ Show recent only' : '▾ Show all ' + logs.length + ' entries') +
+      '</button>' : '');
+
+    /* Bind row actions */
+    el.querySelectorAll('.ss-log-act').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var idx = parseInt(b.getAttribute('data-idx'), 10);
+        var act = b.getAttribute('data-act');
+        if (act === 'delete') {
+          if (!confirm('Delete this entry?')) return;
+          var removed = logs.splice(idx, 1)[0];
+          saveLogs();
+          sendToSheet(pageKey, 'study-log-delete', removed || { note: '' });
+          renderLogs();
+        } else if (act === 'edit') {
+          var entry = logs[idx];
+          var nv = prompt('Edit your reflection:', entry.note);
+          if (nv === null) return;
+          nv = nv.trim();
+          if (!nv) return;
+          entry.note = nv.slice(0, 1000);
+          entry.editedAt = new Date().toISOString().slice(0, 10);
+          saveLogs();
+          sendToSheet(pageKey, 'study-log-edit', entry);
+          renderLogs();
+        }
+      });
+    });
+
+    var toggle = document.getElementById('ss-log-toggle');
+    if (toggle) toggle.addEventListener('click', function () {
+      el.setAttribute('data-show', showAll ? 'recent' : 'all');
+      renderLogs();
+    });
   }
   renderLogs();
 
   document.getElementById('ss-log-submit').addEventListener('click', function () {
-    var text = document.getElementById('ss-log-text').value.trim();
+    var ta = document.getElementById('ss-log-text');
+    var text = ta.value.trim();
     if (!text) return;
-    var attach = document.getElementById('ss-log-attach').value.trim();
-    var entry = { date: new Date().toISOString().slice(0, 10), page: pageKey, note: text, attachment: attach };
+    if (text.length > 1000) text = text.slice(0, 1000);
+    var attach = document.getElementById('ss-log-attach').value.trim().slice(0, 300);
+
+    /* Throttle: 1 entry / 5s, max 30 / hr per browser */
+    var now = Date.now();
+    var rl  = JSON.parse(_ls.get('ss-log-rl') || '{"last":0,"hour":[]}');
+    if (now - rl.last < 5000) { alert('Give yourself a moment between entries.'); return; }
+    rl.hour = rl.hour.filter(function (t) { return now - t < 3600000; });
+    if (rl.hour.length >= 30) { alert('Hourly limit reached.'); return; }
+    rl.last = now; rl.hour.push(now);
+    _ls.set('ss-log-rl', JSON.stringify(rl));
+
+    var entry = {
+      id: 'l_' + now.toString(36),
+      date: new Date().toISOString().slice(0, 10),
+      page: pageKey,
+      note: text,
+      attachment: attach
+    };
     logs.unshift(entry);
-    _ls.set('ss-study-logs', JSON.stringify(logs.slice(0, 50)));
-    document.getElementById('ss-log-text').value = '';
+    saveLogs();
+    ta.value = '';
     document.getElementById('ss-log-attach').value = '';
     sendToSheet(pageKey, 'study-log', entry);
-    /* Record the day */
+    /* Record the day + update header stats */
     ssRecordAction('log');
-    /* Update header stats */
     var s = ssComputeStreak();
     var sCur = document.getElementById('ss-streak-cur');
     if (sCur) sCur.textContent = s.current;
