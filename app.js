@@ -23,6 +23,23 @@ var _ls = {
   keys: function () { try { return Object.keys(localStorage); } catch (e) { return []; } }
 };
 
+/* Shared HTML escaper. Used at every render of user-supplied text so a
+   future refactor (or stray innerHTML in a new attribute context) can't
+   open an XSS hole. Defence in depth — cheap, no excuses to skip. */
+function ssEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* Lightweight diagnostic log — silent for users, breadcrumbs for devs. */
+function ssWarn(msg, err) {
+  try { if (window.console) console.warn('[studysprint]', msg, err || ''); } catch (e) {}
+}
+
 /* ----------------------------------------------------------
    1. SECTION & TOPIC TOGGLES
    (previously inlined on every page — now centralised)
@@ -1313,8 +1330,8 @@ function openCommentBox(topic, pageKey) {
       visible.forEach(function (c, i) {
         var idx = comments.indexOf(c);
         html += '<div class="ss-comment-item">' +
-          '<span class="ss-comment-text">' + c.text.replace(/</g, '&lt;') + '</span>' +
-          '<span class="ss-comment-time">' + c.time + '</span>' +
+          '<span class="ss-comment-text">' + ssEsc(c.text) + '</span>' +
+          '<span class="ss-comment-time">' + ssEsc(c.time) + '</span>' +
           '<div class="ss-comment-item-actions">' +
             '<button class="ss-comment-act" data-action="edit" data-idx="' + idx + '" title="Edit">✏️</button>' +
             '<button class="ss-comment-act" data-action="hide" data-idx="' + idx + '" title="Hide">👁️</button>' +
@@ -1348,8 +1365,8 @@ function openCommentBox(topic, pageKey) {
         } else if (action === 'hide') {
           comments[idx].hidden = true;
         } else if (action === 'edit') {
-          var newText = prompt('Edit suggestion:', comments[idx].text);
-          if (newText !== null && newText.trim()) comments[idx].text = newText.trim();
+          var newText = prompt('Edit suggestion (max 500 chars):', comments[idx].text);
+          if (newText !== null && newText.trim()) comments[idx].text = newText.trim().slice(0, 500);
         }
         _ls.set(key, JSON.stringify(comments));
         updateBtn();
@@ -1846,9 +1863,12 @@ function initStudyTools() {
           '<span class="ss-tools-stat" title="Focus minutes today">⏱️ <b id="ss-pomo-mins">' + pomoMinutesToday + '</b>m today</span>' +
         '</span>' +
       '</div>' +
-      '<button class="ss-tools-toggle" id="ss-tools-toggle" aria-label="Toggle study companion">' +
-        (collapsed ? '▾ Show' : '▴ Hide') +
-      '</button>' +
+      '<div class="ss-tools-bar-right">' +
+        '<button class="ss-tools-clear" id="ss-tools-clear" title="Clear all your Study Sprint data on this device" aria-label="Clear my data on this device">🧹</button>' +
+        '<button class="ss-tools-toggle" id="ss-tools-toggle" aria-label="Toggle study companion">' +
+          (collapsed ? '▾ Show' : '▴ Hide') +
+        '</button>' +
+      '</div>' +
     '</div>' +
 
     '<div class="ss-tools-body">' +
@@ -2161,6 +2181,29 @@ function initStudyTools() {
     if (tools.classList.contains('ss-tools-collapsed')) setCollapsed(false);
   });
 
+  /* ====== Wire up: Clear my data button ====== */
+  var clearBtn = document.getElementById('ss-tools-clear');
+  if (clearBtn) clearBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var ok = confirm(
+      'Clear all Study Sprint data on this device?\n\n' +
+      'This removes: your streak, study log, comments, Pomodoro history, ' +
+      'Recovery check answers, and topic progress — for THIS browser only.\n\n' +
+      'Anything already synced to the central sheet stays there. ' +
+      'Use this on shared/school computers when you\'re done.'
+    );
+    if (!ok) return;
+    try {
+      _ls.keys().forEach(function (k) {
+        if (k.indexOf('ss-') === 0 || k.indexOf('ss:') === 0 ||
+            k.indexOf('progress-') === 0 || k.indexOf('topic-') === 0) {
+          _ls.del(k);
+        }
+      });
+    } catch (err) { ssWarn('clear-data failed', err); }
+    location.reload();
+  });
+
   /* ====== Wire up: tabs ====== */
   document.querySelectorAll('.ss-tab').forEach(function (t) {
     t.addEventListener('click', function () {
@@ -2391,15 +2434,26 @@ function initStudyTools() {
       }
       var s = score();
       var tier, msg, cls;
-      if (s <= 2)      { tier = 'Healthy load';    cls = 'good';   msg = 'Your patterns look sustainable. Keep your rest types varied.'; }
-      else if (s <= 4) { tier = 'Some strain';     cls = 'mild';   msg = 'Early warning signs. Pick 1-2 of the seven rests below and try one tonight.'; }
-      else if (s <= 6) { tier = 'High risk';       cls = 'high';   msg = 'Your nervous system is asking for a real reset. A full rest day this week is not optional — it\'s part of the work.'; }
-      else             { tier = 'Likely burnout';  cls = 'severe'; msg = 'Please slow down. Talk to someone you trust. Recovery is weeks, not days — start with sleep, sensory rest, and one small social anchor. If overwhelm stays, a therapist accelerates this.'; }
+      if (s <= 2)      { tier = 'Healthy load';        cls = 'good';   msg = 'Your patterns look sustainable. Keep your rest types varied.'; }
+      else if (s <= 4) { tier = 'Some strain';         cls = 'mild';   msg = 'Early warning signs. Pick 1-2 of the seven rests below and try one tonight.'; }
+      else if (s <= 6) { tier = 'High risk';           cls = 'high';   msg = 'Your nervous system is asking for a real reset. A full rest day this week is not optional — it\'s part of the work.'; }
+      else             { tier = 'Pattern matches burnout'; cls = 'severe'; msg = 'Please slow down. Talk to someone you trust. Recovery is weeks, not days — start with sleep, sensory rest, and one small social anchor. If overwhelm stays, a therapist accelerates this.'; }
       box.style.display = '';
       box.className = 'ss-rec-result ss-rec-result--' + cls;
+      var help = (cls === 'high' || cls === 'severe')
+        ? '<div class="ss-rec-help">' +
+            '<strong>If you need to talk to someone today:</strong><br>' +
+            '🇸🇪 <a href="https://mind.se/" target="_blank" rel="noopener noreferrer">Mind</a> · ' +
+            '<a href="https://www.bris.se/" target="_blank" rel="noopener noreferrer">BRIS</a> (under 18) · ' +
+            '<a href="https://www.1177.se/" target="_blank" rel="noopener noreferrer">1177 Vårdguiden</a><br>' +
+            '🌍 <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">findahelpline.com</a> (free, every country)' +
+          '</div>'
+        : '';
       box.innerHTML =
-        '<div class="ss-rec-tier">' + tier + ' &middot; <span class="ss-rec-score">' + s + ' / ' + SS_BURNOUT_QUESTIONS.length + '</span></div>' +
-        '<p>' + msg + '</p>' +
+        '<div class="ss-rec-tier">' + ssEsc(tier) + ' &middot; <span class="ss-rec-score">' + s + ' / ' + SS_BURNOUT_QUESTIONS.length + '</span></div>' +
+        '<p>' + ssEsc(msg) + '</p>' +
+        help +
+        '<p class="ss-rec-disclaimer">This is a self-reflection tool, not a medical diagnosis. Trust your own sense of how you\'re doing.</p>' +
         '<button class="ss-rec-reset" id="ss-rec-reset">Retake check</button>';
       var rb = document.getElementById('ss-rec-reset');
       if (rb) rb.addEventListener('click', function () {
@@ -2473,7 +2527,7 @@ function initStudyTools() {
 
   /* ====== Wire up: Study Log (editable, deletable, syncs to sheet) ====== */
   function saveLogs() { _ls.set('ss-study-logs', JSON.stringify(logs.slice(0, 100))); }
-  function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  var esc = ssEsc; /* unified escaper — see ssEsc at top of file */
 
   function renderLogs() {
     var el = document.getElementById('ss-log-entries');

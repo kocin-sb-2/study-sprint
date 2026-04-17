@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy — Study Sprint</title>
+  <meta name="description" content="How Study Sprint handles your data. Short, plain-language, no tracking.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@600;700&display=swap">
+  <link rel="stylesheet" href="extras.css">
+  <style>
+    body { font-family: 'Source Sans 3', sans-serif; max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; line-height: 1.7; color: #2d3748; background: #fdfdfc; }
+    h1 { font-family: 'Source Serif 4', serif; font-size: 34px; margin: 0 0 8px; }
+    h2 { font-family: 'Source Serif 4', serif; font-size: 22px; margin: 32px 0 8px; }
+    .lede { color: #4a5568; font-size: 17px; margin: 0 0 24px; }
+    .back { display: inline-block; margin-bottom: 24px; color: #4a5568; text-decoration: none; font-size: 14px; }
+    .back:hover { text-decoration: underline; }
+    code { background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+    .updated { font-size: 13px; color: #718096; margin-top: 40px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+    body.dark-mode { background: #1a202c; color: #e2e8f0; }
+    body.dark-mode .lede, body.dark-mode .back, body.dark-mode .updated { color: #cbd5e0; }
+    body.dark-mode code { background: #2d3748; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Back to Study Sprint</a>
+  <h1>Privacy</h1>
+  <p class="lede">Short version: nothing about you leaves your browser unless <em>you</em> type it into a comment box or study log. No accounts, no cookies, no tracking pixels, no ads.</p>
+
+  <h2>What stays only on your device</h2>
+  <p>The following are saved in your browser's <code>localStorage</code> and never sent anywhere:</p>
+  <ul>
+    <li>Your topic-completion ticks and per-subject progress.</li>
+    <li>Pomodoro session history and your streak counter.</li>
+    <li>The Recovery self-check answers and which rest types you've marked.</li>
+    <li>Your dark-mode preference and which Companion tab you last used.</li>
+  </ul>
+  <p>Use the <strong>🧹 Clear my data</strong> button in the Study Companion header (top right) to wipe all of it from this browser. On a shared or school computer, please use this when you're done.</p>
+
+  <h2>What gets sent to the central sheet</h2>
+  <p>If you write a topic comment or save a study-log entry, the following is appended to a private Google Sheet that only the site owner can see:</p>
+  <ul>
+    <li>The text you typed (capped at 500 characters for comments, 1000 for logs).</li>
+    <li>Which page and which topic you were on.</li>
+    <li>For logs: the date stamp you chose and any link you pasted.</li>
+    <li>Your browser's user-agent string (e.g. "Chrome 121 on macOS").</li>
+    <li>A short one-way hash derived from your user-agent and the current minute. This is <strong>not</strong> your IP address — it's a tumbling pseudonym used only to rate-limit spam. It cannot be reversed to identify you.</li>
+  </ul>
+  <p>The sheet is private. It is read only by the maintainer, used only to improve the notes and spot bugs. It is not shared, sold, exported, or analysed by any third party.</p>
+
+  <h2>What we don't collect</h2>
+  <ul>
+    <li>No cookies. (Try it — open DevTools → Application → Cookies. Empty.)</li>
+    <li>No analytics scripts (no Google Analytics, no Plausible, no Vercel Analytics).</li>
+    <li>No advertising trackers, no fingerprinting.</li>
+    <li>No login, no email, no name. We don't know who you are.</li>
+  </ul>
+
+  <h2>Third-party requests</h2>
+  <p>The site loads two fonts (Source Sans 3 and Source Serif 4) from <code>fonts.googleapis.com</code>. Google sees the request and your IP address. If you'd like to avoid this entirely, use a browser extension that blocks it, or open an issue on GitHub and we'll self-host the fonts.</p>
+
+  <h2>Your rights (GDPR)</h2>
+  <p>You can:</p>
+  <ul>
+    <li><strong>Erase locally</strong> with the 🧹 Clear my data button — instant.</li>
+    <li><strong>Erase from the central sheet</strong> by emailing the maintainer (see the GitHub repo) with the page, topic, and approximate date of your entry. Because there's no account, please include enough detail to find the row.</li>
+    <li>Ask what's stored about you, in the same way.</li>
+  </ul>
+
+  <h2>Crisis support</h2>
+  <p>Study Sprint is a study tool, not a mental-health service. If the Recovery self-check (or anything else) flagged that you're struggling, please reach out:</p>
+  <ul>
+    <li>🇸🇪 <a href="https://mind.se/" target="_blank" rel="noopener noreferrer">Mind</a> — Swedish mental-health support line.</li>
+    <li><a href="https://www.bris.se/" target="_blank" rel="noopener noreferrer">BRIS</a> — for anyone under 18 in Sweden.</li>
+    <li><a href="https://www.1177.se/" target="_blank" rel="noopener noreferrer">1177 Vårdguiden</a> — Swedish public health line.</li>
+    <li>🌍 <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">findahelpline.com</a> — free, every country.</li>
+  </ul>
+
+  <p class="updated">Last updated: 17 April 2026. If something here is unclear or you'd like a change, open an issue at <a href="https://github.com/kocin-sb-2/study-sprint">github.com/kocin-sb-2/study-sprint</a>.</p>
+</body>
+</html>
