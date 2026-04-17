@@ -2075,19 +2075,27 @@ html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: r
    JUST START ACTIVATOR (in Pomodoro panel)
 ================================= */
 .ss-juststart {
-  background: linear-gradient(135deg, rgba(102,187,106,0.06), rgba(179,136,255,0.05));
-  border: 1px solid rgba(102,187,106,0.25);
-  border-radius: 12px;
-  padding: 16px 18px;
-  margin-bottom: 22px;
+  background: linear-gradient(135deg, rgba(102,187,106,0.05), rgba(179,136,255,0.04));
+  border: 1px solid rgba(102,187,106,0.2);
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-bottom: 18px;
 }
+.ss-juststart[open] { padding: 12px 16px 14px; }
 .ss-juststart-h {
   font-family: 'Playfair Display', serif;
-  font-size: 1.02rem;
-  font-weight: 700;
+  font-size: 0.92rem;
+  font-weight: 600;
   color: #66bb6a;
-  margin-bottom: 4px;
+  cursor: pointer;
+  list-style: none;
+  padding: 4px 0;
+  margin: 0;
 }
+.ss-juststart-h::-webkit-details-marker { display: none; }
+.ss-juststart-h::before { content: '▸ '; transition: transform 0.15s; display: inline-block; }
+.ss-juststart[open] > .ss-juststart-h::before { content: '▾ '; }
+.ss-juststart[open] > .ss-juststart-h { margin-bottom: 6px; }
 .ss-juststart-sub {
   font-size: 0.83rem;
   color: var(--ss-muted);
@@ -2177,8 +2185,18 @@ html.ss-light .resource-link { background: rgba(2,136,209,0.05); border-color: r
   color: #0a0e17;
   border-color: var(--ss-accent, #ffd54f);
 }
+.ss-launch-btn--active {
+  border-color: #ef5350;
+  color: #ef5350;
+  background: rgba(239,83,80,0.08);
+}
 .ss-launch-emoji { font-size: 1.05rem; line-height: 1; }
 .ss-launch-lbl  { letter-spacing: 0.2px; }
+
+/* When the launcher is mounted, hide the legacy floating Quiz / Print
+   buttons so we don't double-up at the bottom-right corner */
+body.ss-launcher-active .ss-quiz-mode-btn,
+body.ss-launcher-active .ss-print-btn { display: none !important; }
 
 /* Pulse highlight when launcher targets the companion */
 .ss-pulse {

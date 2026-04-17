@@ -125,10 +125,36 @@ function initFloatingLauncher(hasTopics) {
       '<span class="ss-launch-emoji">🧘</span><span class="ss-launch-lbl">Companion</span>' +
     '</button>' +
     (hasTopics ?
+      '<button class="ss-launch-btn" id="ss-launch-quiz" title="Hide all solutions — test yourself">' +
+        '<span class="ss-launch-emoji">🎯</span><span class="ss-launch-lbl">Quiz</span>' +
+      '</button>' +
+      '<button class="ss-launch-btn" id="ss-launch-print" title="Expand all and open print / save-PDF dialog">' +
+        '<span class="ss-launch-emoji">🖨️</span><span class="ss-launch-lbl">Print</span>' +
+      '</button>' +
       '<button class="ss-launch-btn" id="ss-launch-feedback" title="Suggest an improvement to a topic">' +
         '<span class="ss-launch-emoji">💡</span><span class="ss-launch-lbl">Feedback</span>' +
       '</button>' : '');
   document.body.appendChild(dock);
+
+  /* Hide the legacy free-floating Quiz / Print buttons (now lives in dock) */
+  document.body.classList.add('ss-launcher-active');
+
+  /* Wire Quiz + Print to the original buttons so all their state logic still works */
+  var lqz = document.getElementById('ss-launch-quiz');
+  if (lqz) lqz.addEventListener('click', function () {
+    var orig = document.getElementById('ss-quiz-mode-btn');
+    if (orig) {
+      orig.click();
+      lqz.classList.toggle('ss-launch-btn--active', orig.classList.contains('ss-quiz-active'));
+      var lbl = lqz.querySelector('.ss-launch-lbl');
+      if (lbl) lbl.textContent = orig.classList.contains('ss-quiz-active') ? 'Exit Quiz' : 'Quiz';
+    }
+  });
+  var lpr = document.getElementById('ss-launch-print');
+  if (lpr) lpr.addEventListener('click', function () {
+    var orig = document.querySelector('.ss-print-btn');
+    if (orig) orig.click();
+  });
 
   /* Companion: ensure expanded + scroll into view + open wellbeing tab */
   document.getElementById('ss-launch-companion').addEventListener('click', function () {
@@ -1728,7 +1754,11 @@ function initStudyTools() {
      Falls back to before-footer or end-of-body. The dock is collapsed
      by default for new users so it never pushes content; the floating
      launcher (🧘) opens it from anywhere. */
-  var topMount = document.querySelector('.ss-onboard') ||
+  /* Prefer mounting AFTER the intro-card so the page reads:
+       hero → intro/stats → companion (slim) → topic content
+     This avoids cramming three boxes into the visible top fold. */
+  var topMount = document.querySelector('.intro-card') ||
+                 document.querySelector('.ss-onboard') ||
                  document.querySelector('.hero')       ||
                  document.querySelector('header')      ||
                  document.querySelector('main');
@@ -1829,19 +1859,19 @@ function initStudyTools() {
 
       /* ---- POMODORO PANEL ---- */
       '<div class="ss-panel" data-panel="pomodoro">' +
-        '<div class="ss-juststart" id="ss-juststart">' +
-          '<div class="ss-juststart-h">🌱 Can\'t get started?</div>' +
-          '<p class="ss-juststart-sub">Three keys that unlock momentum when nothing else will:</p>' +
-          '<ol class="ss-juststart-steps">' +
-            '<li><strong>Promise yourself a bad job.</strong> "I\'m allowed to study terribly for 10 minutes." Perfection paralyses; permission unlocks.</li>' +
-            '<li><strong>Pick the smallest possible action.</strong> Not "study Chemistry" — "open one topic and read one paragraph."</li>' +
-            '<li><strong>Set the reward upfront.</strong> "If I focus 25 minutes, I get [snack / walk / one episode]."</li>' +
-          '</ol>' +
+        '<details class="ss-juststart" id="ss-juststart">' +
+          '<summary class="ss-juststart-h">🌱 Hard to start? Try a quick warm-up</summary>' +
+          '<p class="ss-juststart-sub">Pick one — these unlock momentum without forcing you to commit to a long session.</p>' +
+          '<ul class="ss-juststart-steps">' +
+            '<li><strong>Open one topic and read one paragraph.</strong> The smallest possible action.</li>' +
+            '<li><strong>Set the reward upfront.</strong> "If I focus 25 minutes, I get a snack / a walk / an episode."</li>' +
+            '<li><strong>Change location.</strong> Even moving to the kitchen table can reset focus.</li>' +
+          '</ul>' +
           '<div class="ss-juststart-actions">' +
-            '<button class="ss-juststart-btn" id="ss-juststart-go">▶ Start a 10-minute commitment timer</button>' +
-            '<button class="ss-juststart-btn ss-juststart-btn--ghost" id="ss-juststart-vent">🌧️ I need 10 min to vent first</button>' +
+            '<button class="ss-juststart-btn" id="ss-juststart-go">▶ Start a 10-min warm-up timer</button>' +
+            '<button class="ss-juststart-btn ss-juststart-btn--ghost" id="ss-juststart-vent">🌧️ Vent for 10 min first</button>' +
           '</div>' +
-        '</div>' +
+        '</details>' +
         '<div class="ss-pomo-wrap">' +
           /* SVG progress ring */
           '<div class="ss-pomo-ring">' +
@@ -2220,7 +2250,7 @@ function initStudyTools() {
     pomoMode = 'focus'; pomoSessionInCycle = 1;
     pomoTotal = 10 * 60; pomoLeft = pomoTotal;
     paintTimer();
-    jsGo.textContent = '✓ Timer set — press ▶ Start. You only owe yourself 10 bad minutes.';
+    jsGo.textContent = '✓ Timer set to 10 min — press ▶ Start whenever you\'re ready.';
     setTimeout(function () { startBtn && startBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
   });
   if (jsVent) jsVent.addEventListener('click', function () {
