@@ -1202,8 +1202,13 @@ function openCommentBox(topic, pageKey) {
       html += '<button class="ss-comment-show-hidden" id="ss-show-hidden">' + hidden.length + ' hidden suggestion' + (hidden.length > 1 ? 's' : '') + '</button>';
     }
 
-    html += '<textarea class="ss-comment-input" placeholder="What\'s missing or unclear?" rows="2"></textarea>' +
-      '<div class="ss-comment-actions"><button class="ss-comment-submit">Add suggestion</button></div>';
+    html += '<textarea class="ss-comment-input" placeholder="What\'s missing or unclear? (max 500 chars)" rows="2" maxlength="500"></textarea>' +
+      /* Honeypot field — bots fill this, humans never see it. Server should drop any submission with website != "" */
+      '<input type="text" class="ss-comment-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">' +
+      '<div class="ss-comment-actions">' +
+        '<span class="ss-comment-count" id="ss-comment-count-' + topic.id + '">0 / 500</span>' +
+        '<button class="ss-comment-submit">Add suggestion</button>' +
+      '</div>';
 
     box.innerHTML = html;
 
@@ -1237,8 +1242,25 @@ function openCommentBox(topic, pageKey) {
 
     box.querySelector('.ss-comment-submit').addEventListener('click', function () {
       var input = box.querySelector('.ss-comment-input');
-      var text = input.value.trim();
+      var hp    = box.querySelector('.ss-comment-hp');
+      var text  = input.value.trim();
       if (!text) return;
+
+      /* --- Client-side guards (real protection lives server-side) --- */
+      /* 1. Honeypot — silently drop bot submissions */
+      if (hp && hp.value) { input.value = ''; return; }
+      /* 2. Length cap */
+      if (text.length > 500) text = text.slice(0, 500);
+      if (text.length < 3)   { alert('Suggestion is too short.'); return; }
+      /* 3. Rate limit — max 1 comment / 10s, max 8 / hour, per browser */
+      var now = Date.now();
+      var rl  = JSON.parse(_ls.get('ss-comment-rl') || '{"last":0,"hour":[]}');
+      if (now - rl.last < 10000) { alert('Please wait a few seconds before posting again.'); return; }
+      rl.hour = rl.hour.filter(function (t) { return now - t < 3600000; });
+      if (rl.hour.length >= 8) { alert('Hourly limit reached. Please come back later — your local copy is still saved.'); return; }
+      rl.last = now; rl.hour.push(now);
+      _ls.set('ss-comment-rl', JSON.stringify(rl));
+
       var comment = { text: text, time: new Date().toLocaleDateString(), hidden: false };
       comments.push(comment);
       _ls.set(key, JSON.stringify(comments));
@@ -1249,7 +1271,13 @@ function openCommentBox(topic, pageKey) {
     });
 
     var input = box.querySelector('.ss-comment-input');
-    if (input) input.focus();
+    if (input) {
+      input.focus();
+      var counter = box.querySelector('#ss-comment-count-' + topic.id);
+      input.addEventListener('input', function () {
+        if (counter) counter.textContent = input.value.length + ' / 500';
+      });
+    }
   }
 
   function updateBtn() {
@@ -1283,9 +1311,16 @@ var SS_SHEET_URL = ''; /* Paste your Apps Script web app URL here */
 function sendToSheet(page, topicId, comment) {
   if (!SS_SHEET_URL) return; /* Skip if not configured */
   try {
-    navigator.sendBeacon(SS_SHEET_URL, JSON.stringify({
-      page: page, topic: topicId, text: comment.text
-    }));
+    var payload = {
+      page: String(page || '').slice(0, 80),
+      topic: String(topicId || '').slice(0, 80),
+      text: String(comment.text || '').slice(0, 500),
+      ts: Date.now(),
+      ua: (navigator.userAgent || '').slice(0, 120),
+      website: '' /* honeypot — server should drop any payload where this is non-empty */
+    };
+    var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    navigator.sendBeacon(SS_SHEET_URL, blob);
   } catch (e) { /* Silent fail — local storage is the primary store */ }
 }
 
@@ -1370,20 +1405,42 @@ var SS_WELLBEING_TIPS = [
   { cat: 'environment', icon: '📵', text: 'Just having your phone visible — even face-down and silent — reduces cognitive capacity by ~10%. Put it in another room.', source: 'Ward et al., 2017' },
   { cat: 'environment', icon: '🌅', text: 'Morning study sessions have ~20% better retention than late-night ones. Save passive review (videos) for evenings.', source: 'May et al., 2005' },
   { cat: 'environment', icon: '🌡️', text: 'Cooler rooms (18-21°C) improve concentration and reduce drowsiness. Crack a window before a long session.', source: 'Lan et al., 2009' },
-  { cat: 'environment', icon: '🎵', text: 'Lyrics in your study music compete with reading. Lo-fi, classical, or ambient is far less disruptive than vocals.', source: 'Perham & Vizard, 2011' }
+  { cat: 'environment', icon: '🎵', text: 'Lyrics in your study music compete with reading. Lo-fi, classical, or ambient is far less disruptive than vocals.', source: 'Perham & Vizard, 2011' },
+
+  /* JUST START — momentum hacks for when you cannot begin */
+  { cat: 'just-start', icon: '🌱', text: 'Study badly on purpose. Tell yourself: "I\'m allowed to do a terrible job for 10 minutes." Perfection kills momentum. Once you start, your brain naturally wants to improve what it\'s doing.', source: 'Behavioral activation therapy' },
+  { cat: 'just-start', icon: '🚪', text: 'Change location. Your brain links places to behavior. One spot for studying, another for relaxing. Even moving to a different room or library can reset focus instantly.', source: 'Context-dependent memory, Godden & Baddeley 1975' },
+  { cat: 'just-start', icon: '🎁', text: 'Reward effort, not results. Don\'t wait until you "finish everything." Try: "If I focus 45 minutes I get a snack/walk/episode." This trains your brain to value the process, not just the outcome.', source: 'Operant conditioning, Skinner' },
+  { cat: 'just-start', icon: '🌧️', text: 'Designate 10 minutes to let it all out — cry, journal, vent to a friend. Turn emotional overload into something contained, so it doesn\'t hijack your entire day. Then return to the desk.', source: 'Pennebaker expressive writing, 1997' },
+  { cat: 'just-start', icon: '⏱️', text: 'The "two-minute rule": commit to just 2 minutes of studying. That\'s it. The hardest part is starting; once started, momentum carries you.', source: 'BJ Fogg, Tiny Habits (2019)' },
+  { cat: 'just-start', icon: '📋', text: 'Make the next action absurdly small. Not "study chemistry" — "open the chemistry tab and read one paragraph." Big tasks paralyse; tiny ones get done.', source: 'Implementation intentions, Gollwitzer 1999' },
+
+  /* WISDOM — Thirukkural & timeless reminders */
+  { cat: 'wisdom', icon: '📜', text: '"உள்ளுவ தெல்லாம் உயர்வுள்ளல்; மற்றது தள்ளினும் தள்ளாமை நீர்த்து." — Aim only at noble heights; even if you fall, falling from height is itself dignity.', source: 'Thirukkural 596, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"கற்க கசடறக் கற்பவை; கற்றபின் நிற்க அதற்குத் தக." — Learn flawlessly what you must learn; then live by what you have learned.', source: 'Thirukkural 391, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"தொட்டனைத் தூறும் மணற்கேணி; மாந்தர்க்குக் கற்றனைத் தூறும் அறிவு." — Sand reveals water the deeper you dig; humans reveal wisdom the more they learn.', source: 'Thirukkural 396, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"யாதானும் நாடாமால் ஊராமால்; என்னொருவன் சாந்துணையும் கல்லாத வாறு." — All the world is your home, every town your own — once you have learnt. Why then would anyone refuse to study till the end?', source: 'Thirukkural 397, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"மடியுளாள் மாமுகடி; என்ப மடியிலான் தாளுளாள் தாமரையினாள்." — Misfortune dwells in laziness; fortune (Lakshmi) dwells in the feet of the diligent.', source: 'Thirukkural 617, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"ஆகூழால் தோன்றும் அசைவின்மை கைப்பொருள்; போகூழால் தோன்றும் மடி." — Unwavering effort brings fortune; laziness brings its loss. Effort is the only luck you control.', source: 'Thirukkural 619, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"வெள்ளத் தனைய மலர்நீட்டம்; மாந்தர்தம் உள்ளத் தனையது உயர்வு." — As deep as the water, so tall the lotus. As high as your thought, so high you rise.', source: 'Thirukkural 595, Thiruvalluvar' },
+  { cat: 'wisdom', icon: '📜', text: '"அழுக்கா றுடையான்கண் ஆக்கம்போன்று இல்லை; யாதனும் தீமை செயல்." — Nothing harms a person more than envy of another\'s success. Compare yourself only to who you were yesterday.', source: 'Thirukkural 169, Thiruvalluvar (paraphrase)' },
+  { cat: 'wisdom', icon: '🪷', text: '"You have a right to perform your duty, but never to the fruits of action." Study because the work is yours, not because the grade is.', source: 'Bhagavad Gita 2.47' },
+  { cat: 'wisdom', icon: '🌿', text: '"The wound is the place where the Light enters you." A bad mock exam is information, not identity. Read the wound, then keep walking.', source: 'Rumi' },
+  { cat: 'wisdom', icon: '🕊️', text: '"Between stimulus and response there is a space. In that space is our power to choose our response." When panic rises, breathe and choose.', source: 'Viktor Frankl' },
+  { cat: 'wisdom', icon: '🌅', text: '"Nothing in nature blooms all year." Your mind has seasons too — winter rest is preparation, not failure.', source: 'Folk wisdom' }
 ];
 
 /* Subset selectors used by the smart-tip rotation */
-function ssPickTipsForContext(streak, sessionsToday) {
+function ssPickTipsForContext(streak, sessionsToday, focusMinutesToday) {
   var hour = new Date().getHours();
   var dow = new Date().getDay(); /* 0 Sun..6 Sat */
   var pool = SS_WELLBEING_TIPS.slice();
 
-  /* Time-of-day biases */
-  var morningCats   = ['sleep', 'nutrition', 'technique', 'movement'];
-  var afternoonCats = ['movement', 'technique', 'environment', 'nutrition'];
-  var eveningCats   = ['mental', 'compassion', 'sleep'];
-  var nightCats     = ['sleep', 'compassion', 'mental'];
+  /* Time-of-day biases (always include a sprinkle of wisdom) */
+  var morningCats   = ['just-start', 'sleep', 'nutrition', 'technique', 'wisdom'];
+  var afternoonCats = ['movement', 'technique', 'environment', 'nutrition', 'wisdom'];
+  var eveningCats   = ['mental', 'compassion', 'sleep', 'wisdom'];
+  var nightCats     = ['sleep', 'compassion', 'mental', 'wisdom'];
 
   var preferred;
   if (hour >= 5 && hour < 12)       preferred = morningCats;
@@ -1392,17 +1449,30 @@ function ssPickTipsForContext(streak, sessionsToday) {
   else                              preferred = nightCats;
 
   /* Weekend → bias compassion + rest */
-  if (dow === 0 || dow === 6) preferred = preferred.concat(['compassion', 'mental']);
+  if (dow === 0 || dow === 6) preferred = preferred.concat(['compassion', 'mental', 'wisdom']);
 
   /* Long streak (5+) → compassion-bias to prevent burnout */
   if (streak >= 5) preferred = preferred.concat(['compassion', 'mental']);
 
-  /* Lots of sessions today (4+) → suggest rest */
-  if (sessionsToday >= 4) preferred = ['compassion', 'mental', 'movement'];
+  /* No sessions yet today → bias the just-start kit */
+  if (!sessionsToday) preferred = preferred.concat(['just-start', 'just-start']);
+
+  /* BURNOUT GUARD: 6+ sessions, 4+ focus hours, or streak > 14 → force rest pool */
+  var burnout = (sessionsToday >= 6) || (focusMinutesToday >= 240) || (streak > 14);
+  if (burnout) preferred = ['compassion', 'mental', 'wisdom'];
 
   /* Filter pool to preferred categories, fallback to all */
   var filtered = pool.filter(function (t) { return preferred.indexOf(t.cat) !== -1; });
   return filtered.length ? filtered : pool;
+}
+
+/* Burnout signal — used by the UI to show a "please rest" banner */
+function ssBurnoutSignal(streak, sessionsToday, focusMinutesToday) {
+  var reasons = [];
+  if (sessionsToday >= 6)      reasons.push(sessionsToday + ' Pomodoros today');
+  if (focusMinutesToday >= 240) reasons.push(Math.round(focusMinutesToday/60*10)/10 + 'h of focus today');
+  if (streak > 14)             reasons.push(streak + '-day streak with no rest');
+  return reasons.length ? reasons : null;
 }
 
 /* ---- B. AUDIO CHIME (Web Audio API, no external file) ---- */
@@ -1518,7 +1588,8 @@ function initStudyTools() {
   var logs = JSON.parse(_ls.get('ss-study-logs') || '[]');
 
   /* Pick a tip set; show first by default, allow next/category nav */
-  var tipPool = ssPickTipsForContext(streak.current, todayData.pomos);
+  var tipPool = ssPickTipsForContext(streak.current, todayData.pomos, pomoMinutesToday);
+  var burnoutReasons = ssBurnoutSignal(streak.current, todayData.pomos, pomoMinutesToday);
   var tipIdx = Math.floor(Math.random() * tipPool.length);
   function currentTip() { return tipPool[tipIdx % tipPool.length]; }
 
@@ -1552,6 +1623,13 @@ function initStudyTools() {
 
       /* ---- WELLBEING PANEL ---- */
       '<div class="ss-panel on" data-panel="wellbeing">' +
+        (burnoutReasons ?
+          '<div class="ss-burnout">' +
+            '<div class="ss-burnout-h">🛑 Please rest now.</div>' +
+            '<p>You\'ve done <strong>' + burnoutReasons.join(', ') + '</strong>. ' +
+            'Your brain locks in memory <em>during rest</em>, not during the 7th Pomodoro. Stop here. Eat. Walk. Sleep early. ' +
+            'Future-you will thank present-you for the wisdom of stopping.</p>' +
+          '</div>' : '') +
         '<div class="ss-tip" id="ss-tip">' +
           '<div class="ss-tip-icon">' + currentTip().icon + '</div>' +
           '<div class="ss-tip-body">' +
@@ -1562,6 +1640,8 @@ function initStudyTools() {
         '<div class="ss-tip-controls">' +
           '<button class="ss-tip-btn" id="ss-tip-next">Another tip →</button>' +
           '<div class="ss-tip-cats">' +
+            '<button class="ss-tip-cat" data-cat="just-start">🌱 Just Start</button>' +
+            '<button class="ss-tip-cat" data-cat="wisdom">📜 Wisdom</button>' +
             '<button class="ss-tip-cat" data-cat="sleep">😴 Sleep</button>' +
             '<button class="ss-tip-cat" data-cat="nutrition">🥦 Food</button>' +
             '<button class="ss-tip-cat" data-cat="movement">🚶 Move</button>' +
@@ -1579,6 +1659,19 @@ function initStudyTools() {
 
       /* ---- POMODORO PANEL ---- */
       '<div class="ss-panel" data-panel="pomodoro">' +
+        '<div class="ss-juststart" id="ss-juststart">' +
+          '<div class="ss-juststart-h">🌱 Can\'t get started?</div>' +
+          '<p class="ss-juststart-sub">Three keys that unlock momentum when nothing else will:</p>' +
+          '<ol class="ss-juststart-steps">' +
+            '<li><strong>Promise yourself a bad job.</strong> "I\'m allowed to study terribly for 10 minutes." Perfection paralyses; permission unlocks.</li>' +
+            '<li><strong>Pick the smallest possible action.</strong> Not "study Chemistry" — "open one topic and read one paragraph."</li>' +
+            '<li><strong>Set the reward upfront.</strong> "If I focus 25 minutes, I get [snack / walk / one episode]."</li>' +
+          '</ol>' +
+          '<div class="ss-juststart-actions">' +
+            '<button class="ss-juststart-btn" id="ss-juststart-go">▶ Start a 10-minute commitment timer</button>' +
+            '<button class="ss-juststart-btn ss-juststart-btn--ghost" id="ss-juststart-vent">🌧️ I need 10 min to vent first</button>' +
+          '</div>' +
+        '</div>' +
         '<div class="ss-pomo-wrap">' +
           /* SVG progress ring */
           '<div class="ss-pomo-ring">' +
@@ -1640,46 +1733,96 @@ function initStudyTools() {
 
       /* ---- HOW TO STUDY PANEL ---- */
       '<div class="ss-panel" data-panel="howto">' +
+        '<div class="ss-howto-intro">Read one card a day. These are the techniques that actually work — backed by decades of research, written for human beings who get tired.</div>' +
         '<div class="ss-howto-grid">' +
+
+          /* === MOMENTUM (the user\'s 4 tips, woven in naturally) === */
+          '<div class="ss-howto-card ss-howto-momentum">' +
+            '<h4>🌱 Study Badly On Purpose</h4>' +
+            '<p>Tell yourself: <em>"I\'m allowed to do a terrible job for 10 minutes."</em> Perfection kills momentum. Once you start, your brain naturally wants to improve what it\'s doing.</p>' +
+            '<span class="ss-howto-src">Behavioral activation · the 10-min rule</span>' +
+          '</div>' +
+          '<div class="ss-howto-card ss-howto-momentum">' +
+            '<h4>🚪 Change Location</h4>' +
+            '<p>Your brain links places to behavior. One spot for studying, another for relaxing. Even moving to another room or a library can reset your focus instantly.</p>' +
+            '<span class="ss-howto-src">Context-dependent memory · Godden & Baddeley, 1975</span>' +
+          '</div>' +
+          '<div class="ss-howto-card ss-howto-momentum">' +
+            '<h4>🎁 Reward Effort, Not Results</h4>' +
+            '<p>Don\'t wait until you "finish everything." Try: <em>"If I focus for 45 minutes I get a snack / walk / video."</em> This trains your brain to value the process, not just the outcome.</p>' +
+            '<span class="ss-howto-src">Operant conditioning · Skinner</span>' +
+          '</div>' +
+          '<div class="ss-howto-card ss-howto-momentum">' +
+            '<h4>🌧️ The 10-Minute Vent Box</h4>' +
+            '<p>Designate 10 minutes to <em>let it all out</em> — cry, journal, message someone. Turn emotional overload into something controlled and contained, so it doesn\'t hijack your entire day.</p>' +
+            '<span class="ss-howto-src">Pennebaker, expressive writing (1997)</span>' +
+          '</div>' +
+
+          /* === CORE TECHNIQUES === */
           '<div class="ss-howto-card">' +
             '<h4>🎯 Active Recall</h4>' +
-            '<p>Close the book. Try to write the topic from scratch. The struggle is the learning. Use Quiz Mode on every topic.</p>' +
-            '<span class="ss-howto-src">Karpicke & Blunt, 2011</span>' +
+            '<p>Close the book. Try to write the topic from scratch. The struggle <em>is</em> the learning. Use Quiz Mode on every topic.</p>' +
+            '<a class="ss-howto-link" href="https://www.science.org/doi/10.1126/science.1199327" target="_blank" rel="noopener">📄 Karpicke & Blunt, Science (2011)</a>' +
+            '<span class="ss-howto-src">2-3× more effective than re-reading</span>' +
           '</div>' +
           '<div class="ss-howto-card">' +
             '<h4>🔁 Spaced Repetition</h4>' +
-            '<p>Revisit a topic at intervals: 1 day → 3 days → 7 days → 21 days. Use the "done" buttons to track which topics need a review.</p>' +
+            '<p>Revisit a topic at intervals: 1 day → 3 days → 7 days → 21 days. Use the "done" buttons to track which topics are due for a review.</p>' +
+            '<a class="ss-howto-link" href="https://www.youtube.com/watch?v=cVf38y07cfk" target="_blank" rel="noopener">▶ Ali Abdaal — How to Study (8 min)</a>' +
             '<span class="ss-howto-src">Cepeda et al., 2008</span>' +
           '</div>' +
           '<div class="ss-howto-card">' +
             '<h4>👨‍🏫 Feynman Technique</h4>' +
             '<p>Explain the topic out loud as if to a 12-year-old. Where you stumble is what you don\'t understand yet. Go re-learn that, repeat.</p>' +
+            '<a class="ss-howto-link" href="https://fs.blog/feynman-learning-technique/" target="_blank" rel="noopener">📖 Farnam Street — Feynman Technique</a>' +
             '<span class="ss-howto-src">Feynman, 1985</span>' +
           '</div>' +
           '<div class="ss-howto-card">' +
             '<h4>🔀 Interleaving</h4>' +
             '<p>Don\'t study one subject for 3 hours. Mix Physics → Math → Chem in 25-min blocks. It feels harder but retention is 43% better.</p>' +
-            '<span class="ss-howto-src">Rohrer & Taylor, 2007</span>' +
+            '<a class="ss-howto-link" href="https://uweb.cas.usf.edu/~drohrer/pdfs/Rohrer&Taylor2007IS.pdf" target="_blank" rel="noopener">📄 Rohrer & Taylor (2007)</a>' +
+            '<span class="ss-howto-src">"Desirable difficulty"</span>' +
           '</div>' +
           '<div class="ss-howto-card">' +
             '<h4>🗺️ Concept Mapping</h4>' +
             '<p>Drawing connections between ideas builds the same neural pathways the exam will use. Use the Mind Map button on each subject.</p>' +
+            '<a class="ss-howto-link" href="https://cmap.ihmc.us/docs/theory-of-concept-maps" target="_blank" rel="noopener">📖 Novak — Theory of Concept Maps</a>' +
             '<span class="ss-howto-src">Nesbit & Adesope, 2006</span>' +
           '</div>' +
           '<div class="ss-howto-card">' +
-            '<h4>✍️ Worry Dump (Pre-Exam)</h4>' +
-            '<p>10 minutes before an exam, write your worries on paper. Doing this once raised average grades by 0.4 points in studies.</p>' +
-            '<span class="ss-howto-src">Ramirez & Beilock, 2011</span>' +
-          '</div>' +
-          '<div class="ss-howto-card ss-howto-care">' +
-            '<h4>💛 The Hardest Truth</h4>' +
-            '<p>Working harder while ignoring sleep, food, and emotions is not dedication — it\'s self-harm dressed up as virtue. Rest is a strategy.</p>' +
-            '<span class="ss-howto-src">Care for yourself first.</span>' +
+            '<h4>✍️ Pre-Exam Worry Dump</h4>' +
+            '<p>10 minutes before an exam, write down everything you\'re worried about. One study showed this raised average grades by 0.4 points.</p>' +
+            '<a class="ss-howto-link" href="https://www.science.org/doi/10.1126/science.1199427" target="_blank" rel="noopener">📄 Ramirez & Beilock, Science (2011)</a>' +
+            '<span class="ss-howto-src">Frees up working memory</span>' +
           '</div>' +
           '<div class="ss-howto-card">' +
             '<h4>📅 Study Plan Skeleton</h4>' +
-            '<p>For each subject: <em>Read → Recall → Practice → Review</em>. Block 25-min Pomodoros, alternate subjects, finish with reflection in the Study Log.</p>' +
+            '<p>For every topic: <em>Read → Recall → Practice → Review</em>. Block 25-min Pomodoros, alternate subjects, finish with a reflection in the Study Log.</p>' +
+            '<a class="ss-howto-link" href="https://bjorklab.psych.ucla.edu/research/" target="_blank" rel="noopener">📖 Bjork Lab — Desirable Difficulties</a>' +
             '<span class="ss-howto-src">Bjork & Bjork, 2011</span>' +
+          '</div>' +
+          '<div class="ss-howto-card">' +
+            '<h4>🧘 Deep Work Block</h4>' +
+            '<p>One uninterrupted 90-minute block per day, phone in another room, single subject. This single habit out-performs 6 hours of distracted study.</p>' +
+            '<a class="ss-howto-link" href="https://www.youtube.com/watch?v=p6zMpVwh4ts" target="_blank" rel="noopener">▶ Cal Newport — Deep Work (talk)</a>' +
+            '<span class="ss-howto-src">Newport, 2016</span>' +
+          '</div>' +
+
+          /* === HUMAN REMINDERS === */
+          '<div class="ss-howto-card ss-howto-care">' +
+            '<h4>💛 The Hardest Truth</h4>' +
+            '<p>Working harder while ignoring sleep, food, and emotions is not dedication — it\'s self-harm dressed up as virtue. <strong>Rest is a strategy.</strong></p>' +
+            '<span class="ss-howto-src">Care for yourself first.</span>' +
+          '</div>' +
+          '<div class="ss-howto-card ss-howto-care">' +
+            '<h4>🪷 Thirukkural — On Effort</h4>' +
+            '<p><em>"ஆகூழால் தோன்றும் அசைவின்மை கைப்பொருள்; போகூழால் தோன்றும் மடி."</em><br>Unwavering effort brings fortune; laziness loses it. <strong>Effort is the only luck you control.</strong></p>' +
+            '<span class="ss-howto-src">Thirukkural 619 · Thiruvalluvar</span>' +
+          '</div>' +
+          '<div class="ss-howto-card ss-howto-care">' +
+            '<h4>🕊️ Your Worth ≠ Your Grade</h4>' +
+            '<p>The exam measures recall under pressure on one specific morning. It does not measure your intelligence, your kindness, or your future. Whatever happens — you are still whole.</p>' +
+            '<span class="ss-howto-src">Self-compassion · Neff, 2003</span>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -1885,6 +2028,32 @@ function initStudyTools() {
       startBtn.textContent = '▶ Start';
       paintTimer();
     });
+  });
+
+  /* ====== Wire up: Just Start activator ====== */
+  var jsGo   = document.getElementById('ss-juststart-go');
+  var jsVent = document.getElementById('ss-juststart-vent');
+  if (jsGo) jsGo.addEventListener('click', function () {
+    /* Switch to a 10-min "permission to be bad" focus block */
+    document.querySelectorAll('.ss-pomo-preset').forEach(function (x) { x.classList.remove('on'); });
+    pomoFocus = 10; pomoBreak = 3; pomoLong = 15;
+    pomoMode = 'focus'; pomoSessionInCycle = 1;
+    pomoTotal = 10 * 60; pomoLeft = pomoTotal;
+    paintTimer();
+    jsGo.textContent = '✓ Timer set — press ▶ Start. You only owe yourself 10 bad minutes.';
+    setTimeout(function () { startBtn && startBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+  });
+  if (jsVent) jsVent.addEventListener('click', function () {
+    /* Switch to log tab and prime the textarea */
+    var logTab = document.querySelector('.ss-tab[data-tab="log"]');
+    if (logTab) logTab.click();
+    setTimeout(function () {
+      var ta = document.getElementById('ss-log-text');
+      if (ta) {
+        ta.placeholder = 'Let it out. What\'s heavy right now? No one will read this but you. After 10 minutes, return to the desk.';
+        ta.focus();
+      }
+    }, 200);
   });
 
   /* ====== Wire up: Study Log ====== */
