@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* Every page gets dark mode */
   initDarkModeToggle();
+  initScrollImmersion();
 
   /* Subject pages */
   if (hasTopics && !isHomepage) {
@@ -107,6 +108,22 @@ document.addEventListener('DOMContentLoaded', function () {
     initFloatingLauncher(false);
   }
 });
+
+/* ----------------------------------------------------------
+   SCROLL IMMERSION — adds .ss-fade-in to content blocks so the
+   CSS scroll-driven animation (with reduced-motion fallback)
+   can trigger them. No-op if the browser doesn't support it.
+   ---------------------------------------------------------- */
+function initScrollImmersion() {
+  try {
+    var sels = ['.intro-card', '.section', '.topic', '.subject-card', '.mastery-card'];
+    sels.forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        el.classList.add('ss-fade-in');
+      });
+    });
+  } catch (e) { /* never break the page over a polish layer */ }
+}
 
 /* ----------------------------------------------------------
    FLOATING LAUNCHER — always-visible quick access dock
@@ -1659,6 +1676,30 @@ function ssBurnoutSignal(streak, sessionsToday, focusMinutesToday) {
   return reasons.length ? reasons : null;
 }
 
+/* Burnout self-check questions (Maslach + Grok-condensed). 1 = yes, 0 = no.
+   Score 0-2 healthy · 3-4 strain · 5-6 risk · 7+ likely burnout */
+var SS_BURNOUT_QUESTIONS = [
+  { id: 'q1', text: 'Do you wake up tired even after 7+ hours of sleep?' },
+  { id: 'q2', text: 'Do you feel cynical or distant about studying lately?' },
+  { id: 'q3', text: 'Has your concentration noticeably dropped this week?' },
+  { id: 'q4', text: 'Do you push through every day with little real recovery?' },
+  { id: 'q5', text: 'Do social interactions feel more draining than energising?' },
+  { id: 'q6', text: 'Do you torment yourself with constant micro-decisions?' },
+  { id: 'q7', text: 'Does your home feel like a place that adds tension, not rest?' },
+  { id: 'q8', text: 'Have you felt invisible or unappreciated in your work?' }
+];
+
+/* The 7 types of rest (Saundra Dalton-Smith framework) */
+var SS_REST_TYPES = [
+  { id: 'physical',  icon: '💤', name: 'Physical',  desc: 'Sleep, naps, gentle stretch, massage. Rebuilds tissue, lowers cortisol.', try: 'Tonight: 30-min screen-free wind-down before bed.' },
+  { id: 'mental',    icon: '🧠', name: 'Mental',    desc: 'Quieting racing thoughts, brain breaks, no decision-making.',          try: '10-min "worry window": dump every open decision on paper, then close it.' },
+  { id: 'emotional', icon: '💛', name: 'Emotional', desc: 'Saying what\'s real, setting boundaries, no emotional caretaking.',     try: 'Text one trusted person what you actually feel, not what\'s polite.' },
+  { id: 'sensory',   icon: '🌑', name: 'Sensory',   desc: 'Dim light, no screens, quiet, nature. Counters overstimulation.',      try: '15 min outside without earphones or phone.' },
+  { id: 'creative',  icon: '🎨', name: 'Creative',  desc: 'Awe, beauty, hobby with zero output pressure.',                         try: 'Look at 3 photos / paintings / songs you love. No "use" needed.' },
+  { id: 'social',    icon: '🤝', name: 'Social',    desc: 'Time with energising people OR intentional solitude.',                  try: 'One low-stakes shared activity this week. Quality > quantity.' },
+  { id: 'spiritual', icon: '🌿', name: 'Spiritual', desc: 'Meaning, gratitude, connection to something bigger than today.',        try: 'Write one sentence: "Why does this matter beyond the grade?"' }
+];
+
 /* ---- B. AUDIO CHIME (Web Audio API, no external file) ---- */
 function ssPlayChime(kind) {
   try {
@@ -1818,6 +1859,7 @@ function initStudyTools() {
         '<button class="ss-tab" data-tab="pomodoro">🍅 Focus Timer</button>' +
         '<button class="ss-tab" data-tab="streak">📅 Streak</button>' +
         '<button class="ss-tab" data-tab="log">📝 Study Log</button>' +
+        '<button class="ss-tab" data-tab="recovery">🌿 Recovery</button>' +
         '<button class="ss-tab" data-tab="howto">📚 How to Study</button>' +
       '</div>' +
 
@@ -1827,8 +1869,8 @@ function initStudyTools() {
           '<div class="ss-burnout">' +
             '<div class="ss-burnout-h">🛑 Please rest now.</div>' +
             '<p>You\'ve done <strong>' + burnoutReasons.join(', ') + '</strong>. ' +
-            'Your brain locks in memory <em>during rest</em>, not during the 7th Pomodoro. Stop here. Eat. Walk. Sleep early. ' +
-            'Future-you will thank present-you for the wisdom of stopping.</p>' +
+            'Your brain locks in memory <em>during rest</em>, not during the 7th Pomodoro. Stop here. Eat. Walk. Sleep early.</p>' +
+            '<button class="ss-burnout-cta" data-jump="recovery">🌿 Open Recovery → 60-second check</button>' +
           '</div>' : '') +
         '<div class="ss-tip" id="ss-tip">' +
           '<div class="ss-tip-icon">' + currentTip().icon + '</div>' +
@@ -1929,6 +1971,75 @@ function initStudyTools() {
           '<button class="ss-log-submit" id="ss-log-submit">Save entry</button>' +
         '</div>' +
         '<div class="ss-log-entries" id="ss-log-entries"></div>' +
+      '</div>' +
+
+      /* ---- RECOVERY PANEL — burnout science, 7 rests, hidden influencers ---- */
+      '<div class="ss-panel" data-panel="recovery">' +
+        '<div class="ss-rec-intro">' +
+          'Burnout isn\'t just being tired — it\'s a measurable dysregulation of your stress system. ' +
+          'Most people miss recovery because they only know <em>one</em> kind of rest. There are <strong>seven</strong>. ' +
+          'Take the 60-second check, see which of them you\'re running on empty, and try one tonight.' +
+        '</div>' +
+
+        /* Self-check — answers stored, score colour-coded */
+        '<div class="ss-rec-check">' +
+          '<div class="ss-rec-h">⚖️ 60-second burnout check</div>' +
+          '<div class="ss-rec-q-list" id="ss-rec-q-list"></div>' +
+          '<div class="ss-rec-result" id="ss-rec-result" style="display:none"></div>' +
+        '</div>' +
+
+        /* 7 types of rest — interactive checklist */
+        '<div class="ss-rec-rests">' +
+          '<div class="ss-rec-h">🛏️ The seven types of rest</div>' +
+          '<p class="ss-rec-sub">Rest isn\'t just sleep. Audit which feel most depleted right now.</p>' +
+          '<div class="ss-rec-rest-grid" id="ss-rec-rest-grid"></div>' +
+        '</div>' +
+
+        /* Hidden influencers — collapsed cards */
+        '<div class="ss-rec-hidden">' +
+          '<div class="ss-rec-h">👁️ Hidden burnout accelerators</div>' +
+          '<p class="ss-rec-sub">The factors most students never name — and they matter as much as workload.</p>' +
+          '<div class="ss-rec-cards">' +
+            '<details class="ss-rec-card"><summary>📱 Always-on digital culture</summary>' +
+              '<p>Notifications, comparison loops, blurred work/life boundaries. Even passive scrolling sustains autonomic activation. Studies link constant connectivity to higher emotional exhaustion.</p>' +
+              '<p><strong>Try:</strong> phone in another room during focus blocks; one full screen-free hour before bed.</p>' +
+            '</details>' +
+            '<details class="ss-rec-card"><summary>🌍 Cultural pressure to push</summary>' +
+              '<p>Some cultures frame rest as weakness; others suppress personal needs for the group. Both accelerate HPA-axis dysregulation. The "prove yourself" loop drains faster than the work itself.</p>' +
+              '<p><strong>Try:</strong> notice when "should" replaces "want" in your self-talk. Boundary-setting is a learnable skill, not betrayal.</p>' +
+            '</details>' +
+            '<details class="ss-rec-card"><summary>🪴 Tense home / no recharge spot</summary>' +
+              '<p>If your room is your office is your gym is your bed, your nervous system never gets a "safe" cue. Sensory rest becomes impossible.</p>' +
+              '<p><strong>Try:</strong> pick one corner. Soft light, a chair, a blanket. No screens. Sit there 10 min daily — that\'s the entire intervention.</p>' +
+            '</details>' +
+            '<details class="ss-rec-card"><summary>👥 Alone-in-a-crowd loneliness</summary>' +
+              '<p>Loneliness drains energy at roughly the same rate as skipping meals. Burnout amplifies the social filters — neutral people start feeling draining.</p>' +
+              '<p><strong>Try:</strong> one low-stakes shared activity per week (class, walk, fika). Quality of one connection &gt; quantity of many.</p>' +
+            '</details>' +
+            '<details class="ss-rec-card"><summary>🌑 Light, nature, sleep deficits</summary>' +
+              '<p>Blue light blunts the morning cortisol awakening response. Lack of nature keeps the vagus nerve under-stimulated. Stockholm winters compound both.</p>' +
+              '<p><strong>Try:</strong> 10 min outdoor light within 1 hr of waking; vitamin D in winter; consistent wake time even on weekends.</p>' +
+            '</details>' +
+            '<details class="ss-rec-card"><summary>🎯 Decision overload</summary>' +
+              '<p>Tormenting yourself with constant micro-decisions ("should I work? gym? sleep? text?") keeps the prefrontal cortex burning glucose. By evening, willpower is gone — that\'s why everything feels impossible at 9pm.</p>' +
+              '<p><strong>Try:</strong> a "worry window" — 10 min once a day to dump every decision on paper. Park them. Decide one thing at a time.</p>' +
+            '</details>' +
+          '</div>' +
+        '</div>' +
+
+        /* Science explainer — opt-in deep dive */
+        '<details class="ss-rec-science">' +
+          '<summary>🔬 The science: why "crumbs for tomorrow" backfires</summary>' +
+          '<p>Chronic max-pushing dysregulates your <strong>HPA axis</strong> — the hypothalamus → pituitary → adrenal chain that runs your stress response. ' +
+          'Cortisol stops following its healthy daily rhythm (high in morning, low at night) and goes flat or erratic. ' +
+          'The downstream effects are measurable: fragmented sleep, systemic inflammation, weaker immune function, ' +
+          'reduced BDNF (the protein that lets neurons rewire), and over months, hippocampal shrinkage that hits memory and emotional regulation.</p>' +
+          '<p>Recovery uses the same machinery in reverse. Consistent sleep + low-intensity movement + multiple rest types ' +
+          'rebuild parasympathetic (rest-and-digest) tone via the vagus nerve. Cortisol normalises. BDNF rises. The brain rewires for safety instead of threat. ' +
+          '<em>Weeks to months</em>, not days. Consistency beats intensity.</p>' +
+          '<p class="ss-rec-cite">Sources: WHO ICD-11 burnout definition · Dalton-Smith, "Sacred Rest" (7 rest types) · Frontiers in Psychiatry meta-analyses on HPA + burnout · Maslach burnout inventory.</p>' +
+        '</details>' +
+
       '</div>' +
 
       /* ---- HOW TO STUDY PANEL ---- */
@@ -2067,6 +2178,13 @@ function initStudyTools() {
     var btn = document.querySelector('.ss-tab[data-tab="' + lastTab + '"]');
     if (btn) btn.click();
   }
+  /* Wire any [data-jump] CTAs that switch tabs (used by burnout banner) */
+  document.querySelectorAll('[data-jump]').forEach(function (j) {
+    j.addEventListener('click', function () {
+      var t = document.querySelector('.ss-tab[data-tab="' + j.getAttribute('data-jump') + '"]');
+      if (t) t.click();
+    });
+  });
 
   /* ====== Wire up: wellbeing tip rotation + categories ====== */
   function paintTip() {
@@ -2239,6 +2357,93 @@ function initStudyTools() {
       paintTimer();
     });
   });
+
+  /* ====== Wire up: Recovery panel (self-check + 7 rests) ====== */
+  (function () {
+    var qList = document.getElementById('ss-rec-q-list');
+    var grid  = document.getElementById('ss-rec-rest-grid');
+    if (!qList || !grid) return;
+
+    /* --- Self-check --- */
+    var saved  = JSON.parse(_ls.get('ss-burnout-check') || '{}');
+    qList.innerHTML = SS_BURNOUT_QUESTIONS.map(function (q) {
+      var v = saved[q.id];
+      return '<div class="ss-rec-q" data-id="' + q.id + '">' +
+        '<span class="ss-rec-q-text">' + q.text + '</span>' +
+        '<span class="ss-rec-q-btns">' +
+          '<button class="ss-rec-yn' + (v === 1 ? ' on' : '') + '" data-v="1">Yes</button>' +
+          '<button class="ss-rec-yn' + (v === 0 ? ' on' : '') + '" data-v="0">No</button>' +
+        '</span>' +
+      '</div>';
+    }).join('');
+
+    function score() {
+      var s = 0;
+      SS_BURNOUT_QUESTIONS.forEach(function (q) { if (saved[q.id] === 1) s++; });
+      return s;
+    }
+    function paintResult() {
+      var answered = Object.keys(saved).length;
+      var box = document.getElementById('ss-rec-result');
+      if (!box) return;
+      if (answered < SS_BURNOUT_QUESTIONS.length) {
+        box.style.display = 'none'; return;
+      }
+      var s = score();
+      var tier, msg, cls;
+      if (s <= 2)      { tier = 'Healthy load';    cls = 'good';   msg = 'Your patterns look sustainable. Keep your rest types varied.'; }
+      else if (s <= 4) { tier = 'Some strain';     cls = 'mild';   msg = 'Early warning signs. Pick 1-2 of the seven rests below and try one tonight.'; }
+      else if (s <= 6) { tier = 'High risk';       cls = 'high';   msg = 'Your nervous system is asking for a real reset. A full rest day this week is not optional — it\'s part of the work.'; }
+      else             { tier = 'Likely burnout';  cls = 'severe'; msg = 'Please slow down. Talk to someone you trust. Recovery is weeks, not days — start with sleep, sensory rest, and one small social anchor. If overwhelm stays, a therapist accelerates this.'; }
+      box.style.display = '';
+      box.className = 'ss-rec-result ss-rec-result--' + cls;
+      box.innerHTML =
+        '<div class="ss-rec-tier">' + tier + ' &middot; <span class="ss-rec-score">' + s + ' / ' + SS_BURNOUT_QUESTIONS.length + '</span></div>' +
+        '<p>' + msg + '</p>' +
+        '<button class="ss-rec-reset" id="ss-rec-reset">Retake check</button>';
+      var rb = document.getElementById('ss-rec-reset');
+      if (rb) rb.addEventListener('click', function () {
+        saved = {}; _ls.set('ss-burnout-check', '{}');
+        qList.querySelectorAll('.ss-rec-yn.on').forEach(function (x) { x.classList.remove('on'); });
+        paintResult();
+      });
+    }
+    qList.querySelectorAll('.ss-rec-yn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var row = b.closest('.ss-rec-q');
+        var id = row.getAttribute('data-id');
+        saved[id] = parseInt(b.getAttribute('data-v'), 10);
+        row.querySelectorAll('.ss-rec-yn').forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        _ls.set('ss-burnout-check', JSON.stringify(saved));
+        paintResult();
+      });
+    });
+    paintResult();
+
+    /* --- 7 rests checklist --- */
+    var picked = JSON.parse(_ls.get('ss-rest-picked') || '{}');
+    grid.innerHTML = SS_REST_TYPES.map(function (r) {
+      var on = picked[r.id] === 1;
+      return '<div class="ss-rec-rest' + (on ? ' on' : '') + '" data-id="' + r.id + '">' +
+        '<div class="ss-rec-rest-h"><span>' + r.icon + ' ' + r.name + '</span>' +
+          '<button class="ss-rec-rest-pick" title="I need this one">' + (on ? '✓ noted' : '+ depleted') + '</button>' +
+        '</div>' +
+        '<p class="ss-rec-rest-desc">' + r.desc + '</p>' +
+        '<p class="ss-rec-rest-try"><strong>Try:</strong> ' + r.try + '</p>' +
+      '</div>';
+    }).join('');
+    grid.querySelectorAll('.ss-rec-rest-pick').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var card = b.closest('.ss-rec-rest');
+        var id = card.getAttribute('data-id');
+        picked[id] = picked[id] === 1 ? 0 : 1;
+        _ls.set('ss-rest-picked', JSON.stringify(picked));
+        card.classList.toggle('on', picked[id] === 1);
+        b.textContent = picked[id] === 1 ? '✓ noted' : '+ depleted';
+      });
+    });
+  })();
 
   /* ====== Wire up: Just Start activator ====== */
   var jsGo   = document.getElementById('ss-juststart-go');

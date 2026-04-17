@@ -2281,6 +2281,232 @@ body.ss-launcher-active .ss-print-btn { display: none !important; }
 }
 
 /* =================================
+   RECOVERY PANEL — burnout self-check, 7 rests, hidden influencers
+================================= */
+.ss-rec-intro {
+  font-size: 0.92rem; color: var(--ss-text); line-height: 1.6;
+  background: linear-gradient(135deg, rgba(102,187,106,0.06), rgba(179,136,255,0.04));
+  border: 1px solid rgba(102,187,106,0.2);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 22px;
+}
+.ss-rec-intro em { color: var(--ss-accent); font-style: normal; }
+
+.ss-rec-h {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ss-text); margin-bottom: 6px;
+}
+.ss-rec-sub { font-size: 0.85rem; color: var(--ss-muted); margin: 0 0 12px; line-height: 1.55; }
+
+.ss-rec-check, .ss-rec-rests, .ss-rec-hidden { margin-bottom: 26px; }
+
+/* Self-check Q list */
+.ss-rec-q-list { display: flex; flex-direction: column; gap: 4px; }
+.ss-rec-q {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 12px;
+  background: var(--ss-bg); border: 1px solid var(--ss-border);
+  border-radius: 8px; font-size: 0.88rem; color: var(--ss-text);
+}
+.ss-rec-q-text { flex: 1; line-height: 1.45; }
+.ss-rec-q-btns { display: flex; gap: 4px; flex-shrink: 0; }
+.ss-rec-yn {
+  background: transparent; border: 1px solid var(--ss-border);
+  color: var(--ss-muted); border-radius: 14px;
+  padding: 4px 12px; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; font-family: 'Source Sans 3', sans-serif;
+  transition: all 0.12s; min-width: 50px;
+}
+.ss-rec-yn:hover { color: var(--ss-text); border-color: var(--ss-text); }
+.ss-rec-yn.on {
+  background: var(--ss-accent); color: #0a0e17;
+  border-color: var(--ss-accent); font-weight: 700;
+}
+
+.ss-rec-result {
+  margin-top: 14px; padding: 14px 16px;
+  border-radius: 10px; border: 1px solid;
+  animation: ssFadeIn 0.3s ease;
+}
+.ss-rec-result--good   { border-color: rgba(102,187,106,0.4); background: rgba(102,187,106,0.06); }
+.ss-rec-result--mild   { border-color: rgba(255,213,79,0.4); background: rgba(255,213,79,0.06); }
+.ss-rec-result--high   { border-color: rgba(255,138,101,0.4); background: rgba(255,138,101,0.06); }
+.ss-rec-result--severe { border-color: rgba(239,83,80,0.4);   background: rgba(239,83,80,0.06); }
+.ss-rec-tier { font-family: 'Playfair Display', serif; font-size: 1.02rem; font-weight: 700; margin-bottom: 4px; }
+.ss-rec-result--good   .ss-rec-tier { color: #66bb6a; }
+.ss-rec-result--mild   .ss-rec-tier { color: #ffd54f; }
+.ss-rec-result--high   .ss-rec-tier { color: #ff8a65; }
+.ss-rec-result--severe .ss-rec-tier { color: #ef5350; }
+.ss-rec-score { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--ss-muted); }
+.ss-rec-result p { margin: 0 0 8px; font-size: 0.88rem; line-height: 1.55; color: var(--ss-text); }
+.ss-rec-reset {
+  background: transparent; border: 1px solid var(--ss-border);
+  color: var(--ss-muted); border-radius: 14px; padding: 4px 12px;
+  font-size: 0.74rem; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.ss-rec-reset:hover { color: var(--ss-accent); border-color: var(--ss-accent); }
+
+/* 7 rests grid */
+.ss-rec-rest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+.ss-rec-rest {
+  background: var(--ss-bg); border: 1px solid var(--ss-border);
+  border-radius: 10px; padding: 12px 14px;
+  transition: all 0.15s;
+}
+.ss-rec-rest.on {
+  border-color: rgba(255,138,101,0.5);
+  background: linear-gradient(135deg, rgba(255,138,101,0.08), rgba(255,213,79,0.04));
+}
+.ss-rec-rest-h {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 4px;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  color: var(--ss-text); font-size: 0.95rem;
+}
+.ss-rec-rest-pick {
+  background: transparent; border: 1px dashed var(--ss-border);
+  color: var(--ss-muted); border-radius: 12px; padding: 2px 10px;
+  font-size: 0.7rem; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.ss-rec-rest.on .ss-rec-rest-pick {
+  background: #ff8a65; color: #0a0e17; border-color: #ff8a65; border-style: solid;
+}
+.ss-rec-rest-desc { margin: 0 0 6px; font-size: 0.82rem; color: var(--ss-muted); line-height: 1.5; }
+.ss-rec-rest-try { margin: 0; font-size: 0.82rem; color: var(--ss-text); line-height: 1.5; }
+.ss-rec-rest-try strong { color: var(--ss-accent); }
+
+/* Hidden influencer cards */
+.ss-rec-cards { display: flex; flex-direction: column; gap: 6px; }
+.ss-rec-card {
+  background: var(--ss-bg); border: 1px solid var(--ss-border);
+  border-radius: 8px; padding: 0 14px;
+  transition: border-color 0.15s;
+}
+.ss-rec-card[open] { padding-bottom: 10px; border-color: var(--ss-accent); }
+.ss-rec-card summary {
+  cursor: pointer; padding: 10px 0;
+  font-size: 0.88rem; color: var(--ss-text); font-weight: 600;
+  list-style: none;
+}
+.ss-rec-card summary::-webkit-details-marker { display: none; }
+.ss-rec-card summary::before { content: '▸ '; color: var(--ss-muted); }
+.ss-rec-card[open] summary::before { content: '▾ '; color: var(--ss-accent); }
+.ss-rec-card p { margin: 0 0 6px; font-size: 0.84rem; line-height: 1.55; color: var(--ss-text); }
+.ss-rec-card p:last-child { margin-bottom: 0; }
+.ss-rec-card strong { color: var(--ss-accent); }
+
+/* Science explainer */
+.ss-rec-science {
+  background: rgba(179,136,255,0.05); border: 1px solid rgba(179,136,255,0.2);
+  border-radius: 10px; padding: 0 16px; margin-top: 6px;
+}
+.ss-rec-science[open] { padding-bottom: 14px; }
+.ss-rec-science summary {
+  cursor: pointer; padding: 12px 0;
+  font-family: 'Playfair Display', serif; font-size: 0.95rem;
+  color: #b388ff; list-style: none; font-weight: 700;
+}
+.ss-rec-science summary::-webkit-details-marker { display: none; }
+.ss-rec-science p { margin: 0 0 10px; font-size: 0.86rem; line-height: 1.6; color: var(--ss-text); }
+.ss-rec-science strong { color: #b388ff; }
+.ss-rec-cite {
+  font-size: 0.72rem !important; color: var(--ss-muted) !important;
+  font-style: italic; margin-bottom: 0 !important;
+}
+
+/* Burnout banner CTA button */
+.ss-burnout-cta {
+  background: #ef5350; color: #fff; border: none;
+  border-radius: 8px; padding: 7px 14px; margin-top: 8px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  transition: opacity 0.15s;
+}
+.ss-burnout-cta:hover { opacity: 0.88; }
+
+/* =================================
+   MOBILE POLISH (iPhone-class screens)
+================================= */
+@media (max-width: 600px) {
+  .ss-rec-q { flex-direction: column; align-items: stretch; gap: 8px; }
+  .ss-rec-q-btns { justify-content: flex-end; }
+  .ss-rec-rest-grid { grid-template-columns: 1fr; }
+  .ss-rec-h { font-size: 0.98rem; }
+  .ss-rec-intro { font-size: 0.85rem; padding: 12px 14px; }
+
+  /* Companion top bar — slim it further on phones */
+  .ss-study-tools.ss-tools--top { margin: 12px 12px 22px; padding: 0; }
+  .ss-tools-bar { padding: 8px 12px; gap: 8px; }
+  .ss-tools-title { font-size: 0.85rem; }
+  .ss-tools-meta { gap: 8px; }
+  .ss-tools-stat { font-size: 0.68rem; }
+  .ss-tools-toggle { padding: 3px 9px; font-size: 0.7rem; }
+
+  /* Launcher — keep room for thumbs, never block content */
+  .ss-launcher { right: 8px; bottom: 8px; gap: 4px; }
+  .ss-launch-btn { padding: 9px 11px; font-size: 0.75rem; gap: 4px; }
+  .ss-launch-lbl { display: none; }
+  body { padding-bottom: 60px; }
+
+  /* Comment / log overlays — full-width modal on phones */
+  .ss-fb-card { max-width: 100%; max-height: 90vh; }
+  .ss-fb-item { font-size: 0.82rem; }
+
+  /* Pomodoro ring slightly smaller for phones */
+  .ss-pomo-ring { width: 170px; height: 170px; }
+  .ss-pomo-ring svg { width: 170px; height: 170px; }
+  .ss-pomo-time { font-size: 2rem; }
+
+  /* Tabs scroll horizontally on phones */
+  .ss-tabs { padding: 0 8px; }
+  .ss-tab { padding: 10px 10px; font-size: 0.78rem; }
+}
+
+/* =================================
+   LIGHTWEIGHT SCROLL-IMMERSION
+   Subtle fade-in + lift as elements enter the viewport.
+   - CSS-only (uses native scroll-driven animations where supported)
+   - Pure progressive enhancement: looks identical without JS / on
+     older browsers, and respects prefers-reduced-motion.
+================================= */
+@supports (animation-timeline: view()) {
+  .ss-fade-in {
+    animation: ssEnter linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+@keyframes ssEnter {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* Subtle parallax on hero (transform-only, GPU-cheap) */
+.hero { will-change: transform; }
+@supports (animation-timeline: scroll()) {
+  .hero::before {
+    animation: ssHeroDrift linear;
+    animation-timeline: scroll(root);
+    animation-range: 0 80vh;
+  }
+}
+@keyframes ssHeroDrift {
+  to { transform: translateY(-30px) scale(1.05); opacity: 0.5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none !important; }
+}
+
+/* =================================
    LIGHT THEME OVERRIDES
 ================================= */
 html.ss-light .ss-tools-bar,
