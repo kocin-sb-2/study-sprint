@@ -2475,16 +2475,24 @@ body.ss-launcher-active .ss-print-btn { display: none !important; }
    - Pure progressive enhancement: looks identical without JS / on
      older browsers, and respects prefers-reduced-motion.
 ================================= */
+/* Default state for tagged elements is FULLY VISIBLE — the animation
+   only ever animates *toward* the visible state, never away from it.
+   This means a stuck/aborted timeline can never hide content. */
+.ss-fade-in { opacity: 1; transform: none; }
 @supports (animation-timeline: view()) {
   .ss-fade-in {
     animation: ssEnter linear both;
     animation-timeline: view();
-    animation-range: entry 0% cover 30%;
+    animation-range: entry 0% cover 25%;
+    animation-fill-mode: forwards;
   }
 }
+/* Note: the "from" state is still visible (opacity 0.6, not 0).
+   Worst case if a browser bug freezes the timeline, content stays
+   readable — just slightly faded. Better than disappearing. */
 @keyframes ssEnter {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0.6; transform: translateY(16px); }
+  to   { opacity: 1;   transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ss-fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }

@@ -133,10 +133,16 @@ document.addEventListener('DOMContentLoaded', function () {
    ---------------------------------------------------------- */
 function initScrollImmersion() {
   try {
-    var sels = ['.intro-card', '.section', '.topic', '.subject-card', '.mastery-card'];
+    /* Only tag elements that start BELOW the fold. Elements already in view
+       on page load can get stuck in the start-state of a view()-timed
+       animation in some browsers — and we never want the Study Companion,
+       intro card, or first section to vanish. */
+    var sels = ['.section', '.topic', '.subject-card', '.mastery-card'];
+    var foldY = (window.innerHeight || 800) - 40;
     sels.forEach(function (sel) {
       document.querySelectorAll(sel).forEach(function (el) {
-        el.classList.add('ss-fade-in');
+        var top = el.getBoundingClientRect().top;
+        if (top > foldY) el.classList.add('ss-fade-in');
       });
     });
   } catch (e) { /* never break the page over a polish layer */ }
