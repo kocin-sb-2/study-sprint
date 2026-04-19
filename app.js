@@ -1983,7 +1983,7 @@ function initStudyTools() {
               ' · <b id="ss-pomo-mins-2">' + pomoMinutesToday + '</b> focus minutes' +
             '</div>' +
             '<label class="ss-pomo-opt">' +
-              '<input type="checkbox" id="ss-pomo-notify"' + (Notification && Notification.permission === 'granted' ? ' checked' : '') + '>' +
+              '<input type="checkbox" id="ss-pomo-notify"' + ((typeof Notification !== 'undefined' && Notification.permission === 'granted') ? ' checked' : '') + '>' +
               ' Browser notification when timer ends' +
             '</label>' +
           '</div>' +
