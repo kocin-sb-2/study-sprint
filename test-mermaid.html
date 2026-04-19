@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><head><title>Mermaid Test</title></head>
+<body style="background:#111;color:#eee;font-family:sans-serif;padding:40px;">
+<h2>Mermaid.js Render Test</h2>
+<div id="status">Loading Mermaid...</div>
+<div id="diagram" style="margin-top:20px;"></div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  var diagram = 'flowchart TD\n' +
+    '  CH["IB Chemistry HL"] --> S1["S1: Particulate Matter"]\n' +
+    '  CH --> S2["S2: Bonding"]\n' +
+    '  CH --> S3["S3: Classification"]\n' +
+    '  S1 --> S1a["Atoms and Isotopes"]\n' +
+    '  S1 --> S1b["Electron Config"]\n' +
+    '  S2 --> S2a["Ionic Model"]\n' +
+    '  S2 --> S2b["Covalent and VSEPR"]\n' +
+    '  S1b -.-> S2b';
+
+  mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+  var el = document.getElementById('diagram');
+  el.className = 'mermaid';
+  el.id = 'test-mm';
+  el.textContent = diagram;
+
+  try {
+    var result = mermaid.run({ nodes: [el] });
+    if (result && typeof result.then === 'function') {
+      result.then(function() {
+        document.getElementById('status').textContent = 'SUCCESS - Promise resolved';
+      }).catch(function(err) {
+        document.getElementById('status').textContent = 'FAIL (promise): ' + err.message;
+      });
+    } else {
+      setTimeout(function() {
+        var hasSvg = el.querySelector('svg');
+        document.getElementById('status').textContent = hasSvg ? 'SUCCESS - sync render' : 'FAIL - no SVG found';
+      }, 1000);
+    }
+  } catch(e) {
+    document.getElementById('status').textContent = 'FAIL (sync): ' + e.message;
+  }
+</script>
+</body></html>
