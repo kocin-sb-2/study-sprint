@@ -98,31 +98,44 @@ document.addEventListener('DOMContentLoaded', function () {
   var hasTopics  = !!document.querySelector('.topic-list');
   var isHomepage = !!document.querySelector('.systems');
 
-  /* Every page gets dark mode */
-  initDarkModeToggle();
-  initScrollImmersion();
+  /* Surface any uncaught errors to the console so phone debugging
+     (Safari → Settings → Advanced → Web Inspector) actually shows them. */
+  window.addEventListener('error', function (e) { ssWarn('uncaught', e.message + ' @ ' + e.filename + ':' + e.lineno); });
+  window.addEventListener('unhandledrejection', function (e) { ssWarn('unhandled promise', e.reason); });
 
-  /* Subject pages */
-  if (hasTopics && !isHomepage) {
-    initProgress();
-    initSubjectSearch();
-    initPrintButton();
-    initMindMap();
-    initQuizMode();
-    initFeedbackTab();
-    initStudyTools();
-    initOnboarding();
-    initFloatingLauncher(true);
+  /* Each init in its own guard so ONE bug can't kill the rest of the
+     page. Without this, an exception in (say) initMindMap silently
+     aborts initStudyTools and the Companion never mounts — exactly
+     the symptom that hit phones / fresh browsers. */
+  function safe(name, fn) {
+    try { fn(); } catch (err) { ssWarn('init failed: ' + name, err); }
   }
 
-  /* Homepage */
+  safe('darkMode', initDarkModeToggle);
+  safe('scrollImmersion', initScrollImmersion);
+
+  /* Subject pages — Companion FIRST so it always wins, even if a
+     later init throws. Order otherwise unchanged. */
+  if (hasTopics && !isHomepage) {
+    safe('studyTools',       initStudyTools);
+    safe('floatingLauncher', function () { initFloatingLauncher(true); });
+    safe('feedbackTab',      initFeedbackTab);
+    safe('progress',         initProgress);
+    safe('subjectSearch',    initSubjectSearch);
+    safe('printButton',      initPrintButton);
+    safe('mindMap',          initMindMap);
+    safe('quizMode',         initQuizMode);
+    safe('onboarding',       initOnboarding);
+  }
+
+  /* Homepage — same isolation pattern. Companion first. */
   if (isHomepage) {
-    initHomeSearch();
-    injectSyllabusLink();
-    initMasteryDashboard();
-    initFeedbackTab();
-    initStudyTools();
-    initFloatingLauncher(false);
+    safe('studyTools',       initStudyTools);
+    safe('floatingLauncher', function () { initFloatingLauncher(false); });
+    safe('feedbackTab',      initFeedbackTab);
+    safe('homeSearch',       initHomeSearch);
+    safe('syllabusLink',     injectSyllabusLink);
+    safe('masteryDashboard', initMasteryDashboard);
   }
 });
 
