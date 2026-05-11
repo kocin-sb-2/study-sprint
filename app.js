@@ -1,4 +1,9 @@
 /* ============================================================
+   Copyright (c) 2026 Kocin Sabareeswaran Bama. All Rights Reserved.
+   Unauthorized copying, modification, or distribution is strictly prohibited.
+   ============================================================ */
+
+/* ============================================================
    Study Sprint — app.js
    Provides: section/topic toggles, progress tracking,
    in-page search, homepage filter, print mode.
@@ -2672,3 +2677,69 @@ function initOnboarding() {
 }
 
 /* (boot sequence consolidated in section 2 above) */
+
+/* ----------------------------------------------------------
+   15. VERSION INDICATOR
+   Injects version badge into footer on every page.
+---------------------------------------------------------- */
+(function () {
+  var VERSION = '0.1.0-prototype';
+  document.addEventListener('DOMContentLoaded', function () {
+    var footer = document.querySelector('.footer-note') || document.querySelector('.footer');
+    if (!footer) return;
+    var badge = document.createElement('div');
+    badge.style.cssText = 'margin-top:12px;font-size:0.7rem;opacity:0.5;font-family:monospace;';
+    badge.textContent = 'v' + VERSION;
+    footer.appendChild(badge);
+  });
+})();
+
+/* ----------------------------------------------------------
+   16. STORAGE CONSENT BANNER
+   GDPR-compliant notice for localStorage usage.
+   Only shows once; dismissal is stored in localStorage itself
+   (the minimum required for remembering consent).
+---------------------------------------------------------- */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    if (_ls.get('ss-storage-consent') === '1') return;
+    var banner = document.createElement('div');
+    banner.id = 'ss-consent-banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a2236;color:#e8ecf4;padding:14px 24px;font-size:0.85rem;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:99999;border-top:1px solid #2a3654;flex-wrap:wrap;';
+    banner.innerHTML =
+      '<span>This site uses browser storage (localStorage) to save your study progress. No personal data is sent to any server. <a href="/privacy.html" style="color:#4fc3f7;text-decoration:underline">Privacy</a> · <a href="/terms.html" style="color:#4fc3f7;text-decoration:underline">Terms</a></span>' +
+      '<button id="ss-consent-accept" style="background:#4fc3f7;color:#0a0e17;border:none;padding:8px 18px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;">Accept</button>';
+    document.body.appendChild(banner);
+    document.getElementById('ss-consent-accept').addEventListener('click', function () {
+      _ls.set('ss-storage-consent', '1');
+      banner.remove();
+    });
+  });
+})();
+
+/* ----------------------------------------------------------
+   17. COPY PROTECTION (lightweight deterrent)
+   Disables right-click context menu and common copy shortcuts
+   on educational content. Not foolproof, but discourages
+   casual copying.
+---------------------------------------------------------- */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target.closest('input, textarea, .q-solution')) return;
+      e.preventDefault();
+    });
+    document.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('copy', function (e) {
+      var sel = (window.getSelection() || '').toString();
+      if (sel.length > 200) {
+        e.clipboardData.setData('text/plain', sel.slice(0, 200) + '\n\n© 2026 Kocin Sabareeswaran Bama — Study Sprint. All Rights Reserved.');
+        e.preventDefault();
+      }
+    });
+  });
+})();
